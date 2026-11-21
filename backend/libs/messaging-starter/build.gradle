@@ -1,0 +1,1 @@
+description = 'Shared Kafka plumbing only; event ownership remains service-owned.'

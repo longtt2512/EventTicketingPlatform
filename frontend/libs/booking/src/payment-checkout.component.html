@@ -1,0 +1,40 @@
+@if(session();as s){
+ <a class="back-link" [routerLink]="['/checkout',s.attempt.orderId]">Về đơn hàng</a>
+ <h1>Thanh toán đơn hàng</h1>
+ <ol class="purchase-steps" aria-label="Tiến trình đặt vé"><li>1. Chọn vé</li><li aria-current="step">2. Thanh toán</li><li>3. Nhận vé</li></ol>
+ @if(error()){<div class="notice error" role="alert"><p>{{error()}}</p><button type="button" class="secondary" (click)="load()" [disabled]="loading()||busy()">Kiểm tra lại</button></div>}
+ <div class="purchase-layout payment-method-layout">
+  <section class="payment-panel" aria-label="Phương thức thanh toán">
+   @if(!s.attempt.paymentMethod&&!s.attempt.scenario&&remaining()>0){
+    <h2>Bạn muốn thanh toán bằng cách nào?</h2>
+    <p class="payment-description">Chọn phương thức phù hợp để hoàn tất đặt vé.</p>
+    <form (ngSubmit)="submit()">
+     <fieldset class="payment-methods" [disabled]="busy()||loading()">
+      <legend class="visually-hidden">Chọn phương thức thanh toán</legend>
+      <label class="payment-method" [class.selected]="method==='QR'"><input type="radio" name="method" value="QR" [(ngModel)]="method"><etp-icon name="qr-code" tone="indigo"/><span><strong>Thanh toán qua QR</strong><small>Mã riêng cho giao dịch của bạn</small></span></label>
+      <label class="payment-method" [class.selected]="method==='CARD'"><input type="radio" name="method" value="CARD" [(ngModel)]="method"><etp-icon name="credit-card" tone="indigo"/><span><strong>Thanh toán qua thẻ</strong><small>Sử dụng số thẻ để thanh toán</small></span></label>
+     </fieldset>
+     @if(method==='CARD'){
+      <div class="card-entry"><label for="payment-card">Số thẻ</label><input id="payment-card" name="cardNumber" type="text" inputmode="numeric" autocomplete="off" placeholder="0000 0000 0000 0000" maxlength="23" [(ngModel)]="cardNumber" [disabled]="busy()" [attr.aria-invalid]="submitted&&!validCard?'true':null" [attr.aria-describedby]="submitted&&!validCard?'card-error':null">
+      @if(submitted&&!validCard){<p id="card-error" class="field-error" role="alert">Nhập đủ 16 chữ số trên thẻ.</p>}</div>
+     }
+     <button class="payment-submit" type="submit" [disabled]="busy()||loading()||remaining()<=0">{{busy()?'Đang xử lý…':method==='QR'?'Hiển thị mã QR':'Thanh toán '+money(s.attempt.expectedAmount)}}</button>
+    </form>
+   }@else if(remaining()<=0&&s.attempt.status==='PENDING'){
+    <div class="payment-wait"><etp-icon name="clock" tone="indigo"/><h2>Đã hết thời gian thanh toán</h2><p>Đang kiểm tra kết quả cuối cùng. Bạn có thể quay lại đơn hàng để xem trạng thái và thử lại.</p><a class="button-link secondary" [routerLink]="['/payment/result',s.attempt.orderId]">Xem trạng thái đơn</a></div>
+   }@else if(s.attempt.paymentMethod==='QR'){
+    <div class="payment-qr"><h2>Thanh toán qua QR</h2><p>Kết quả thanh toán sẽ được cập nhật tự động.</p>
+     @if(s.qrDataUri){<div class="payment-qr-frame"><img [src]="s.qrDataUri" alt="Mã QR thanh toán cho giao dịch này" width="280" height="280"></div>}
+     <div class="qr-lifetime"><span>Mã QR hết hạn sau</span><strong role="timer" aria-label="Thời gian hiệu lực mã QR">{{countdown(remaining())}}</strong></div>
+     <p class="payment-processing" role="status"><span class="processing-dot" aria-hidden="true"></span>Đang chờ xác nhận thanh toán…</p>
+     <p class="payment-caption">Mã chỉ dùng cho giao dịch này.</p>
+    </div>
+   }@else{
+    <div class="payment-wait"><etp-icon name="credit-card" tone="indigo"/><h2>Đang xử lý thanh toán</h2>@if(s.attempt.cardLastFour){<p>Thẻ kết thúc bằng <strong>{{s.attempt.cardLastFour}}</strong></p>}<p class="payment-processing" role="status"><span class="processing-dot" aria-hidden="true"></span>Chúng tôi đang xác nhận giao dịch của bạn.</p><p>Kết quả sẽ tự động hiển thị khi có xác nhận.</p></div>
+   }
+  </section>
+  <aside class="purchase-summary"><h2>Thông tin thanh toán</h2>@if(order();as o){<p class="payment-event">{{o.eventName}}</p><p class="small">{{o.items.length}} loại vé trong đơn</p>}<div class="summary-total"><span>Tổng thanh toán</span><strong>{{money(s.attempt.expectedAmount)}}</strong></div><p class="small wrap">Mã đơn: {{s.attempt.orderId}}</p><p class="payment-caption">Vé điện tử sẽ được phát hành sau khi đơn hàng được xác nhận.</p></aside>
+ </div>
+}@else{
+ <h1>Thanh toán đơn hàng</h1>@if(error()){<p class="notice error" role="alert">{{error()}}</p><button type="button" class="secondary" (click)="load()" [disabled]="loading()">Thử lại</button><a class="button-link quiet" routerLink="/account/orders">Đơn hàng của tôi</a>}@else{<p role="status">Đang tải thông tin thanh toán…</p>}
+}

@@ -1,0 +1,18 @@
+package com.eventticketing.commerce.api;
+import com.fasterxml.jackson.databind.*;
+import java.util.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.bind.annotation.*;
+@RestController @RequestMapping("/internal/notifications")
+public class NotificationFeed {
+ private final JdbcTemplate db;private final ObjectMapper json;private final String token;
+ public NotificationFeed(JdbcTemplate db,ObjectMapper json,@Value("${app.identity.service-token}")String token){this.db=db;this.json=json;this.token=token;}
+ @GetMapping public List<JsonNode> pending(@RequestHeader(value="X-Service-Token",required=false)String supplied){guard(supplied);return db.query("select id,payload::text from event_commerce.notification_outbox where acknowledged_at is null order by created_at,id limit 100",(r,n)->{try{var p=(com.fasterxml.jackson.databind.node.ObjectNode)json.readTree(r.getString("payload"));p.put("id",r.getString("id"));return p;}catch(Exception ex){throw new IllegalStateException(ex);}});}
+ @PostMapping("/{id}/ack") public void ack(@PathVariable UUID id,@RequestHeader(value="X-Service-Token",required=false)String supplied){guard(supplied);db.update("update event_commerce.notification_outbox set acknowledged_at=clock_timestamp() where id=? and acknowledged_at is null",id);}
+ @GetMapping("/reminders") public List<Map<String,Object>> reminders(@RequestParam int hours,@RequestParam(defaultValue="")String cursor,@RequestHeader(value="X-Service-Token",required=false)String supplied){guard(supplied);if(hours<1||hours>168)throw new ApiException(HttpStatus.BAD_REQUEST,"REMINDER_WINDOW_INVALID","Invalid reminder window");return db.queryForList("select distinct e.id::text as event_id,o.customer_id::text as user_id,e.name,e.start_at from event_commerce.events e join event_commerce.orders o on o.event_id=e.id where o.status='CONFIRMED' and e.status in ('PUBLISHED','ONGOING') and not e.cancellation_pending and e.start_at>clock_timestamp() and e.start_at<=clock_timestamp()+make_interval(hours=>?) and (e.id::text||':'||o.customer_id::text)>? order by event_id,user_id limit 100",hours,cursor);}
+ @GetMapping("/reminder-check") public Map<String,Object> check(@RequestParam UUID eventId,@RequestParam UUID userId,@RequestParam int hours,@RequestHeader(value="X-Service-Token",required=false)String supplied){guard(supplied);boolean eligible=Boolean.TRUE.equals(db.queryForObject("select exists(select 1 from event_commerce.events e join event_commerce.orders o on o.event_id=e.id where e.id=? and o.customer_id=? and o.status='CONFIRMED' and e.status in ('PUBLISHED','ONGOING') and not e.cancellation_pending and e.start_at>clock_timestamp() and e.start_at<=clock_timestamp()+make_interval(hours=>?))",Boolean.class,eventId,userId,hours));return Map.of("eligible",eligible);}
+ @GetMapping("/cancelled-customers/{event}") public List<UUID> cancelled(@PathVariable UUID event,@RequestHeader(value="X-Service-Token",required=false)String supplied){guard(supplied);return db.queryForList("select distinct o.customer_id from event_commerce.orders o where o.event_id=? and o.status='CANCELLED' and exists(select 1 from event_commerce.order_audit a where a.order_id=o.id and a.action='EVENT_CANCELLED')",UUID.class,event);}
+ private void guard(String value){if(value==null||!java.security.MessageDigest.isEqual(token.getBytes(java.nio.charset.StandardCharsets.UTF_8),value.getBytes(java.nio.charset.StandardCharsets.UTF_8)))throw new ApiException(HttpStatus.FORBIDDEN,"SERVICE_AUTH_REQUIRED","Service authentication is required.");}
+}

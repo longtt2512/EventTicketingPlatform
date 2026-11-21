@@ -1,0 +1,30 @@
+import { TestBed,fakeAsync,flushMicrotasks,tick } from '@angular/core/testing';
+import { ActivatedRoute,convertToParamMap,provideRouter } from '@angular/router';
+import { of,throwError } from 'rxjs';
+import { OrderComponent } from './order.component';
+import { BookingApi,clearRequestKey } from './booking-api';
+import { Order } from './booking-models';
+import { SessionStore } from '@event-ticketing/session';
+const pending:Order={id:'order-test',customerId:'customer',eventId:'event',organizationId:'org',eventName:'Sự kiện thử nghiệm',terms:'Điều khoản',status:'PENDING_PAYMENT',eventStatus:'PUBLISHED',totalVnd:100000,currency:'VND',expiresAt:'2030-01-01T10:10:00Z',createdAt:'2030-01-01T10:00:00Z',updatedAt:'2030-01-01T10:00:00Z',confirmedAt:null,paymentStatus:'NONE',activeAttemptId:null,items:[{id:'item',ticketTypeId:'ticket',name:'Vé thường',quantity:1,unitPrice:100000,lineTotal:100000}],serverTime:'2030-01-01T10:00:00Z',canPay:true,canCancel:true,canConfirmFree:false,version:1};
+describe('Order interaction safety',()=>{
+ let api:jasmine.SpyObj<BookingApi>;
+ afterEach(()=>{for(const action of ['cancel','free','payment'])clearRequestKey(`${action}:order-test`);});
+ beforeEach(()=>{api=jasmine.createSpyObj<BookingApi>('BookingApi',['order','paymentStatus','command','startPayment']);api.order.and.returnValue(of({...pending}));api.paymentStatus.and.returnValue(of({attempts:[],exceptions:[]}));TestBed.configureTestingModule({imports:[OrderComponent],providers:[provideRouter([]),{provide:BookingApi,useValue:api},{provide:SessionStore,useValue:{user:()=>({id:'customer',displayName:'Fixture',email:'fixture@example.test'})}},{provide:ActivatedRoute,useValue:{snapshot:{paramMap:convertToParamMap({orderId:'order-test'}),queryParamMap:convertToParamMap({status:'SUCCESS'}),data:{mode:'checkout'}}}}]});});
+ it('requires confirmation before cancellation and preserves state on dismissal',fakeAsync(()=>{const f=TestBed.createComponent(OrderComponent);flushMicrotasks();f.componentInstance.cancel();expect(api.command).not.toHaveBeenCalled();f.componentInstance.confirmation.resolve(false);expect(api.command).not.toHaveBeenCalled();api.command.and.returnValue(of({...pending,status:'CANCELLED',canCancel:false,canPay:false}));f.componentInstance.cancel();f.componentInstance.confirmation.resolve(true);flushMicrotasks();expect(api.command).toHaveBeenCalledTimes(1);expect(f.componentInstance.order()?.status).toBe('CANCELLED');f.destroy();}));
+ it('return query flags cannot confirm an order or start another payment',fakeAsync(()=>{const f=TestBed.createComponent(OrderComponent);flushMicrotasks();expect(f.componentInstance.order()?.status).toBe('PENDING_PAYMENT');expect(api.startPayment).not.toHaveBeenCalled();expect(api.command).not.toHaveBeenCalled();f.destroy();}));
+ it('pending payment prevents cancel and pay mutations',fakeAsync(()=>{api.order.and.returnValue(of({...pending,paymentStatus:'PENDING',canPay:false,canCancel:false}));const f=TestBed.createComponent(OrderComponent);flushMicrotasks();f.componentInstance.terms=true;void f.componentInstance.pay();f.componentInstance.cancel();flushMicrotasks();expect(api.command).not.toHaveBeenCalled();expect(api.startPayment).not.toHaveBeenCalled();f.destroy();}));
+ it('a failed cancellation retains order and gives recovery feedback',fakeAsync(()=>{const f=TestBed.createComponent(OrderComponent);flushMicrotasks();api.command.and.returnValue(throwError(()=>new Error('offline')));f.componentInstance.cancel();f.componentInstance.confirmation.resolve(true);flushMicrotasks();expect(f.componentInstance.order()?.status).toBe('PENDING_PAYMENT');expect(f.componentInstance.error()).toBeTruthy();expect(f.componentInstance.busy()).toBeFalse();f.destroy();}));
+ it('local timer expiry disables pay regardless of stale action flags',fakeAsync(()=>{const f=TestBed.createComponent(OrderComponent);flushMicrotasks();f.componentInstance.remaining.set(0);f.componentInstance.terms=true;void f.componentInstance.pay();flushMicrotasks();expect(api.startPayment).not.toHaveBeenCalled();f.destroy();}));
+ it('keeps checking delayed payment beyond thirty seconds and stops on a server result',fakeAsync(()=>{
+  spyOnProperty(document,'visibilityState','get').and.returnValue('visible');
+  spyOnProperty(navigator,'onLine','get').and.returnValue(true);
+  api.order.and.returnValue(of({...pending,paymentStatus:'PENDING',canPay:false,canCancel:false}));
+  const f=TestBed.createComponent(OrderComponent);flushMicrotasks();tick(36000);
+  expect(f.componentInstance.order()?.status).toBe('PENDING_PAYMENT');
+  api.order.and.returnValue(of({...pending,status:'CONFIRMED',paymentStatus:'SUCCESS',canPay:false,canCancel:false}));
+  tick(5000);expect(f.componentInstance.order()?.status).toBe('CONFIRMED');
+  const reads=api.order.calls.count();tick(10000);expect(api.order.calls.count()).toBe(reads);
+  expect(api.startPayment).not.toHaveBeenCalled();expect(api.command).not.toHaveBeenCalled();
+  f.destroy();tick(5000);expect(api.order.calls.count()).toBe(reads);
+ }));
+});

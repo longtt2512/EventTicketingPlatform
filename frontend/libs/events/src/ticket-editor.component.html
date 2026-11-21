@@ -1,0 +1,18 @@
+<div class="section-heading"><div><h2>Hạng vé và tồn kho</h2><p>Đã phân bổ <strong>{{total()}} / {{event.capacity ?? '—'}}</strong> chỗ. Số vé đang giữ và đã bán do hệ thống cập nhật.</p></div>
+@if(editable()&&event.status!=='PUBLISHED'){<button type="button" [disabled]="busy()" (click)="edit(null)">Thêm hạng vé</button>}</div>
+@if(error()){<p class="notice error" role="alert">{{error()}}</p>}@if(message()){<p class="notice success" role="status">{{message()}}</p>}
+@if(event.ticketTypes.length){<p class="table-hint small">Vuốt ngang bảng để xem giá, số lượng và thao tác.</p><div class="table-scroll" tabindex="0" role="region" aria-label="Hạng vé và số lượng"><table class="ticket-table"><thead><tr><th>Hạng vé</th><th>Giá</th><th>Hạn mức</th><th>Đang giữ</th><th>Đã bán</th><th>Còn lại</th><th>Thao tác</th></tr></thead><tbody>
+@for(t of event.ticketTypes;track t.id){<tr><td><strong>{{t.name}}</strong><small>{{label(t.saleState)}}</small><small>{{date(t.saleStart,event.timezone)}} – {{date(t.saleEnd,event.timezone)}}</small></td><td>{{money(t.price)}}</td><td>{{t.quota}}</td><td>{{t.reserved}}</td><td>{{t.sold}}</td><td>{{t.available}}</td><td>@if(editable()){<div class="actions"><button class="secondary" type="button" [disabled]="busy()" (click)="edit(t)">Sửa {{t.name}}</button><button class="quiet" type="button" [disabled]="busy()" (click)="pause(t)">{{t.paused?'Tiếp tục bán':'Tạm dừng bán'}}</button></div>}</td></tr>}
+</tbody></table></div>}@else{<div class="empty-state"><h3>Chưa có hạng vé</h3><p>Lưu thời gian và sức chứa ở bước Địa điểm, sau đó thêm hạng vé đầu tiên. Giá 0 đồng dành cho vé miễn phí.</p></div>}
+@if(editing()){
+<section class="ticket-edit"><h3>{{selected?'Chỉnh sửa hạng vé':'Hạng vé mới'}}</h3><p class="small">Thời gian theo {{event.timezone}}. Đóng bán không sau giờ bắt đầu sự kiện.</p>
+<form etpForm #ticketForm="ngForm" (ngSubmit)="save()"><div class="form-grid">
+<div><label for="ticket-name">Tên hạng vé</label><input etpField id="ticket-name" name="name" [(ngModel)]="name" required maxlength="160" [readonly]="event.status==='PUBLISHED'"></div>
+<div><label for="ticket-price">Giá vé (VND)</label><input etpField id="ticket-price" type="number" name="price" [(ngModel)]="price" min="0" step="1" required></div>
+<div><label for="ticket-quota">Hạn mức vé</label><input etpField id="ticket-quota" type="number" name="quota" [(ngModel)]="quota" min="1" step="1" required></div>
+<div><label for="ticket-max">Tối đa mỗi đơn</label><input etpField id="ticket-max" type="number" name="maxPerOrder" [(ngModel)]="maxPerOrder" min="1" step="1" required [readonly]="event.status==='PUBLISHED'"></div>
+<div><label for="sale-start">Bắt đầu bán</label><input etpField id="sale-start" type="datetime-local" name="saleStart" [(ngModel)]="saleStart" required [readonly]="event.status==='PUBLISHED'"></div>
+<div><label for="sale-end">Kết thúc bán</label><input etpField id="sale-end" type="datetime-local" name="saleEnd" [(ngModel)]="saleEnd" required [readonly]="event.status==='PUBLISHED'"></div>
+</div><label for="ticket-description">Mô tả hạng vé</label><textarea etpField id="ticket-description" name="description" [(ngModel)]="description" maxlength="4000" [readonly]="event.status==='PUBLISHED'"></textarea>
+<div class="actions"><button [disabled]="busy()">{{busy()?'Đang lưu…':'Lưu hạng vé'}}</button><button type="button" class="secondary" [disabled]="busy()" (click)="cancel()">Đóng chỉnh sửa</button></div></form></section>}
+@if(confirmation.current();as confirm){<etp-confirm-dialog [confirmation]="confirm" (resolved)="confirmation.resolve($event)"/>}

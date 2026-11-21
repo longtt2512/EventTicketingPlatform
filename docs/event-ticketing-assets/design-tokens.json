@@ -1,0 +1,44 @@
+{
+  "colors": {
+    "primary": "#4F46E5",
+    "primaryDark": "#4338CA",
+    "brandDeep": "#22145D",
+    "secondary": "#475569",
+    "background": "#F8FAFC",
+    "surface": "#FFFFFF",
+    "text": "#111827",
+    "muted": "#64748B",
+    "success": "#166534",
+    "warning": "#92400E",
+    "error": "#B91C1C",
+    "info": "#1E40AF"
+  },
+  "radius": {
+    "sm": "6px",
+    "md": "10px",
+    "lg": "14px",
+    "xl": "20px"
+  },
+  "fonts": {
+    "recommended": [
+      "Be Vietnam Pro",
+      "Inter",
+      "Noto Sans",
+      "system-ui"
+    ]
+  },
+  "images": {
+    "poster": {
+      "width": 1200,
+      "height": 675
+    },
+    "hero": {
+      "width": 1920,
+      "height": 720
+    },
+    "auth": {
+      "width": 900,
+      "height": 1200
+    }
+  }
+}

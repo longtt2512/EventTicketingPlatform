@@ -1,0 +1,929 @@
+[
+  {
+    "screen_id": "C-01",
+    "title": "Home Page",
+    "route": "/",
+    "suggested_icon_assets": [
+      "icons/indigo/search.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/cart.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/user.svg",
+      "icons/indigo/map-pin.svg",
+      "icons/indigo/heart.svg",
+      "icons/indigo/filter.svg",
+      "icons/indigo/clock.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/layout/hero-home-background.png",
+      "backgrounds/event-posters/aurora-festival.png",
+      "backgrounds/event-posters/future-tech-summit.png",
+      "backgrounds/event-posters/jazz-after-dark.png"
+    ]
+  },
+  {
+    "screen_id": "C-02",
+    "title": "Event Listing",
+    "route": "/events",
+    "suggested_icon_assets": [
+      "icons/indigo/search.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/cart.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/user.svg",
+      "icons/indigo/map-pin.svg",
+      "icons/indigo/heart.svg",
+      "icons/indigo/filter.svg",
+      "icons/indigo/clock.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png",
+      "backgrounds/event-posters/future-tech-summit.png",
+      "backgrounds/event-posters/jazz-after-dark.png"
+    ]
+  },
+  {
+    "screen_id": "C-03",
+    "title": "Search Results",
+    "route": "/events/search?q=...",
+    "suggested_icon_assets": [
+      "icons/indigo/search.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/cart.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/user.svg",
+      "icons/indigo/map-pin.svg",
+      "icons/indigo/heart.svg",
+      "icons/indigo/filter.svg",
+      "icons/indigo/clock.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png",
+      "backgrounds/event-posters/future-tech-summit.png",
+      "backgrounds/event-posters/jazz-after-dark.png"
+    ]
+  },
+  {
+    "screen_id": "C-04",
+    "title": "Event Details",
+    "route": "/events/:eventId",
+    "suggested_icon_assets": [
+      "icons/indigo/search.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/cart.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/user.svg",
+      "icons/indigo/map-pin.svg",
+      "icons/indigo/heart.svg",
+      "icons/indigo/filter.svg",
+      "icons/indigo/clock.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png",
+      "backgrounds/event-posters/future-tech-summit.png",
+      "backgrounds/event-posters/jazz-after-dark.png"
+    ]
+  },
+  {
+    "screen_id": "C-05",
+    "title": "Login",
+    "route": "/auth/login",
+    "suggested_icon_assets": [
+      "icons/indigo/search.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/cart.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/user.svg",
+      "icons/indigo/map-pin.svg",
+      "icons/indigo/heart.svg",
+      "icons/indigo/filter.svg",
+      "icons/indigo/clock.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/layout/auth-panel-background.png"
+    ]
+  },
+  {
+    "screen_id": "C-06",
+    "title": "Register",
+    "route": "/auth/register",
+    "suggested_icon_assets": [
+      "icons/indigo/search.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/cart.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/user.svg",
+      "icons/indigo/map-pin.svg",
+      "icons/indigo/heart.svg",
+      "icons/indigo/filter.svg",
+      "icons/indigo/clock.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/layout/auth-panel-background.png"
+    ]
+  },
+  {
+    "screen_id": "C-07",
+    "title": "Forgot Password",
+    "route": "/auth/forgot-password",
+    "suggested_icon_assets": [
+      "icons/indigo/search.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/cart.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/user.svg",
+      "icons/indigo/map-pin.svg",
+      "icons/indigo/heart.svg",
+      "icons/indigo/filter.svg",
+      "icons/indigo/clock.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/layout/auth-panel-background.png"
+    ]
+  },
+  {
+    "screen_id": "C-08",
+    "title": "Ticket Selection",
+    "route": "/booking/:eventId",
+    "suggested_icon_assets": [
+      "icons/indigo/search.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/cart.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/user.svg",
+      "icons/indigo/map-pin.svg",
+      "icons/indigo/heart.svg",
+      "icons/indigo/filter.svg",
+      "icons/indigo/clock.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png",
+      "backgrounds/event-posters/future-tech-summit.png",
+      "backgrounds/event-posters/jazz-after-dark.png"
+    ]
+  },
+  {
+    "screen_id": "C-09",
+    "title": "Checkout",
+    "route": "/checkout/:orderId",
+    "suggested_icon_assets": [
+      "icons/indigo/search.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/cart.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/user.svg",
+      "icons/indigo/map-pin.svg",
+      "icons/indigo/heart.svg",
+      "icons/indigo/filter.svg",
+      "icons/indigo/clock.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png",
+      "backgrounds/event-posters/future-tech-summit.png",
+      "backgrounds/event-posters/jazz-after-dark.png"
+    ]
+  },
+  {
+    "screen_id": "C-10",
+    "title": "Payment Result",
+    "route": "/payment/result/:orderId",
+    "suggested_icon_assets": [
+      "icons/indigo/search.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/cart.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/user.svg",
+      "icons/indigo/map-pin.svg",
+      "icons/indigo/heart.svg",
+      "icons/indigo/filter.svg",
+      "icons/indigo/clock.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png",
+      "backgrounds/event-posters/future-tech-summit.png",
+      "backgrounds/event-posters/jazz-after-dark.png"
+    ]
+  },
+  {
+    "screen_id": "C-11",
+    "title": "My Orders",
+    "route": "/account/orders",
+    "suggested_icon_assets": [
+      "icons/indigo/search.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/cart.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/user.svg",
+      "icons/indigo/map-pin.svg",
+      "icons/indigo/heart.svg",
+      "icons/indigo/filter.svg",
+      "icons/indigo/clock.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png",
+      "backgrounds/event-posters/future-tech-summit.png",
+      "backgrounds/event-posters/jazz-after-dark.png"
+    ]
+  },
+  {
+    "screen_id": "C-12",
+    "title": "Order Details",
+    "route": "/account/orders/:orderId",
+    "suggested_icon_assets": [
+      "icons/indigo/search.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/cart.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/user.svg",
+      "icons/indigo/map-pin.svg",
+      "icons/indigo/heart.svg",
+      "icons/indigo/filter.svg",
+      "icons/indigo/clock.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png",
+      "backgrounds/event-posters/future-tech-summit.png",
+      "backgrounds/event-posters/jazz-after-dark.png"
+    ]
+  },
+  {
+    "screen_id": "C-13",
+    "title": "My Tickets",
+    "route": "/account/tickets",
+    "suggested_icon_assets": [
+      "icons/indigo/search.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/cart.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/user.svg",
+      "icons/indigo/map-pin.svg",
+      "icons/indigo/heart.svg",
+      "icons/indigo/filter.svg",
+      "icons/indigo/clock.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png",
+      "backgrounds/event-posters/future-tech-summit.png",
+      "backgrounds/event-posters/jazz-after-dark.png"
+    ]
+  },
+  {
+    "screen_id": "C-14",
+    "title": "Ticket Details",
+    "route": "/account/tickets/:ticketId",
+    "suggested_icon_assets": [
+      "icons/indigo/search.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/cart.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/user.svg",
+      "icons/indigo/map-pin.svg",
+      "icons/indigo/heart.svg",
+      "icons/indigo/filter.svg",
+      "icons/indigo/clock.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png",
+      "backgrounds/event-posters/future-tech-summit.png",
+      "backgrounds/event-posters/jazz-after-dark.png"
+    ]
+  },
+  {
+    "screen_id": "C-15",
+    "title": "User Profile",
+    "route": "/account/profile",
+    "suggested_icon_assets": [
+      "icons/indigo/search.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/cart.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/user.svg",
+      "icons/indigo/map-pin.svg",
+      "icons/indigo/heart.svg",
+      "icons/indigo/filter.svg",
+      "icons/indigo/clock.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png",
+      "backgrounds/event-posters/future-tech-summit.png",
+      "backgrounds/event-posters/jazz-after-dark.png"
+    ]
+  },
+  {
+    "screen_id": "O-01",
+    "title": "Organizer Registration",
+    "route": "/organizer/register",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/edit.svg",
+      "icons/indigo/check-circle.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png"
+    ]
+  },
+  {
+    "screen_id": "O-02",
+    "title": "Organizer Dashboard",
+    "route": "/organizer/:orgId/dashboard",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/edit.svg",
+      "icons/indigo/check-circle.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png"
+    ]
+  },
+  {
+    "screen_id": "O-03",
+    "title": "My Events",
+    "route": "/organizer/:orgId/events",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/edit.svg",
+      "icons/indigo/check-circle.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png"
+    ]
+  },
+  {
+    "screen_id": "O-04",
+    "title": "Create Event",
+    "route": "/organizer/:orgId/events/new",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/edit.svg",
+      "icons/indigo/check-circle.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png"
+    ]
+  },
+  {
+    "screen_id": "O-05",
+    "title": "Edit Event",
+    "route": "/organizer/:orgId/events/:eventId/edit",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/edit.svg",
+      "icons/indigo/check-circle.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png"
+    ]
+  },
+  {
+    "screen_id": "O-06",
+    "title": "Event Details / Overview",
+    "route": "/organizer/:orgId/events/:eventId",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/edit.svg",
+      "icons/indigo/check-circle.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png"
+    ]
+  },
+  {
+    "screen_id": "O-07",
+    "title": "Ticket Type Management",
+    "route": "/organizer/:orgId/events/:eventId/tickets",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/edit.svg",
+      "icons/indigo/check-circle.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png"
+    ]
+  },
+  {
+    "screen_id": "O-08",
+    "title": "Order Management",
+    "route": "/organizer/:orgId/events/:eventId/orders",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/edit.svg",
+      "icons/indigo/check-circle.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png"
+    ]
+  },
+  {
+    "screen_id": "O-09",
+    "title": "Attendee Management",
+    "route": "/organizer/:orgId/events/:eventId/attendees",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/edit.svg",
+      "icons/indigo/check-circle.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png"
+    ]
+  },
+  {
+    "screen_id": "O-10",
+    "title": "Check-in Dashboard",
+    "route": "/organizer/:orgId/events/:eventId/check-in",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/edit.svg",
+      "icons/indigo/check-circle.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png"
+    ]
+  },
+  {
+    "screen_id": "O-11",
+    "title": "Staff Management",
+    "route": "/organizer/:orgId/staff; /organizer/:orgId/events/:eventId/staff",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/edit.svg",
+      "icons/indigo/check-circle.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png"
+    ]
+  },
+  {
+    "screen_id": "O-12",
+    "title": "Revenue & Analytics",
+    "route": "/organizer/:orgId/analytics",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/edit.svg",
+      "icons/indigo/check-circle.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png"
+    ]
+  },
+  {
+    "screen_id": "O-13",
+    "title": "Settlement Management",
+    "route": "/organizer/:orgId/settlements",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/edit.svg",
+      "icons/indigo/check-circle.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png"
+    ]
+  },
+  {
+    "screen_id": "O-14",
+    "title": "Organization Settings",
+    "route": "/organizer/:orgId/settings",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/ticket.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/edit.svg",
+      "icons/indigo/check-circle.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/event-posters/aurora-festival.png"
+    ]
+  },
+  {
+    "screen_id": "S-01",
+    "title": "Assigned Events",
+    "route": "/check-in/events",
+    "suggested_icon_assets": [
+      "icons/indigo/scan.svg",
+      "icons/indigo/qr-code.svg",
+      "icons/indigo/check-circle.svg",
+      "icons/indigo/warning.svg",
+      "icons/indigo/camera.svg",
+      "icons/indigo/search.svg"
+    ],
+    "suggested_background_assets": []
+  },
+  {
+    "screen_id": "S-02",
+    "title": "QR Code Scanner",
+    "route": "/check-in/events/:eventId/scan",
+    "suggested_icon_assets": [
+      "icons/indigo/scan.svg",
+      "icons/indigo/qr-code.svg",
+      "icons/indigo/check-circle.svg",
+      "icons/indigo/warning.svg",
+      "icons/indigo/camera.svg",
+      "icons/indigo/search.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/layout/checkin-scanner-background.png"
+    ]
+  },
+  {
+    "screen_id": "S-03",
+    "title": "Ticket Validation Result",
+    "route": "/check-in/events/:eventId/result",
+    "suggested_icon_assets": [
+      "icons/indigo/scan.svg",
+      "icons/indigo/qr-code.svg",
+      "icons/indigo/check-circle.svg",
+      "icons/indigo/warning.svg",
+      "icons/indigo/camera.svg",
+      "icons/indigo/search.svg"
+    ],
+    "suggested_background_assets": []
+  },
+  {
+    "screen_id": "S-04",
+    "title": "Manual Ticket Lookup",
+    "route": "/check-in/events/:eventId/lookup",
+    "suggested_icon_assets": [
+      "icons/indigo/scan.svg",
+      "icons/indigo/qr-code.svg",
+      "icons/indigo/check-circle.svg",
+      "icons/indigo/warning.svg",
+      "icons/indigo/camera.svg",
+      "icons/indigo/search.svg"
+    ],
+    "suggested_background_assets": []
+  },
+  {
+    "screen_id": "S-05",
+    "title": "Check-in History",
+    "route": "/check-in/events/:eventId/history",
+    "suggested_icon_assets": [
+      "icons/indigo/scan.svg",
+      "icons/indigo/qr-code.svg",
+      "icons/indigo/check-circle.svg",
+      "icons/indigo/warning.svg",
+      "icons/indigo/camera.svg",
+      "icons/indigo/search.svg"
+    ],
+    "suggested_background_assets": []
+  },
+  {
+    "screen_id": "S-06",
+    "title": "Check-in Statistics",
+    "route": "/check-in/events/:eventId/stats",
+    "suggested_icon_assets": [
+      "icons/indigo/scan.svg",
+      "icons/indigo/qr-code.svg",
+      "icons/indigo/check-circle.svg",
+      "icons/indigo/warning.svg",
+      "icons/indigo/camera.svg",
+      "icons/indigo/search.svg"
+    ],
+    "suggested_background_assets": []
+  },
+  {
+    "screen_id": "A-01",
+    "title": "Admin Dashboard",
+    "route": "/admin/dashboard",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/building.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/shield.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/settings.svg"
+    ],
+    "suggested_background_assets": []
+  },
+  {
+    "screen_id": "A-02",
+    "title": "User Management",
+    "route": "/admin/users",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/building.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/shield.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/settings.svg"
+    ],
+    "suggested_background_assets": []
+  },
+  {
+    "screen_id": "A-03",
+    "title": "Organizer Management",
+    "route": "/admin/organizers",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/building.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/shield.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/settings.svg"
+    ],
+    "suggested_background_assets": []
+  },
+  {
+    "screen_id": "A-04",
+    "title": "Organizer Verification",
+    "route": "/admin/organizers/verification; /:orgId detail",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/building.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/shield.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/settings.svg"
+    ],
+    "suggested_background_assets": []
+  },
+  {
+    "screen_id": "A-05",
+    "title": "Event Management",
+    "route": "/admin/events",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/building.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/shield.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/settings.svg"
+    ],
+    "suggested_background_assets": []
+  },
+  {
+    "screen_id": "A-06",
+    "title": "Event Approval",
+    "route": "/admin/events/approval; /:eventId detail",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/building.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/shield.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/settings.svg"
+    ],
+    "suggested_background_assets": []
+  },
+  {
+    "screen_id": "A-07",
+    "title": "Category Management",
+    "route": "/admin/categories",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/building.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/shield.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/settings.svg"
+    ],
+    "suggested_background_assets": []
+  },
+  {
+    "screen_id": "A-08",
+    "title": "Order Management",
+    "route": "/admin/orders",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/building.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/shield.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/settings.svg"
+    ],
+    "suggested_background_assets": []
+  },
+  {
+    "screen_id": "A-09",
+    "title": "Payment Management",
+    "route": "/admin/payments",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/building.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/shield.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/settings.svg"
+    ],
+    "suggested_background_assets": []
+  },
+  {
+    "screen_id": "A-10",
+    "title": "Payment Exception Management",
+    "route": "/admin/payment-exceptions",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/building.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/shield.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/settings.svg"
+    ],
+    "suggested_background_assets": []
+  },
+  {
+    "screen_id": "A-11",
+    "title": "Commission Configuration",
+    "route": "/admin/commissions",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/building.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/shield.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/settings.svg"
+    ],
+    "suggested_background_assets": []
+  },
+  {
+    "screen_id": "A-12",
+    "title": "Settlement Management",
+    "route": "/admin/settlements",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/building.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/shield.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/settings.svg"
+    ],
+    "suggested_background_assets": []
+  },
+  {
+    "screen_id": "A-13",
+    "title": "Audit Logs",
+    "route": "/admin/audit-logs",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/building.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/shield.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/settings.svg"
+    ],
+    "suggested_background_assets": []
+  },
+  {
+    "screen_id": "A-14",
+    "title": "System Settings",
+    "route": "/admin/settings",
+    "suggested_icon_assets": [
+      "icons/indigo/dashboard.svg",
+      "icons/indigo/users.svg",
+      "icons/indigo/building.svg",
+      "icons/indigo/calendar.svg",
+      "icons/indigo/shield.svg",
+      "icons/indigo/credit-card.svg",
+      "icons/indigo/wallet.svg",
+      "icons/indigo/chart.svg",
+      "icons/indigo/settings.svg"
+    ],
+    "suggested_background_assets": []
+  },
+  {
+    "screen_id": "X-01",
+    "title": "Reset Password",
+    "route": "/auth/reset-password",
+    "suggested_icon_assets": [
+      "icons/indigo/lock.svg",
+      "icons/indigo/email.svg",
+      "icons/indigo/check-circle.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/layout/auth-panel-background.png"
+    ]
+  },
+  {
+    "screen_id": "X-02",
+    "title": "Email Verification",
+    "route": "/auth/verify-email",
+    "suggested_icon_assets": [
+      "icons/indigo/lock.svg",
+      "icons/indigo/email.svg",
+      "icons/indigo/check-circle.svg"
+    ],
+    "suggested_background_assets": [
+      "backgrounds/layout/auth-panel-background.png"
+    ]
+  }
+]

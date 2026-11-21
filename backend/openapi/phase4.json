@@ -1,0 +1,1095 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Local Phase 4 ticket fulfillment and admission",
+    "version": "1.0.0",
+    "description": "Decision 0003. Private/no-store responses. Online admission only. No QR in URL, list, logs or event payloads."
+  },
+  "servers": [
+    {
+      "url": "/api/v1"
+    }
+  ],
+  "paths": {
+    "/tickets": {
+      "get": {
+        "summary": "Own tickets; no QR in list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "orderId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authoritative result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TicketPage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Inactive session"
+          },
+          "403": {
+            "description": "Permission revoked, suspended organization or unverified staff"
+          },
+          "404": {
+            "description": "Resource absent or not owned"
+          },
+          "409": {
+            "description": "Idempotency key conflict"
+          },
+          "503": {
+            "description": "Decision could not be verified; query or replay same request. Never assume admission."
+          }
+        }
+      }
+    },
+    "/tickets/{ticketId}": {
+      "get": {
+        "summary": "Owner-only ticket details",
+        "parameters": [
+          {
+            "name": "ticketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authoritative result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ticket"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Inactive session"
+          },
+          "403": {
+            "description": "Permission revoked, suspended organization or unverified staff"
+          },
+          "404": {
+            "description": "Resource absent or not owned"
+          },
+          "409": {
+            "description": "Idempotency key conflict"
+          },
+          "503": {
+            "description": "Decision could not be verified; query or replay same request. Never assume admission."
+          }
+        }
+      }
+    },
+    "/tickets/{ticketId}/pdf": {
+      "get": {
+        "summary": "Private current-status PDF; used/voided/expired tickets omit QR",
+        "parameters": [
+          {
+            "name": "ticketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authoritative result",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Inactive session"
+          },
+          "403": {
+            "description": "Permission revoked, suspended organization or unverified staff"
+          },
+          "404": {
+            "description": "Resource absent or not owned"
+          },
+          "409": {
+            "description": "Idempotency key conflict"
+          },
+          "503": {
+            "description": "Decision could not be verified; query or replay same request. Never assume admission."
+          }
+        }
+      }
+    },
+    "/orders/{orderId}/tickets": {
+      "get": {
+        "summary": "Owner-only issuance progress; first 100 units, use paginated /tickets for more",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authoritative result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Progress"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Inactive session"
+          },
+          "403": {
+            "description": "Permission revoked, suspended organization or unverified staff"
+          },
+          "404": {
+            "description": "Resource absent or not owned"
+          },
+          "409": {
+            "description": "Idempotency key conflict"
+          },
+          "503": {
+            "description": "Decision could not be verified; query or replay same request. Never assume admission."
+          }
+        }
+      }
+    },
+    "/check-in/events": {
+      "get": {
+        "summary": "Currently authorized staff and organizer events",
+        "parameters": [],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authoritative result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventAccess"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Inactive session"
+          },
+          "403": {
+            "description": "Permission revoked, suspended organization or unverified staff"
+          },
+          "404": {
+            "description": "Resource absent or not owned"
+          },
+          "409": {
+            "description": "Idempotency key conflict"
+          },
+          "503": {
+            "description": "Decision could not be verified; query or replay same request. Never assume admission."
+          }
+        }
+      }
+    },
+    "/check-in/events/{eventId}": {
+      "get": {
+        "summary": "Current event permission and admission window",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authoritative result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventAccess"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Inactive session"
+          },
+          "403": {
+            "description": "Permission revoked, suspended organization or unverified staff"
+          },
+          "404": {
+            "description": "Resource absent or not owned"
+          },
+          "409": {
+            "description": "Idempotency key conflict"
+          },
+          "503": {
+            "description": "Decision could not be verified; query or replay same request. Never assume admission."
+          }
+        }
+      }
+    },
+    "/check-in/events/{eventId}/scan": {
+      "post": {
+        "summary": "Atomically consume QR; replayed success is not a fresh entrance",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{8,128}$"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authoritative result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Decision"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Inactive session"
+          },
+          "403": {
+            "description": "Permission revoked, suspended organization or unverified staff"
+          },
+          "404": {
+            "description": "Resource absent or not owned"
+          },
+          "409": {
+            "description": "Idempotency key conflict"
+          },
+          "503": {
+            "description": "Decision could not be verified; query or replay same request. Never assume admission."
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "credential"
+                ],
+                "properties": {
+                  "credential": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/check-in/events/{eventId}/lookup": {
+      "post": {
+        "summary": "Exact ticket-ID lookup without admission",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authoritative result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LookupResult"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Inactive session"
+          },
+          "403": {
+            "description": "Permission revoked, suspended organization or unverified staff"
+          },
+          "404": {
+            "description": "Resource absent or not owned"
+          },
+          "409": {
+            "description": "Idempotency key conflict"
+          },
+          "503": {
+            "description": "Decision could not be verified; query or replay same request. Never assume admission."
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "ticketId"
+                ],
+                "properties": {
+                  "ticketId": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/check-in/events/{eventId}/lookup/{ticketId}/confirm": {
+      "post": {
+        "summary": "Confirm manual admission with the same guards",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "ticketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{8,128}$"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authoritative result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Decision"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Inactive session"
+          },
+          "403": {
+            "description": "Permission revoked, suspended organization or unverified staff"
+          },
+          "404": {
+            "description": "Resource absent or not owned"
+          },
+          "409": {
+            "description": "Idempotency key conflict"
+          },
+          "503": {
+            "description": "Decision could not be verified; query or replay same request. Never assume admission."
+          }
+        }
+      }
+    },
+    "/check-in/events/{eventId}/history": {
+      "get": {
+        "summary": "Scoped unique admission history, newest first",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authoritative result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdmissionPage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Inactive session"
+          },
+          "403": {
+            "description": "Permission revoked, suspended organization or unverified staff"
+          },
+          "404": {
+            "description": "Resource absent or not owned"
+          },
+          "409": {
+            "description": "Idempotency key conflict"
+          },
+          "503": {
+            "description": "Decision could not be verified; query or replay same request. Never assume admission."
+          }
+        }
+      }
+    },
+    "/check-in/events/{eventId}/stats": {
+      "get": {
+        "summary": "Server aggregate of unique admissions",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authoritative result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Stats"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Inactive session"
+          },
+          "403": {
+            "description": "Permission revoked, suspended organization or unverified staff"
+          },
+          "404": {
+            "description": "Resource absent or not owned"
+          },
+          "409": {
+            "description": "Idempotency key conflict"
+          },
+          "503": {
+            "description": "Decision could not be verified; query or replay same request. Never assume admission."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Ticket": {
+        "type": "object",
+        "required": [
+          "id",
+          "orderId",
+          "eventId",
+          "eventName",
+          "venueName",
+          "venueAddress",
+          "timezone",
+          "startAt",
+          "endAt",
+          "ticketTypeName",
+          "buyerName",
+          "status",
+          "eventCancelled",
+          "issuedAt",
+          "checkedInAt",
+          "version",
+          "qrImage"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "orderId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "eventName": {
+            "type": "string"
+          },
+          "venueName": {
+            "type": "string"
+          },
+          "venueAddress": {
+            "type": "string"
+          },
+          "timezone": {
+            "type": "string"
+          },
+          "startAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ticketTypeName": {
+            "type": "string"
+          },
+          "buyerName": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ISSUED",
+              "CHECKED_IN",
+              "VOIDED"
+            ]
+          },
+          "eventCancelled": {
+            "type": "boolean"
+          },
+          "issuedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "checkedInAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "qrImage": {
+            "type": "string",
+            "description": "Private PNG data URI only on authorized usable-ticket detail. Null in lists, expired, used or voided tickets.",
+            "nullable": true
+          }
+        }
+      },
+      "Event": {
+        "type": "object",
+        "required": [
+          "id",
+          "organizationId",
+          "name",
+          "status",
+          "venueName",
+          "venueAddress",
+          "timezone",
+          "startAt",
+          "endAt",
+          "cancellationPending"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "venueName": {
+            "type": "string"
+          },
+          "venueAddress": {
+            "type": "string"
+          },
+          "timezone": {
+            "type": "string"
+          },
+          "startAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "endAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cancellationPending": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Decision": {
+        "type": "object",
+        "required": [
+          "outcome",
+          "eventId",
+          "ticketId",
+          "checkedInAt",
+          "replayed"
+        ],
+        "properties": {
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "SUCCESS",
+              "ALREADY_USED",
+              "WRONG_EVENT",
+              "INVALID_TICKET",
+              "EVENT_CANCELLED",
+              "VOIDED",
+              "OUTSIDE_CHECK_IN_WINDOW"
+            ]
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ticketId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "checkedInAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "LookupResult": {
+        "type": "object",
+        "required": [
+          "ticketId",
+          "ticketTypeName",
+          "buyerName",
+          "status",
+          "outcome",
+          "canCheckIn",
+          "checkedInAt"
+        ],
+        "properties": {
+          "ticketId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ticketTypeName": {
+            "type": "string"
+          },
+          "buyerName": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "outcome": {
+            "type": "string"
+          },
+          "canCheckIn": {
+            "type": "boolean"
+          },
+          "checkedInAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "Progress": {
+        "type": "object",
+        "required": [
+          "orderId",
+          "status",
+          "expectedCount",
+          "issuedCount",
+          "tickets"
+        ],
+        "properties": {
+          "orderId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "READY",
+              "ISSUING",
+              "CANCELLED",
+              "NOT_ELIGIBLE"
+            ]
+          },
+          "expectedCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "issuedCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "tickets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Ticket"
+            }
+          }
+        }
+      },
+      "EventAccess": {
+        "type": "object",
+        "required": [
+          "event",
+          "opensAt",
+          "closesAt",
+          "serverTime",
+          "canCheckIn"
+        ],
+        "properties": {
+          "event": {
+            "$ref": "#/components/schemas/Event"
+          },
+          "opensAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "closesAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "serverTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "canCheckIn": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Admission": {
+        "type": "object",
+        "required": [
+          "id",
+          "ticketId",
+          "actorId",
+          "method",
+          "checkedInAt",
+          "ticketTypeName"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ticketId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "actorId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "QR",
+              "MANUAL"
+            ]
+          },
+          "checkedInAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ticketTypeName": {
+            "type": "string"
+          }
+        }
+      },
+      "TypeCount": {
+        "type": "object",
+        "required": [
+          "ticketTypeName",
+          "issued",
+          "checkedIn",
+          "voided"
+        ],
+        "properties": {
+          "ticketTypeName": {
+            "type": "string"
+          },
+          "issued": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "checkedIn": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "voided": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "Stats": {
+        "type": "object",
+        "required": [
+          "issued",
+          "checkedIn",
+          "voided",
+          "eligible",
+          "dataUpdatedAt",
+          "byType"
+        ],
+        "properties": {
+          "issued": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "checkedIn": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "voided": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "eligible": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "dataUpdatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "byType": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TypeCount"
+            }
+          }
+        }
+      },
+      "TicketPage": {
+        "type": "object",
+        "required": [
+          "data",
+          "hasMore",
+          "nextCursor"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Ticket"
+            }
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextCursor": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        }
+      },
+      "AdmissionPage": {
+        "type": "object",
+        "required": [
+          "data",
+          "hasMore",
+          "nextCursor"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Admission"
+            }
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextCursor": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

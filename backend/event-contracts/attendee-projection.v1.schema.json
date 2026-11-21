@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Local ticket attendee projection v1",
+  "type": "object",
+  "required": [
+    "eventId",
+    "eventType",
+    "eventVersion",
+    "occurredAt",
+    "producer",
+    "aggregateType",
+    "aggregateId",
+    "correlationId",
+    "causationId",
+    "payload"
+  ],
+  "properties": {
+    "eventId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "eventType": {
+      "type": "string"
+    },
+    "eventVersion": {
+      "const": 1
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "producer": {
+      "const": "ticket-admission"
+    },
+    "aggregateType": {
+      "const": "ticket"
+    },
+    "aggregateId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "correlationId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "causationId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "ticketId",
+        "eventId",
+        "version",
+        "attendeeName",
+        "attendeeEmail",
+        "ticketTypeName",
+        "status"
+      ],
+      "properties": {
+        "ticketId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "eventId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "attendeeName": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "attendeeEmail": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 320
+        },
+        "ticketTypeName": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "status": {
+          "enum": [
+            "ISSUED",
+            "CHECKED_IN",
+            "VOIDED"
+          ]
+        },
+        "orderId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "checkedInAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

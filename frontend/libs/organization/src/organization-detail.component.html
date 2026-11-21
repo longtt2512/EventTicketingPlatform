@@ -1,0 +1,20 @@
+<div [etpUnsavedChanges]="hasUnsavedChanges()">
+
+@if(error()){<p class="notice error" role="alert">{{error()}}</p>} @if(message()){<p class="notice success" role="status">{{message()}}</p>}
+@if(busy()){<p role="status">Đang xử lý…</p>}
+@if(organization();as o){<etp-organization-workspace [organization]="o" [active]="tab()" [inline]="true" (sectionChange)="select($event)"/>
+<div [hidden]="tab()!=='general'"><section class="panel"><h2>Thông tin tổ chức</h2><form etpForm #form="ngForm" (ngSubmit)="save()"><fieldset [disabled]="busy()||o.status!=='ACTIVE'||!canManage()||admin()" style="border:0;padding:0;min-width:0">
+<label for="organization-name">Tên tổ chức</label><input etpField id="organization-name" name="name" [(ngModel)]="data.name" required maxlength="200">
+<label for="organization-email">Email liên hệ</label><input etpField id="organization-email" type="email" name="contactEmail" [(ngModel)]="data.contactEmail" required email maxlength="320">
+<label for="organization-address">Địa chỉ tổ chức</label><textarea etpField id="organization-address" name="address" [(ngModel)]="data.address" required maxlength="1000"></textarea>
+<label for="organization-description">Giới thiệu</label><textarea etpField id="organization-description" name="description" [(ngModel)]="data.description" maxlength="2000"></textarea></fieldset>
+@if(canManage()&&!admin()&&o.status==='ACTIVE'){<button [disabled]="busy()">Lưu thông tin tổ chức</button>}</form></section>
+@if(admin()){<section class="panel"><h2>Trạng thái hoạt động</h2><label for="status-reason">Lý do thay đổi trạng thái</label><textarea etpField id="status-reason" [(ngModel)]="reason" maxlength="2000" required aria-describedby="status-help"></textarea><p class="small" id="status-help">Bắt buộc nhập lý do để lưu vào lịch sử trước khi xác nhận.</p><button [class.danger]="o.status==='ACTIVE'" [disabled]="busy()||!reason.trim()" (click)="status()">{{o.status==='ACTIVE'?'Đình chỉ tổ chức':'Khôi phục tổ chức'}}</button></section>}</div>
+@if(visited().has('members')&&canManage()){<div [hidden]="tab()!=='members'"><etp-members [organization]="o"/></div>}
+@if(visited().has('payouts')&&canFinance()){<div [hidden]="tab()!=='payouts'"><etp-payouts [organization]="o" [admin]="admin()"/></div>}
+@if(visited().has('events')&&canManage()&&!admin()){<div [hidden]="tab()!=='events'"><etp-events [organization]="o"/></div>}
+@if(tab()==='audit'){<section class="panel"><h2>Lịch sử thao tác</h2><p class="small">Thời gian hiển thị theo giờ Việt Nam.</p>@for(a of audit();track a.id){<p class="wrap"><strong>{{actionLabel(a.action)}}</strong><br>{{date(a.createdAt)}} @if(a.reason){<span>— {{detailLabel(a.reason)}}</span>}</p>}@empty{<p>Chưa có lịch sử.</p>}</section>}
+}@if(error()){<button class="secondary" [disabled]="busy()" (click)="load()">Thử lại</button>}
+
+</div>
+@if(confirmation.current();as decision){<etp-confirm-dialog [confirmation]="decision" (resolved)="confirmation.resolve($event)"/>}

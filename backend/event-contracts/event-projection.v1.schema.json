@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Local Phase 2 event projection v1",
+  "type": "object",
+  "required": [
+    "eventId",
+    "eventType",
+    "eventVersion",
+    "occurredAt",
+    "producer",
+    "aggregateType",
+    "aggregateId",
+    "correlationId",
+    "causationId",
+    "payload"
+  ],
+  "properties": {
+    "eventId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "eventType": {
+      "type": "string"
+    },
+    "eventVersion": {
+      "const": 1
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "producer": {
+      "const": "event-commerce"
+    },
+    "aggregateType": {
+      "const": "event"
+    },
+    "aggregateId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "correlationId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "causationId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "id",
+        "version",
+        "status",
+        "publishedAt",
+        "name",
+        "category",
+        "city",
+        "startAt",
+        "endAt",
+        "updatedAt",
+        "featured",
+        "ticketTypes"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "status": {
+          "enum": [
+            "DRAFT",
+            "PENDING_REVIEW",
+            "APPROVED",
+            "REJECTED",
+            "PUBLISHED",
+            "ONGOING",
+            "COMPLETED",
+            "CANCELLED"
+          ]
+        }
+      },
+      "description": "Full canonical EventDetail as defined by ../openapi/phase2.json, omitting private reviewReason; nullable draft fields are preserved."
+    }
+  }
+}

@@ -1,0 +1,37 @@
+import { refreshOnReturn } from '@event-ticketing/ui';
+import { label as eventLabel } from '../../events/src/event-models';
+import { OrganizationWorkspaceComponent } from '../../organization/src/organization-workspace.component';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
+import { KeyValuePipe } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { finalize } from 'rxjs';
+import { ConfirmDialogComponent, ConfirmationState, FORM_FEEDBACK, UnsavedChangesDirective } from '@event-ticketing/ui';
+import { dateTime, utcTime } from '../../events/src/event-models';
+import { OperationsApi, operationError } from './operations-api';
+import { Settlement, Eligibility, Evidence, amount, statusLabel } from './operation-models';
+@Component({
+    selector: 'etp-settlements', imports: [OrganizationWorkspaceComponent, FormsModule, KeyValuePipe, ConfirmDialogComponent, UnsavedChangesDirective, ...FORM_FEEDBACK], changeDetection: ChangeDetectionStrategy.OnPush, templateUrl: './settlements.component.html', styleUrl: './operations.scss'
+})
+export class SettlementsComponent {private expanded=false;
+ readonly api=inject(OperationsApi);private readonly destroy=inject(DestroyRef);readonly org=inject(ActivatedRoute).snapshot.paramMap.get('org');readonly admin=!this.org;
+ readonly rows=signal<Settlement[]>([]);readonly selected=signal<Settlement|null>(null);readonly preview=signal<Eligibility|null>(null);readonly events=signal<{id:string;name:string;status:string}[]>([]);readonly next=signal<string|null>(null);
+ readonly loading=signal(false);readonly busy=signal(false);readonly error=signal('');readonly notice=signal('');readonly confirmation=new ConfirmationState();readonly amount=amount;readonly label=statusLabel;readonly eventLabel=eventLabel;readonly date=dateTime;
+ status='';private appliedStatus='';eventId='';reason='';reference='';occurredAt='';evidence='';private requestKey=crypto.randomUUID();
+ constructor(){refreshOnReturn(()=>{this.load();if(this.selected())this.open(this.selected()!.id);},()=>this.loading()||this.busy()||this.hasUnsavedChanges()||!!this.confirmation.current()||this.expanded||this.status!==this.appliedStatus);this.load();if(this.org)this.api.events(this.org).pipe(takeUntilDestroyed(this.destroy)).subscribe({next:r=>this.events.set(r),error:e=>this.error.set(operationError(e))});}
+ retry(){const selected=this.selected();if(selected)this.open(selected.id);else this.load();}
+ hasUnsavedChanges(){return this.selected()?.status!=='SETTLED'&&!this.selected()?.decision&&!!(this.reason||this.reference||this.occurredAt||this.evidence);}
+ load(more=false){if(this.loading())return;this.expanded=more;if(!more)this.appliedStatus=this.status;this.loading.set(true);this.error.set('');this.api.settlements(this.org,this.appliedStatus,more?this.next()??undefined:undefined).pipe(takeUntilDestroyed(this.destroy),finalize(()=>this.loading.set(false))).subscribe({next:p=>{this.rows.set(more?[...this.rows(),...p.data]:p.data);this.next.set(p.nextCursor);},error:e=>this.error.set(operationError(e))});}
+ open(id:string){if(this.busy())return;if(this.selected()?.id!==id&&this.hasUnsavedChanges()){this.confirmation.ask({title:'Bỏ nội dung chưa lưu?',subject:this.selected()?.snapshot.eventName??'',description:'Nội dung xác minh hiện tại chưa được gửi. Bỏ nội dung này để mở yêu cầu khác.',confirmLabel:'Bỏ và mở yêu cầu'},()=>{this.reason='';this.reference='';this.occurredAt='';this.evidence='';this.open(id);});return;}this.busy.set(true);this.error.set('');this.api.settlement(this.org,id).pipe(takeUntilDestroyed(this.destroy),finalize(()=>this.busy.set(false))).subscribe({next:s=>this.selected.set(s),error:e=>this.error.set(operationError(e))});}
+ check(){if(!this.org||!this.eventId||this.busy())return;this.preview.set(null);this.requestKey=crypto.randomUUID();this.busy.set(true);this.error.set('');this.api.eligibility(this.org,this.eventId).pipe(takeUntilDestroyed(this.destroy),finalize(()=>this.busy.set(false))).subscribe({next:r=>this.preview.set(r),error:e=>this.error.set(operationError(e))});}
+ request(){const p=this.preview();if(!this.org||!p?.eligible||this.busy())return;const org=this.org,key=this.requestKey;this.confirmation.ask({title:'Yêu cầu đối soát sự kiện?',subject:p.eventName+' · '+amount(p.netVnd),description:'Tạo một yêu cầu cho toàn bộ sự kiện với tài khoản đã xác minh. Mỗi đơn chỉ được đối soát một lần.',confirmLabel:'Tạo yêu cầu đối soát'},()=>{this.busy.set(true);this.error.set('');this.api.request(org,p.eventId,key).pipe(takeUntilDestroyed(this.destroy),finalize(()=>this.busy.set(false))).subscribe({next:s=>{this.selected.set(s);this.preview.set(null);this.notice.set('Đã tạo yêu cầu. Admin sẽ kiểm tra điều kiện trước khi xử lý.');this.load();},error:e=>this.error.set(operationError(e))});});}
+ action(action:'process'|'refresh-destination'|'fail'|'unknown'){
+ const s=this.selected();if(!s||this.busy()||this.reason.trim().length<10)return;const reason=this.reason.trim();const title={process:'Bắt đầu xử lý đối soát?', 'refresh-destination':'Cập nhật tài khoản nhận tiền đã chốt?',fail:'Xác nhận chắc chắn chưa trả?',unknown:'Ghi nhận kết quả chưa rõ?'}[action];
+ this.confirmation.ask({title,subject:s.snapshot.eventName+' · '+amount(s.snapshot.netVnd),description:action==='fail'?'Chỉ xác nhận khi bằng chứng đã kiểm tra cho thấy chưa chuyển tiền. Lý do được lưu vào lịch sử.':action==='unknown'?'Giữ nguyên yêu cầu và nghĩa vụ xác minh. Không chỉ dẫn chuyển tiền lần hai.':'Máy chủ sẽ kiểm tra lại quyền, số tiền, nghĩa vụ và tài khoản nhận tiền.',reason,confirmLabel:'Xác nhận'},()=>this.send(s,action,{reason}));}
+ settle(){const s=this.selected();if(!s||this.busy()||s.snapshot.netVnd==null)return;let input:Evidence;
+ try{input=s.decision??{kind:s.snapshot.netVnd===0?'NO_TRANSFER':'PAID',amountVnd:s.snapshot.netVnd,reference:s.snapshot.netVnd===0?null:this.reference.trim(),occurredAt:this.occurredAt?utcTime(this.occurredAt)!:new Date().toISOString(),evidence:this.evidence.trim()};}catch(e){this.error.set('Thời điểm bằng chứng không hợp lệ.');return;}
+ if(!s.decision&&(input.evidence.length<10||(input.kind==='PAID'&&!/^MOCK-SETTLEMENT-[A-Za-z0-9-]{6,80}$/.test(input.reference??'')))){this.error.set('Nhập mã MOCK-SETTLEMENT hợp lệ và nội dung xác minh ít nhất 10 ký tự.');return;}
+ this.confirmation.ask({title:s.decision?'Kiểm tra lại bằng chứng đã lưu?':input.kind==='NO_TRANSFER'?'Đóng đối soát không chuyển tiền?':'Ghi nhận chi trả?',subject:s.snapshot.eventName+' · '+amount(input.amountVnd),description:'Lưu bằng chứng đã kiểm tra để đối chiếu và tiếp tục xử lý nếu kết nối gián đoạn.',reason:input.evidence,confirmLabel:'Lưu và kiểm tra bằng chứng'},()=>this.send(s,'settle',input));}
+ private send(s:Settlement,action:string,body:{reason:string}|Evidence){this.busy.set(true);this.error.set('');this.notice.set('');this.api.command(s.id,s.version,action,body).pipe(takeUntilDestroyed(this.destroy),finalize(()=>this.busy.set(false))).subscribe({next:value=>{this.selected.set(value);this.reason='';this.reference='';this.occurredAt='';this.evidence='';this.notice.set(value.pendingReason??(value.status==='SETTLED'?'Đã hoàn tất đối soát.':'Đã lưu trạng thái đối soát.'));this.load();},error:e=>this.error.set(operationError(e))});}
+}

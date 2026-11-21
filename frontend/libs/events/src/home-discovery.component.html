@@ -1,0 +1,30 @@
+<section class="home-hero">
+  <div class="home-hero-inner">
+    <div class="home-hero-copy">
+      <h1>Mỗi sự kiện<br><span>một câu chuyện.</span></h1>
+      <p>Từ sân khấu bùng nổ đến những ý tưởng mới. Trải nghiệm đáng nhớ bắt đầu tại đây.</p>
+      <a class="button-link hero-button" routerLink="/events">Khám phá sự kiện <etp-icon name="arrow-right" tone="white"/></a>
+    </div>
+    <div class="home-hero-art">
+      @if(hero();as e){
+        <a class="hero-secondary hero-event-ticket" [routerLink]="['/events',e.id]" [attr.aria-label]="'Khám phá '+e.name" [style.background-image]="'url('+art(e.category)+')'">
+          <div class="hero-event-caption"><span class="hero-ticket-category">{{categoryName(e.category)}}</span><strong>{{e.name}}</strong><span><etp-icon name="map-pin" tone="white"/>{{e.city}}</span></div>
+          <div class="hero-ticket-stub"><time><etp-icon name="calendar" tone="indigo"/>{{day(e.startAt,e.timezone)}}</time><span>Xem sự kiện <etp-icon name="arrow-right" tone="indigo"/></span></div>
+        </a>
+      }@else{
+        <div class="hero-empty-art" aria-hidden="true"><etp-icon name="ticket" tone="indigo"/><span>Hẹn bạn ở<br>trải nghiệm tiếp theo.</span></div>
+      }
+      <span class="hero-spark hero-spark-one" aria-hidden="true"></span><span class="hero-spark hero-spark-two" aria-hidden="true"></span><span class="hero-confetti" aria-hidden="true"></span>
+    </div>
+  </div>
+</section>
+<section class="home-categories" aria-labelledby="category-heading">
+  <h2 id="category-heading">Hôm nay, bạn muốn trải nghiệm gì?</h2>
+  <nav class="category-chips" aria-label="Khám phá theo danh mục">@for(c of categories;track c.value){<a routerLink="/events" [queryParams]="{category:c.value}" [attr.data-category]="c.value"><span class="category-symbol"><etp-icon [name]="c.icon" tone="indigo"/></span><span>{{c.name}}</span><etp-icon name="arrow-right" tone="indigo"/></a>}</nav>
+</section>
+<section class="home-events">
+  <div class="section-heading"><div><h2>Sự kiện dành cho bạn</h2><p>Chọn một cuộc hẹn đáng mong chờ.</p></div><a class="button-link secondary" routerLink="/events">Xem tất cả <etp-icon name="arrow-right" tone="indigo"/></a></div>
+  @if(error()){<div class="notice error" role="alert"><p>{{error()}}</p><button class="secondary" (click)="load()">Thử tải lại</button></div>}
+  @if(busy()){<div class="event-grid home-event-grid" aria-label="Đang tải sự kiện" role="status">@for(i of [1,2,3,4];track i){<div class="event-skeleton"><div></div><span></span><span></span></div>}</div>}
+  @else{<div class="event-grid home-event-grid">@for(e of events().slice(0,8);track e.id){<etp-event-card [event]="e"/>}</div>@if(!events().length&&!error()){<div class="empty-state home-empty"><etp-icon name="calendar-empty" tone="indigo"/><h2>Những trải nghiệm mới đang được chuẩn bị</h2><p>Khám phá danh mục yêu thích hoặc quay lại để xem sự kiện sắp mở bán.</p><a class="button-link secondary" routerLink="/events">Tìm sự kiện</a></div>}}
+</section>

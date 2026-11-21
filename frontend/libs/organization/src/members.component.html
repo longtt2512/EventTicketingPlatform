@@ -1,0 +1,10 @@
+<section class="panel"><h2>Thành viên tổ chức</h2>
+@if(error()){<p class="notice error" role="alert">{{error()}}</p>} @if(message()){<p class="notice success" role="status">{{message()}}</p>}
+@if(busy()){<p role="status">Đang xử lý…</p>}
+<div class="table-scroll" role="region" aria-label="Bảng dữ liệu, cuộn ngang để xem thêm" tabindex="0"><table><thead><tr><th>Thành viên</th><th>Quyền</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody>
+@for(m of members();track m.userId){<tr><td>{{m.displayName||'Chủ sở hữu'}}<br><span class="small">{{m.email}}</span></td><td>{{m.owner?'Chủ sở hữu':label(m.permission)}}</td><td>{{label(m.status)}}</td><td>@if(organization.owner&&!m.owner&&m.status==='ACTIVE'&&organization.status==='ACTIVE'){<button class="danger" [disabled]="busy()" (click)="revoke(m)">Thu hồi thành viên</button>}</td></tr>}
+</tbody></table></div>@if(error()){<button class="secondary" [disabled]="busy()" (click)="load()">Thử lại</button>}</section>
+@if(organization.owner&&organization.status==='ACTIVE'){<section class="panel"><h2>Thêm thành viên</h2><p class="muted">Người dùng cần đăng ký và xác thực email trước khi được thêm.</p>
+<form etpForm #form="ngForm" (ngSubmit)="add()"><label for="member-email">Email thành viên</label><input etpField id="member-email" name="email" type="email" [(ngModel)]="email" required email maxlength="320">
+<label for="member-permission">Quyền thành viên</label><select etpField id="member-permission" name="permission" [(ngModel)]="permission"><option value="CHECKIN">Soát vé</option><option value="MANAGEMENT">Quản lý tổ chức và phân công</option><option value="FINANCE">Xem tài khoản nhận tiền</option></select>
+<button [disabled]="busy()">Thêm thành viên</button></form></section>}

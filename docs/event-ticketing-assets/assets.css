@@ -1,0 +1,20 @@
+/* Optional design-token helpers for Event Ticketing Platform MVP */
+:root {
+  --etp-primary: #4F46E5;
+  --etp-primary-dark: #4338CA;
+  --etp-brand-deep: #22145D;
+  --etp-secondary: #475569;
+  --etp-background: #F8FAFC;
+  --etp-surface: #FFFFFF;
+  --etp-text: #111827;
+  --etp-muted: #64748B;
+  --etp-success: #166534;
+  --etp-warning: #92400E;
+  --etp-error: #B91C1C;
+  --etp-info: #1E40AF;
+  --etp-radius-md: 10px;
+  --etp-radius-lg: 14px;
+}
+.etp-hero { background: #22145D url('./backgrounds/layout/hero-home-background.png') center / cover no-repeat; }
+.etp-auth-panel { background: #201054 url('./backgrounds/layout/auth-panel-background.png') center / cover no-repeat; }
+.etp-checkin-scanner { background: #151A2C url('./backgrounds/layout/checkin-scanner-background.png') center / cover no-repeat; }

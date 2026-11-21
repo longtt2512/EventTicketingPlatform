@@ -1,0 +1,60 @@
+<a class="skip-link" href="#main-content" (click)="skipToContent($event)">Bỏ qua điều hướng</a>
+<div class="app-frame" [class.auth-frame]="authPage()" [class.portal-frame]="portal()&&!authPage()" [class.customer-frame]="workspace==='customer'&&!authPage()" [class.checkin-frame]="workspace==='checkin'&&!authPage()">
+  @if(authPage()) {
+    <aside class="auth-art">
+      <a class="brand brand-light" routerLink="/home" aria-label="ETP — trang chủ"><img src="/assets/etp/icons/brand/etp-mark.svg" alt="" width="36" height="36"><span>ETP</span></a>
+      <div class="auth-art-copy"><h2><span>Trải nghiệm</span><span>đáng nhớ</span><span>đang chờ bạn.</span></h2><p>Khám phá. Kết nối. Sống trọn từng khoảnh khắc.</p></div>
+    </aside>
+  } @else {
+    @if(portal()) {
+      <aside class="portal-sidebar" [class.is-open]="menuOpen()" id="portal-navigation">
+        <a class="brand portal-brand" routerLink="/home" aria-label="ETP — trang chủ"><img src="/assets/etp/icons/brand/etp-mark.svg" alt="" width="34" height="34"><span>ETP<small>{{workspace==='admin'?'PLATFORM ADMIN':'ORGANIZER PORTAL'}}</small></span></a>
+        <a class="workspace-switch" [routerLink]="workspace==='admin'?'/home':'/organizations'"><span class="workspace-symbol">{{workspace==='admin'?'E':'O'}}</span><span>{{workspace==='admin'?'ETP Operations':'Không gian tổ chức'}}<small>{{workspaceName}}</small></span><etp-icon name="chevron-down"/></a>
+        <nav aria-label="Điều hướng chính">@for(item of navigation();track item.path){@if(item.group){<p class="nav-group">{{item.group}}</p>}<a [routerLink]="item.path" routerLinkActive="active" [routerLinkActiveOptions]="{exact:item.path==='/home'}"><etp-icon [name]="item.icon"/><span>{{item.label}}</span></a>}</nav>
+        <a routerLink="/profile" class="sidebar-account"><span class="avatar">{{initials()}}</span><span>{{session.user()?.displayName}}<small>{{workspaceName}}</small></span><etp-icon name="chevron-right"/></a>
+      </aside>
+    }
+    <header class="topbar">
+      @if(portal()) {
+        <button type="button" class="icon-button portal-menu" aria-label="Mở điều hướng" [attr.aria-expanded]="menuOpen()" aria-controls="portal-navigation" (click)="menuOpen.set(!menuOpen())"><etp-icon name="menu"/></button>
+        <p class="workspace-breadcrumb"><span>{{workspace==='admin'?'Admin Console':'Organizer Workspace'}}</span><span aria-hidden="true">/</span>{{currentSection()}}</p>
+      } @else {
+        <a class="brand" routerLink="/home" aria-label="Event Ticketing — trang chủ"><img src="/assets/etp/icons/brand/etp-mark.svg" alt="" width="34" height="34"><span>ETP</span></a>
+        @if(workspace==='customer') {
+          <nav class="customer-navigation" aria-label="Điều hướng chính"><a routerLink="/home" routerLinkActive="active">Khám phá</a><a routerLink="/events" routerLinkActive="active">Sự kiện</a><a routerLink="/account/tickets" routerLinkActive="active">Vé của tôi</a><a routerLink="/account/orders" routerLinkActive="active">Đơn hàng</a></nav>
+          <form class="header-search" (ngSubmit)="findEvents()"><etp-icon name="search"/><input type="search" name="headerSearch" [(ngModel)]="search" placeholder="Tìm sự kiện, địa điểm…" aria-label="Tìm sự kiện, địa điểm"><button class="visually-hidden" type="submit">Tìm kiếm</button></form>
+        } @else if(workspace==='checkin') { <a class="checkin-home" routerLink="/check-in/events">Soát vé sự kiện</a> } @else { <span class="workspace-name">{{workspaceName}}</span> }
+      }
+      <div class="account-nav">
+        @if(session.isAuthenticated()) {
+          <a class="account-link" routerLink="/profile" [attr.aria-label]="session.user()?.displayName"><span class="avatar">{{initials()}}</span><span class="account-display-name">{{session.user()?.displayName}}</span></a>
+          <button type="button" class="icon-button" aria-label="Đăng xuất" title="Đăng xuất" [disabled]="loggingOut()" (click)="logout()"><etp-icon name="logout"/></button>
+        } @else { <a routerLink="/login">Đăng nhập</a><a class="button-link register-link" routerLink="/register">Đăng ký</a> }
+      </div>
+    </header>
+  }
+  <div class="workspace-layout" [class.account-layout]="accountPage()&&session.isAuthenticated()">
+    @if(accountPage()&&session.isAuthenticated()) {
+      <aside class="account-sidebar"><div class="account-identity"><span class="avatar avatar-large">{{initials()}}</span><strong>{{session.user()?.displayName}}</strong><small>{{session.user()?.email}}</small></div><nav aria-label="Điều hướng tài khoản">
+        <a routerLink="/account/orders" routerLinkActive="active"><etp-icon name="list"/>Đơn hàng của tôi</a>
+        <a routerLink="/account/tickets" routerLinkActive="active"><etp-icon name="ticket"/>Vé của tôi</a>
+        <a routerLink="/profile" routerLinkActive="active"><etp-icon name="user"/>Hồ sơ cá nhân</a>
+        <a routerLink="/apply" routerLinkActive="active"><etp-icon name="building"/>Hồ sơ nhà tổ chức</a>
+      </nav></aside>
+    }
+    <main id="main-content" tabindex="-1" class="main-content" [class.home-content]="workspace==='customer'&&path()==='/home'" [class.purchase-content]="purchasePage()">
+      @if(logoutError()){<p class="notice error" role="alert">{{logoutError()}}</p>}<router-outlet/>
+      @if(session.isAuthenticated()&&!authPage()&&!purchasePage()){
+        <nav class="workspace-links" aria-label="Chuyển vai trò"><span class="small">Không gian làm việc:</span>
+          @if(workspace!=='customer'){<a href="/home">Khách mua vé</a>}
+          @if(workspace!=='organizer'){<a href="/org/home">Nhà tổ chức</a>}
+          @if(workspace!=='checkin'){<a href="/staff/home">Soát vé</a>}
+          @if(workspace!=='admin'&&session.user()?.roles?.includes('ADMIN')){<a href="/admin/home">Quản trị</a>}
+        </nav>
+      }
+    </main>
+  </div>
+  @if(workspace==='customer'&&!authPage()&&!purchasePage()) {
+    <nav class="mobile-navigation" aria-label="Điều hướng trên điện thoại"><a routerLink="/home" routerLinkActive="active"><etp-icon name="home"/>Trang chủ</a><a routerLink="/events" routerLinkActive="active"><etp-icon name="compass"/>Khám phá</a><a routerLink="/account/tickets" routerLinkActive="active"><etp-icon name="ticket"/>Vé của tôi</a><a routerLink="/profile" routerLinkActive="active"><etp-icon name="user"/>Tài khoản</a></nav>
+  }
+</div>

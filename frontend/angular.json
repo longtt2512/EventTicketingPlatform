@@ -1,0 +1,660 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "cli": {
+    "packageManager": "npm"
+  },
+  "newProjectRoot": "projects",
+  "projects": {
+    "customer-web": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/customer-web",
+      "sourceRoot": "apps/customer-web/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist/customer-web",
+            "index": "apps/customer-web/src/index.html",
+            "browser": "apps/customer-web/src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "apps/customer-web/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "apps/customer-web/src/favicon.ico",
+              "apps/customer-web/src/assets",
+              {
+                "glob": "**/*",
+                "input": "assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*.svg",
+                "input": "../docs/event-ticketing-assets/icons",
+                "output": "assets/etp/icons"
+              },
+              {
+                "glob": "*.png",
+                "input": "../docs/event-ticketing-assets/backgrounds/event-plain",
+                "output": "assets/etp/backgrounds/event-plain"
+              },
+              {
+                "glob": "*.png",
+                "input": "../docs/event-ticketing-assets/backgrounds/layout",
+                "output": "assets/etp/backgrounds/layout"
+              },
+              {
+                "glob": "THIRD_PARTY_NOTICES.md",
+                "input": "../docs/event-ticketing-assets/docs",
+                "output": "assets/etp"
+              }
+            ],
+            "styles": [
+              "apps/customer-web/src/styles.scss"
+            ],
+            "scripts": [],
+            "baseHref": "/"
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "customer-web:build:production"
+            },
+            "development": {
+              "buildTarget": "customer-web:build:development"
+            }
+          },
+          "defaultConfiguration": "development",
+          "options": {
+            "proxyConfig": "proxy.conf.json"
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "customer-web:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "apps/customer-web/tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "apps/customer-web/src/favicon.ico",
+              "apps/customer-web/src/assets",
+              {
+                "glob": "**/*",
+                "input": "assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*.svg",
+                "input": "../docs/event-ticketing-assets/icons",
+                "output": "assets/etp/icons"
+              },
+              {
+                "glob": "*.png",
+                "input": "../docs/event-ticketing-assets/backgrounds/event-plain",
+                "output": "assets/etp/backgrounds/event-plain"
+              },
+              {
+                "glob": "*.png",
+                "input": "../docs/event-ticketing-assets/backgrounds/layout",
+                "output": "assets/etp/backgrounds/layout"
+              },
+              {
+                "glob": "THIRD_PARTY_NOTICES.md",
+                "input": "../docs/event-ticketing-assets/docs",
+                "output": "assets/etp"
+              }
+            ],
+            "styles": [
+              "apps/customer-web/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    },
+    "organizer-web": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/organizer-web",
+      "sourceRoot": "apps/organizer-web/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist/organizer-web",
+            "index": "apps/organizer-web/src/index.html",
+            "browser": "apps/organizer-web/src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "apps/organizer-web/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "apps/organizer-web/src/favicon.ico",
+              "apps/organizer-web/src/assets",
+              {
+                "glob": "**/*",
+                "input": "assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*.svg",
+                "input": "../docs/event-ticketing-assets/icons",
+                "output": "assets/etp/icons"
+              },
+              {
+                "glob": "*.png",
+                "input": "../docs/event-ticketing-assets/backgrounds/event-plain",
+                "output": "assets/etp/backgrounds/event-plain"
+              },
+              {
+                "glob": "*.png",
+                "input": "../docs/event-ticketing-assets/backgrounds/layout",
+                "output": "assets/etp/backgrounds/layout"
+              },
+              {
+                "glob": "THIRD_PARTY_NOTICES.md",
+                "input": "../docs/event-ticketing-assets/docs",
+                "output": "assets/etp"
+              }
+            ],
+            "styles": [
+              "apps/organizer-web/src/styles.scss"
+            ],
+            "scripts": [],
+            "baseHref": "/org/"
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "organizer-web:build:production"
+            },
+            "development": {
+              "buildTarget": "organizer-web:build:development"
+            }
+          },
+          "defaultConfiguration": "development",
+          "options": {
+            "proxyConfig": "proxy.conf.json"
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "organizer-web:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "apps/organizer-web/tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "apps/organizer-web/src/favicon.ico",
+              "apps/organizer-web/src/assets",
+              {
+                "glob": "**/*",
+                "input": "assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*.svg",
+                "input": "../docs/event-ticketing-assets/icons",
+                "output": "assets/etp/icons"
+              },
+              {
+                "glob": "*.png",
+                "input": "../docs/event-ticketing-assets/backgrounds/event-plain",
+                "output": "assets/etp/backgrounds/event-plain"
+              },
+              {
+                "glob": "*.png",
+                "input": "../docs/event-ticketing-assets/backgrounds/layout",
+                "output": "assets/etp/backgrounds/layout"
+              },
+              {
+                "glob": "THIRD_PARTY_NOTICES.md",
+                "input": "../docs/event-ticketing-assets/docs",
+                "output": "assets/etp"
+              }
+            ],
+            "styles": [
+              "apps/organizer-web/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    },
+    "checkin-web": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/checkin-web",
+      "sourceRoot": "apps/checkin-web/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist/checkin-web",
+            "index": "apps/checkin-web/src/index.html",
+            "browser": "apps/checkin-web/src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "apps/checkin-web/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "apps/checkin-web/src/favicon.ico",
+              "apps/checkin-web/src/assets",
+              {
+                "glob": "**/*",
+                "input": "assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*.svg",
+                "input": "../docs/event-ticketing-assets/icons",
+                "output": "assets/etp/icons"
+              },
+              {
+                "glob": "*.png",
+                "input": "../docs/event-ticketing-assets/backgrounds/event-plain",
+                "output": "assets/etp/backgrounds/event-plain"
+              },
+              {
+                "glob": "*.png",
+                "input": "../docs/event-ticketing-assets/backgrounds/layout",
+                "output": "assets/etp/backgrounds/layout"
+              },
+              {
+                "glob": "THIRD_PARTY_NOTICES.md",
+                "input": "../docs/event-ticketing-assets/docs",
+                "output": "assets/etp"
+              }
+            ],
+            "styles": [
+              "apps/checkin-web/src/styles.scss"
+            ],
+            "scripts": [],
+            "baseHref": "/staff/"
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "checkin-web:build:production"
+            },
+            "development": {
+              "buildTarget": "checkin-web:build:development"
+            }
+          },
+          "defaultConfiguration": "development",
+          "options": {
+            "proxyConfig": "proxy.conf.json"
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "checkin-web:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "apps/checkin-web/tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "apps/checkin-web/src/favicon.ico",
+              "apps/checkin-web/src/assets",
+              {
+                "glob": "**/*",
+                "input": "assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*.svg",
+                "input": "../docs/event-ticketing-assets/icons",
+                "output": "assets/etp/icons"
+              },
+              {
+                "glob": "*.png",
+                "input": "../docs/event-ticketing-assets/backgrounds/event-plain",
+                "output": "assets/etp/backgrounds/event-plain"
+              },
+              {
+                "glob": "*.png",
+                "input": "../docs/event-ticketing-assets/backgrounds/layout",
+                "output": "assets/etp/backgrounds/layout"
+              },
+              {
+                "glob": "THIRD_PARTY_NOTICES.md",
+                "input": "../docs/event-ticketing-assets/docs",
+                "output": "assets/etp"
+              }
+            ],
+            "styles": [
+              "apps/checkin-web/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    },
+    "admin-web": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/admin-web",
+      "sourceRoot": "apps/admin-web/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist/admin-web",
+            "index": "apps/admin-web/src/index.html",
+            "browser": "apps/admin-web/src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "apps/admin-web/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "apps/admin-web/src/favicon.ico",
+              "apps/admin-web/src/assets",
+              {
+                "glob": "**/*",
+                "input": "assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*.svg",
+                "input": "../docs/event-ticketing-assets/icons",
+                "output": "assets/etp/icons"
+              },
+              {
+                "glob": "*.png",
+                "input": "../docs/event-ticketing-assets/backgrounds/event-plain",
+                "output": "assets/etp/backgrounds/event-plain"
+              },
+              {
+                "glob": "*.png",
+                "input": "../docs/event-ticketing-assets/backgrounds/layout",
+                "output": "assets/etp/backgrounds/layout"
+              },
+              {
+                "glob": "THIRD_PARTY_NOTICES.md",
+                "input": "../docs/event-ticketing-assets/docs",
+                "output": "assets/etp"
+              }
+            ],
+            "styles": [
+              "apps/admin-web/src/styles.scss"
+            ],
+            "scripts": [],
+            "baseHref": "/admin/"
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "admin-web:build:production"
+            },
+            "development": {
+              "buildTarget": "admin-web:build:development"
+            }
+          },
+          "defaultConfiguration": "development",
+          "options": {
+            "proxyConfig": "proxy.conf.json"
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "admin-web:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "apps/admin-web/tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "apps/admin-web/src/favicon.ico",
+              "apps/admin-web/src/assets",
+              {
+                "glob": "**/*",
+                "input": "assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*.svg",
+                "input": "../docs/event-ticketing-assets/icons",
+                "output": "assets/etp/icons"
+              },
+              {
+                "glob": "*.png",
+                "input": "../docs/event-ticketing-assets/backgrounds/event-plain",
+                "output": "assets/etp/backgrounds/event-plain"
+              },
+              {
+                "glob": "*.png",
+                "input": "../docs/event-ticketing-assets/backgrounds/layout",
+                "output": "assets/etp/backgrounds/layout"
+              },
+              {
+                "glob": "THIRD_PARTY_NOTICES.md",
+                "input": "../docs/event-ticketing-assets/docs",
+                "output": "assets/etp"
+              }
+            ],
+            "styles": [
+              "apps/admin-web/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    },
+    "phase1-tests": {
+      "projectType": "library",
+      "root": "",
+      "sourceRoot": ".",
+      "architect": {
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "tsconfig.test.json",
+            "inlineStyleLanguage": "scss",
+            "include": [
+              "apps/**/src/app/**/*.spec.ts",
+              "libs/**/*.spec.ts"
+            ],
+            "styles": [
+              "libs/ui/src/styles.scss"
+            ],
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*.svg",
+                "input": "../docs/event-ticketing-assets/icons",
+                "output": "assets/etp/icons"
+              },
+              {
+                "glob": "*.png",
+                "input": "../docs/event-ticketing-assets/backgrounds/event-plain",
+                "output": "assets/etp/backgrounds/event-plain"
+              },
+              {
+                "glob": "*.png",
+                "input": "../docs/event-ticketing-assets/backgrounds/layout",
+                "output": "assets/etp/backgrounds/layout"
+              },
+              {
+                "glob": "THIRD_PARTY_NOTICES.md",
+                "input": "../docs/event-ticketing-assets/docs",
+                "output": "assets/etp"
+              }
+            ],
+            "codeCoverage": true,
+            "codeCoverageExclude": [
+              "apps/**/*.spec.ts",
+              "libs/**/*.spec.ts"
+            ],
+            "karmaConfig": "karma.conf.cjs"
+          }
+        }
+      }
+    }
+  }
+}

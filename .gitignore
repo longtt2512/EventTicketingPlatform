@@ -1,3 +1,22 @@
 # Harness core maintenance binary
 scripts/bin/harness
 scripts/bin/harness.exe
+
+# Application build output and local-only credentials
+.env
+.runtime/
+**/node_modules/
+**/.angular/
+**/.gradle/
+**/build/
+**/dist/
+**/out-tsc/
+**/coverage/
+output/
+.playwright-cli/
+**/.DS_Store
+**/__pycache__/
+*.py[cod]
+# Java IDE compilation output (keep the Gradle wrapper in version control)
+backend/**/bin/
+*.class

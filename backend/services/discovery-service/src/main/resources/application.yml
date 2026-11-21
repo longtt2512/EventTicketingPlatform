@@ -1,0 +1,51 @@
+server:
+  port: ${SERVER_PORT:8084}
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${IDENTITY_JWK_URI:http://localhost:8081/api/v1/.well-known/jwks.json}
+  application:
+    name: discovery-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/event_ticketing}
+    username: ${DB_USERNAME:app_discovery}
+    password: ${DB_PASSWORD:local_discovery}
+  flyway:
+    schemas: discovery
+    default-schema: discovery
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: public-discovery-v1
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    listener:
+      ack-mode: manual_immediate
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+      properties:
+        enable.idempotence: true
+        delivery.timeout.ms: 10000
+        request.timeout.ms: 5000
+        max.block.ms: 3000
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+app:
+  jwt:
+    issuer: ${JWT_ISSUER:http://localhost:8081}
+  identity:
+    base-url: ${IDENTITY_BASE_URL:http://localhost:8081}
+    service-token: ${IDENTITY_SERVICE_TOKEN:local-service-token}
+  organization-base-url: ${ORGANIZATION_SERVICE_URL:http://localhost:8082}
+  commerce-base-url: ${COMMERCE_BASE_URL:http://localhost:8083}
+  service-token: ${IDENTITY_SERVICE_TOKEN:local-service-token}

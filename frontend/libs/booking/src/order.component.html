@@ -1,0 +1,30 @@
+<a class="back-link" [routerLink]="readOnly?'/payments':'/account/orders'">{{readOnly?'Về quản lý thanh toán':'Đơn hàng của tôi'}}</a><h1>{{title()}}</h1>
+@if(mode!=='detail'){<ol class="purchase-steps" aria-label="Tiến trình đặt vé"><li>1. Chọn vé</li><li [attr.aria-current]="mode==='checkout'?'step':null">2. Thanh toán</li><li [attr.aria-current]="mode==='result'?'step':null">3. Kết quả</li></ol>}
+@if(error()){<p class="notice error" role="alert">{{error()}}</p>}
+@if(paymentError()){<p class="notice error" role="alert">{{paymentError()}} Trạng thái thanh toán cần được kiểm tra lại.</p>}
+@if(!order()&&loading()){<p role="status">Đang kiểm tra đơn hàng…</p>}
+@if(order();as o){<div class="purchase-layout" [class.payment-result-layout]="mode==='result'" [class.order-detail-layout]="mode==='detail'"><div><section class="order-state" [attr.data-state]="o.paymentStatus==='FAILED'?'FAILED':o.status" aria-live="polite"><span class="payment-result-symbol"><etp-icon [name]="o.paymentStatus==='FAILED'?'error-circle':o.status==='CONFIRMED'?'check-circle':o.status==='PENDING_PAYMENT'?'clock':'error-circle'" tone="indigo"/></span><h2>{{o.paymentStatus==='FAILED'?'Thanh toán chưa thành công':label(o.status)}}</h2>
+@if(o.status==='CONFIRMED'){<p>Đơn hàng đã được xác nhận. Theo dõi tiến trình phát hành và mở vé bên dưới.</p>}
+@else if(o.status==='EXPIRED'){<p>Thời gian giữ vé đã hết. Đơn này không thể thanh toán tiếp; bạn có thể chọn vé để tạo đơn mới.</p>}
+@else if(o.status==='CANCELLED'){<p>Đơn đã hủy. Vé đang giữ đã được giải phóng.</p>}
+@else if(o.paymentStatus==='PENDING'){<p>Đang chờ xác minh kết quả thanh toán. Hãy kiểm tra trạng thái trước khi thực hiện giao dịch khác.</p>}
+@else if(o.paymentStatus==='EXCEPTION'){<p>Giao dịch cần được đối soát. Chưa xác nhận vé cho khoản thanh toán này.</p>}
+@else if(o.paymentStatus==='FAILED'){<p>{{failureMessage() || 'Lần thanh toán trước chưa thành công. Bạn có thể thử lại khi thời gian giữ vé còn hiệu lực.'}}</p>}
+@else{<p>Vé đang được giữ cho bạn. Hoàn tất xác nhận trước khi hết thời gian.</p>}
+@if(o.eventStatus==='CANCELLED'){<p class="notice error">Sự kiện đã hủy. Giao dịch đã thu sẽ được quản trị viên đối soát.</p>}
+@if(o.paymentStatus==='EXCEPTION'&&!payments().exceptions.length){<p class="notice">Khoản thanh toán đang được chuyển sang đối soát. Bạn có thể kiểm tra lại để xem mã hỗ trợ.</p>}
+</section>@if(!readOnly&&o.status==='CONFIRMED'){<etp-order-tickets [orderId]="o.id"/>}<h2>{{o.eventName}}</h2><p class="small wrap">Mã đơn: {{o.id}}<br>Tạo lúc {{date(o.createdAt)}}</p>
+<ul class="order-lines">@for(item of o.items;track item.id){<li><div><strong>{{item.name}}</strong><small>{{item.quantity}} × {{money(item.unitPrice)}}</small></div><strong>{{money(item.lineTotal)}}</strong></li>}</ul>
+<details class="booking-terms"><summary>Điều khoản tại thời điểm đặt vé</summary><p>{{o.terms}}</p></details>
+@if(payments().attempts.length){<section class="payment-timeline"><h2>Lịch sử thanh toán</h2><ol>@for(a of payments().attempts;track a.id){<li><div><strong>{{label(a.status)}}</strong><span class="small">{{date(a.createdAt)}}</span></div><p class="small wrap">Mã giao dịch: {{a.id}}</p>@if(a.paymentMethod){<p class="small">{{a.paymentMethod==='QR'?'Thanh toán qua QR':'Thanh toán qua thẻ'}}@if(a.cardLastFour){ · •••• {{a.cardLastFour}}}</p>}@if(a.result!=='PENDING'){<p>{{label(a.result)}}</p>}</li>}</ol></section>}
+@for(c of payments().exceptions;track c.id){<section class="notice"><h3>{{label(c.type)}}</h3><p>{{label(c.status)}} · {{amount(c.received_amount-c.returned_amount,c.currency)}} còn cần đối soát.</p><p class="small wrap">Mã hỗ trợ: {{c.id}}</p></section>}
+</div><aside class="purchase-summary"><h2>Tổng đơn hàng</h2><div class="summary-total"><span>Tổng cộng</span><strong>{{money(o.totalVnd)}}</strong></div><p>{{label(o.paymentStatus)}}</p>
+@if(o.status==='PENDING_PAYMENT'){<div class="hold-clock"><span>Thời gian giữ vé còn lại</span><strong [class.expiring]="remaining()<60" role="timer" aria-label="Thời gian giữ vé còn lại">{{countdown(remaining())}}</strong><small>Thời gian giữ vé không được gia hạn.</small></div>}
+@if(!readOnly&&(o.canPay||o.canConfirmFree)&&remaining()>0){<p class="small">{{session.user()?.displayName}}<br>{{session.user()?.email}}</p><label class="check-label"><input type="checkbox" [(ngModel)]="terms" [disabled]="busy()">Tôi đã kiểm tra đơn và đồng ý điều khoản</label><button type="button" [disabled]="busy()||!terms||remaining()<=0" (click)="pay()">{{busy()?'Đang xử lý…':o.totalVnd===0?'Xác nhận đơn miễn phí':'Thanh toán '+money(o.totalVnd)}}</button>}
+@if(!readOnly&&o.paymentStatus==='PENDING'&&o.activeAttemptId){<a class="button-link secondary" [routerLink]="['/payment/checkout',o.activeAttemptId]">Tiếp tục thanh toán</a>}
+@if(error()){<button type="button" class="secondary" [disabled]="loading()||busy()" (click)="load()">Thử lại</button>}
+@if(!readOnly&&o.canCancel){<button type="button" class="quiet" [disabled]="busy()" (click)="cancel()">Hủy đơn đang giữ vé</button>}
+@if(!readOnly&&(o.status==='EXPIRED'||o.status==='CANCELLED')){<a class="button-link" [routerLink]="['/booking',o.eventId]">Chọn vé lại</a>}
+@if(!readOnly&&mode!=='detail'){<a class="button-link secondary" [routerLink]="['/account/orders',o.id]">Xem chi tiết đơn</a>}
+</aside></div>}
+@if(confirmation.current();as c){<etp-confirm-dialog [confirmation]="c" (resolved)="confirmation.resolve($event)"/>}

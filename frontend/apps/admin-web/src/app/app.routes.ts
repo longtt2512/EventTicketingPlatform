@@ -1,0 +1,30 @@
+import { unsavedChangesGuard } from '@event-ticketing/ui';
+import { Routes } from '@angular/router';
+import { authGuard, roleGuard } from '@event-ticketing/auth';
+export const routes: Routes = [
+  { path: 'login', loadComponent: () => import('@event-ticketing/auth').then(m => m.LoginPageComponent) },
+  { path: 'register', loadComponent: () => import('@event-ticketing/auth').then(m => m.RegisterPageComponent), canDeactivate: [unsavedChangesGuard] },
+  { path: 'forgot-password', loadComponent: () => import('@event-ticketing/auth').then(m => m.RecoveryPageComponent), canDeactivate: [unsavedChangesGuard], data: { mode: 'forgot' } },
+  { path: 'reset-password', loadComponent: () => import('@event-ticketing/auth').then(m => m.RecoveryPageComponent), canDeactivate: [unsavedChangesGuard], data: { mode: 'reset' } },
+  { path: 'verify-email', loadComponent: () => import('@event-ticketing/auth').then(m => m.RecoveryPageComponent), canDeactivate: [unsavedChangesGuard], data: { mode: 'verify' } },
+  { path: 'profile', loadComponent: () => import('@event-ticketing/auth').then(m => m.ProfilePageComponent), canDeactivate: [unsavedChangesGuard], canActivate: [authGuard] },
+  { path: 'home', loadComponent: () => import('@event-ticketing/operations').then(m => m.AnalyticsComponent), canActivate: [roleGuard('ADMIN')] },
+  { path: 'analytics', loadComponent: () => import('@event-ticketing/operations').then(m => m.AnalyticsComponent), canActivate: [roleGuard('ADMIN')] },
+  { path: 'settlements', loadComponent: () => import('@event-ticketing/operations').then(m => m.SettlementsComponent), canActivate: [roleGuard('ADMIN')], canDeactivate: [unsavedChangesGuard] },
+  { path: 'commission', loadComponent: () => import('@event-ticketing/operations').then(m => m.CommissionComponent), canActivate: [roleGuard('ADMIN')], canDeactivate: [unsavedChangesGuard] },
+  { path: 'settings', loadComponent: () => import('@event-ticketing/operations').then(m => m.SettingsComponent), canActivate: [roleGuard('ADMIN')], canDeactivate: [unsavedChangesGuard] },
+  { path: 'categories', loadComponent: () => import('@event-ticketing/operations').then(m => m.CategoriesComponent), canActivate: [roleGuard('ADMIN')], canDeactivate: [unsavedChangesGuard] },
+  { path: 'audit-logs', loadComponent: () => import('@event-ticketing/operations').then(m => m.AuditComponent), canActivate: [roleGuard('ADMIN')] },
+  { path: 'orders', loadComponent: () => import('@event-ticketing/operations').then(m => m.AdminOrdersComponent), canActivate: [roleGuard('ADMIN')] },
+  { path: 'events', loadComponent: () => import('@event-ticketing/events').then(m => m.AdminEventsComponent), canDeactivate: [unsavedChangesGuard], canActivate: [roleGuard('ADMIN')] },
+  { path: 'payments', loadComponent: () => import('@event-ticketing/booking').then(m => m.AdminPaymentsComponent), canActivate: [roleGuard('ADMIN')], canDeactivate: [unsavedChangesGuard] },
+  { path: 'payment-exceptions', loadComponent: () => import('@event-ticketing/booking').then(m => m.AdminPaymentsComponent), canActivate: [roleGuard('ADMIN')], canDeactivate: [unsavedChangesGuard], data: {exceptions:true} },
+  { path: 'orders/:orderId', loadComponent: () => import('@event-ticketing/booking').then(m => m.OrderComponent), canActivate: [roleGuard('ADMIN')], data: {mode:'detail',readOnly:true} },
+  { path: 'users', loadComponent: () => import('@event-ticketing/admin').then(m => m.UsersPageComponent), canDeactivate: [unsavedChangesGuard], canActivate: [roleGuard('ADMIN')] },
+  { path: 'applications', loadComponent: () => import('@event-ticketing/organization').then(m => m.AdminApplicationsPageComponent), canDeactivate: [unsavedChangesGuard], canActivate: [roleGuard('ADMIN')] },
+  { path: 'organizations', loadComponent: () => import('@event-ticketing/organization').then(m => m.OrganizationsPageComponent), canActivate: [roleGuard('ADMIN')] },
+  { path: 'organizations/:id', loadComponent: () => import('@event-ticketing/organization').then(m => m.OrganizationDetailComponent), canDeactivate: [unsavedChangesGuard], canActivate: [roleGuard('ADMIN')] },
+  { path: 'forbidden', loadComponent: () => import('@event-ticketing/ui').then(m => m.StatusPageComponent), data: { forbidden: true } },
+  { path: '', pathMatch: 'full', redirectTo: 'home' },
+  { path: '**', loadComponent: () => import('@event-ticketing/ui').then(m => m.StatusPageComponent) },
+];

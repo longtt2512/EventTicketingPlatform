@@ -1,0 +1,81 @@
+/* Actions share one visual hierarchy, regardless of anchor or button semantics. */
+button, .button-link, .back-link {
+  min-height: 44px;
+  border-radius: 10px;
+  font-weight: 600;
+  line-height: 1.45;
+  text-align: center;
+  text-decoration: none;
+}
+.button-link.quiet {
+  color: var(--primary);
+  background: transparent;
+  border-color: transparent;
+}
+.button-link.quiet:hover { color: var(--primary-hover); background: var(--soft); }
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 9px 14px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+  color: #475569;
+  background: white;
+  font-size: .875rem;
+}
+.back-link::before {
+  content: '';
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  background: currentColor;
+  mask: url('/assets/etp/icons/slate/arrow-left.svg') center/contain no-repeat;
+}
+.back-link:hover { color: var(--primary); background: var(--soft); border-color: #c7c2f9; }
+.toolbar .back-link,.auth-links .back-link { margin-bottom: 0; }
+.toolbar { align-items: center; gap: 12px; flex-wrap: wrap; }
+.actions { gap: 12px; }
+.auth-links { align-items: center; gap: 10px; }
+.auth-links .button-link { padding: 10px 12px; }
+.table-scroll .button-link { font-size: .85rem; padding: 8px 12px; white-space: nowrap; }
+.table-scroll a:not(.button-link),.organization-card h2 a {
+  color: var(--primary); font-weight: 600; text-decoration: none;
+}
+.table-scroll a:not(.button-link):hover,.organization-card h2 a:hover { text-decoration: underline; }
+.section-heading > .button-link { flex-shrink: 0; }
+.purchase-summary > .button-link { width: 100%; }
+.order-fulfillment h2 { display: flex; align-items: center; gap: 10px; }
+.order-fulfillment h2 etp-icon { width: 24px; height: 24px; }
+.order-fulfillment .quiet { margin: 0 0 12px; }
+.payment-result-layout .order-fulfillment h2 { justify-content: center; }
+.payment-result-layout .order-fulfillment .quiet { margin: 12px 0 0; }
+.icon-button { min-width: 44px; min-height: 44px; }
+.customer-navigation a,.portal-sidebar nav a,.account-sidebar nav a { min-height: 44px; display: flex; align-items: center; }
+.mobile-navigation a,.checkin-tabs a,.checkin-tabs span { font-size: max(.8rem,12px); }
+:is(button,a,input,select,textarea,summary):focus-visible { outline: 3px solid #6554df; outline-offset: 3px; }
+button:disabled { cursor: not-allowed; }
+@media(prefers-reduced-motion:no-preference) {
+  :is(button,.button-link,.back-link) { transition: background-color 150ms ease-out,border-color 150ms ease-out,color 150ms ease-out; }
+}
+@media(max-width:767px) {
+  .back-link { font-size: .9rem; }
+  .toolbar > .button-link,.toolbar > .back-link { flex-shrink: 0; }
+  .auth-links { align-items: stretch; }
+  .order-fulfillment > :is(a,button) { width: 100%; margin: 8px 0 0; }
+}
+/* Operational metadata remains readable at the same root scale. */
+.nav-group,.portal-brand small { font-size: 11px; }
+.workspace-switch small,.sidebar-account small,.overview-metrics small,.dashboard-queue small { font-size: 12px; }
+.portal-sidebar nav a,.account-nav a { font-size: 13px; }
+.selection-row .small,.selection-row .quantity-control label,.booking-event-strip p,
+.order-list-row .small,.ticket-row-copy small,.ticket-description .small,
+.profile-settings .small,.checkin-page-heading p,.connection-status,
+.checkin-page-heading .connection-status,.checkin-workspace .back-link,
+.admission-counts dt,.checkin-events .ticket-row .small,.status-badge,.badge {
+  font-size: 12px;
+}
+.table-scroll th,.event-steps button,.review-item span,.scanner-instruction { font-size: 12px; }
+
+.dashboard-shortcuts small { font-size: 12px; }

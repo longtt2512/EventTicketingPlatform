@@ -1,0 +1,51 @@
+server:
+  port: ${SERVER_PORT:8082}
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 6MB
+  application:
+    name: organization-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/event_ticketing}
+    username: ${DB_USERNAME:app_organization}
+    password: ${DB_PASSWORD:local_organization}
+  flyway:
+    enabled: true
+    schemas: organization
+    default-schema: organization
+    locations: classpath:db/migration
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.default_schema: organization
+      hibernate.jdbc.time_zone: UTC
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${IDENTITY_JWK_URI:http://localhost:8081/api/v1/.well-known/jwks.json}
+
+app:
+  data-encryption-key: ${DATA_ENCRYPTION_KEY:}
+  commerce-base-url: ${COMMERCE_BASE_URL:http://localhost:8083}
+  storage:
+    endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
+    access-key: ${MINIO_ACCESS_KEY:localminio}
+    secret-key: ${MINIO_SECRET_KEY:localminio123}
+    bucket: ${MINIO_VERIFICATION_BUCKET:organization-verification}
+  jwt:
+    issuer: ${JWT_ISSUER:http://localhost:8081}
+  identity:
+    base-url: ${IDENTITY_BASE_URL:http://localhost:8081}
+    service-token: ${IDENTITY_SERVICE_TOKEN:local-service-token}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

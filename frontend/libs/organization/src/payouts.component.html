@@ -1,0 +1,15 @@
+<section class="panel"><h2>Tài khoản nhận tiền</h2><p>Chỉ hiển thị bốn số cuối. Mỗi thay đổi tạo một phiên bản mới và cần được xác minh.</p>
+@if(error()){<p class="notice error" role="alert">{{error()}}</p>} @if(message()){<p class="notice success" role="status">{{message()}}</p>}
+@if(busy()){<p role="status">Đang xử lý…</p>}
+<div class="table-scroll" role="region" aria-label="Bảng dữ liệu, cuộn ngang để xem thêm" tabindex="0"><table><thead><tr><th>Phiên bản</th><th>Ngân hàng / Chủ tài khoản</th><th>Số tài khoản</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody>
+@for(p of payouts();track p.id){<tr><td>{{p.version}}</td><td>{{p.bankName}}<br>{{p.accountHolder}}</td><td>{{p.maskedAccount}}</td><td>{{label(p.status)}}@if(p.reviewReason){<p class="small">{{p.reviewReason}}</p>}</td><td>@if(admin&&p.status==='PENDING_REVERIFY'&&organization.status==='ACTIVE'){<div class="actions"><button [disabled]="busy()||!reason.trim()" (click)="review(p,true)">Xác minh tài khoản</button><button class="danger" [disabled]="busy()||!reason.trim()" (click)="review(p,false)">Từ chối tài khoản</button></div>}</td></tr>}
+@empty{<tr><td colspan="5">Chưa có tài khoản nhận tiền.</td></tr>}</tbody></table></div>
+@if(admin){<label for="payout-reason">Ghi chú xét duyệt tài khoản</label><textarea id="payout-reason" [(ngModel)]="reason" maxlength="2000" aria-describedby="payout-help"></textarea><p class="small" id="payout-help">Nhập ghi chú xét duyệt trước khi chọn xác minh hoặc từ chối.</p>}
+@if(error()){<button class="secondary" [disabled]="busy()" (click)="load()">Thử lại</button>}</section>
+@if(organization.owner&&organization.status==='ACTIVE'){<section class="panel"><h2>Thêm tài khoản nhận tiền</h2><form etpForm #form="ngForm" (ngSubmit)="add()" autocomplete="off">
+<label for="bank-name">Tên ngân hàng</label><input etpField id="bank-name" name="bankName" [(ngModel)]="data.bankName" required maxlength="200">
+<label for="account-holder">Tên chủ tài khoản</label><input etpField id="account-holder" name="accountHolder" [(ngModel)]="data.accountHolder" required maxlength="200">
+<label for="account-number">Số tài khoản ngân hàng</label><input etpField id="account-number" name="accountNumber" [(ngModel)]="data.accountNumber" required pattern="[0-9]{6,34}" inputmode="numeric" maxlength="34" autocomplete="off">
+<p class="small">Thay đổi này không sửa các thông tin đối soát đã ghi nhận trước đó.</p><button [disabled]="busy()">Gửi tài khoản để xác minh</button></form></section>}
+
+@if(confirmation.current();as decision){<etp-confirm-dialog [confirmation]="decision" (resolved)="confirmation.resolve($event)"/>}

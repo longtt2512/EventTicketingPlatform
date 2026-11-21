@@ -1,0 +1,41 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@event-ticketing/models": [
+        "libs/models/src/index.ts"
+      ],
+      "@event-ticketing/api-client": [
+        "libs/api-client/src/index.ts"
+      ],
+      "@event-ticketing/session": [
+        "libs/session/src/index.ts"
+      ],
+      "@event-ticketing/auth": [
+        "libs/auth/src/index.ts"
+      ],
+      "@event-ticketing/organization": [
+        "libs/organization/src/index.ts"
+      ],
+      "@event-ticketing/ui": [
+        "libs/ui/src/index.ts"
+      ],
+      "@event-ticketing/admin": [
+        "libs/admin/src/index.ts"
+      ],
+      "@event-ticketing/events": [
+        "libs/events/src/index.ts"
+      ],
+      "@event-ticketing/booking": [
+        "libs/booking/src/index.ts"
+      ],
+      "@event-ticketing/tickets": [
+        "libs/tickets/src/index.ts"
+      ],
+      "@event-ticketing/operations": [
+        "libs/operations/src/index.ts"
+      ]
+    }
+  }
+}

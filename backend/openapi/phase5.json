@@ -1,0 +1,3365 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Local Phase 5 platform operations",
+    "version": "1.0.0",
+    "description": "Decision 0005. VND simulation only. Current permissions required; immutable snapshots; no missing fee default."
+  },
+  "servers": [
+    {
+      "url": "/api/v1"
+    }
+  ],
+  "paths": {
+    "/admin/commission-config": {
+      "get": {
+        "summary": "GET /admin/commission-config",
+        "parameters": [],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommissionConfig"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        }
+      },
+      "post": {
+        "summary": "POST /admin/commission-config",
+        "parameters": [
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommissionConfig"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommissionChange"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/commission-config/history": {
+      "get": {
+        "summary": "GET /admin/commission-config/history",
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigurationPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        }
+      }
+    },
+    "/organizations/{org}/settlements": {
+      "get": {
+        "summary": "GET /organizations/{org}/settlements",
+        "parameters": [
+          {
+            "name": "org",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettlementPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        }
+      },
+      "post": {
+        "summary": "POST /organizations/{org}/settlements",
+        "parameters": [
+          {
+            "name": "org",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Settlement"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "eventId": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                },
+                "required": [
+                  "eventId"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/organizations/{org}/settlements/{id}": {
+      "get": {
+        "summary": "GET /organizations/{org}/settlements/{id}",
+        "parameters": [
+          {
+            "name": "org",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Settlement"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        }
+      }
+    },
+    "/organizations/{org}/reports/summary": {
+      "get": {
+        "summary": "GET /organizations/{org}/reports/summary",
+        "parameters": [
+          {
+            "name": "org",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateBasis",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "CONFIRMED_AT"
+              ]
+            }
+          },
+          {
+            "name": "eventId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "snapshotId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportSummary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        }
+      }
+    },
+    "/organizations/{org}/reports/sales": {
+      "get": {
+        "summary": "GET /organizations/{org}/reports/sales",
+        "parameters": [
+          {
+            "name": "org",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateBasis",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "CONFIRMED_AT"
+              ]
+            }
+          },
+          {
+            "name": "eventId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "snapshotId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalesPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        }
+      }
+    },
+    "/organizations/{org}/reports/sales.csv": {
+      "get": {
+        "summary": "GET /organizations/{org}/reports/sales.csv",
+        "parameters": [
+          {
+            "name": "org",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateBasis",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "CONFIRMED_AT"
+              ]
+            }
+          },
+          {
+            "name": "eventId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "snapshotId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        }
+      }
+    },
+    "/admin/settlements": {
+      "get": {
+        "summary": "GET /admin/settlements",
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettlementPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        }
+      }
+    },
+    "/admin/settlements/{id}": {
+      "get": {
+        "summary": "GET /admin/settlements/{id}",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Settlement"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        }
+      }
+    },
+    "/admin/reports/summary": {
+      "get": {
+        "summary": "GET /admin/reports/summary",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateBasis",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "CONFIRMED_AT"
+              ]
+            }
+          },
+          {
+            "name": "eventId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "snapshotId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportSummary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        }
+      }
+    },
+    "/admin/reports/sales": {
+      "get": {
+        "summary": "GET /admin/reports/sales",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateBasis",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "CONFIRMED_AT"
+              ]
+            }
+          },
+          {
+            "name": "eventId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "snapshotId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalesPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        }
+      }
+    },
+    "/admin/reports/sales.csv": {
+      "get": {
+        "summary": "GET /admin/reports/sales.csv",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateBasis",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "CONFIRMED_AT"
+              ]
+            }
+          },
+          {
+            "name": "eventId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "snapshotId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        }
+      }
+    },
+    "/organizations/{org}/settlements/events": {
+      "get": {
+        "summary": "GET /organizations/{org}/settlements/events",
+        "parameters": [
+          {
+            "name": "org",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "name",
+                      "status"
+                    ],
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        }
+      }
+    },
+    "/organizations/{org}/settlements/eligibility/{event}": {
+      "get": {
+        "summary": "GET /organizations/{org}/settlements/eligibility/{event}",
+        "parameters": [
+          {
+            "name": "org",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "event",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Eligibility"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        }
+      }
+    },
+    "/admin/settlements/{id}/process": {
+      "post": {
+        "summary": "POST /admin/settlements/{id}/process",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Settlement"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reason"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/settlements/{id}/refresh-destination": {
+      "post": {
+        "summary": "POST /admin/settlements/{id}/refresh-destination",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Settlement"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reason"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/settlements/{id}/fail": {
+      "post": {
+        "summary": "POST /admin/settlements/{id}/fail",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Settlement"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reason"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/settlements/{id}/unknown": {
+      "post": {
+        "summary": "POST /admin/settlements/{id}/unknown",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Settlement"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reason"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/settlements/{id}/settle": {
+      "post": {
+        "summary": "POST /admin/settlements/{id}/settle",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Settlement"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          },
+          "202": {
+            "description": "Evidence persisted; authorization recovery pending",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Settlement"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Evidence"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/discover/categories": {
+      "get": {
+        "summary": "GET /discover/categories",
+        "parameters": [],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        }
+      }
+    },
+    "/admin/categories": {
+      "get": {
+        "summary": "GET /admin/categories",
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        }
+      },
+      "post": {
+        "summary": "POST /admin/categories",
+        "parameters": [],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/categories/{id}": {
+      "patch": {
+        "summary": "PATCH /admin/categories/{id}",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "active": {
+                    "type": "boolean"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "active",
+                  "reason"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/settings": {
+      "get": {
+        "summary": "GET /admin/settings",
+        "parameters": [],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Settings"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        }
+      }
+    },
+    "/admin/settings/{key}": {
+      "patch": {
+        "summary": "PATCH /admin/settings/{key}",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Settings"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "oneOf": [
+                      {
+                        "type": "integer",
+                        "format": "int64"
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "value",
+                  "reason"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/audit-logs": {
+      "get": {
+        "summary": "GET /admin/audit-logs",
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "action",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "actorId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "resourceId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        }
+      }
+    },
+    "/admin/audit-logs/{source}/{id}": {
+      "get": {
+        "summary": "GET /admin/audit-logs/{source}/{id}",
+        "parameters": [
+          {
+            "name": "source",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditRecord"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        }
+      }
+    },
+    "/admin/orders": {
+      "get": {
+        "summary": "GET /admin/orders",
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authoritative result or frozen report snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./phase3.json#/components/schemas/OrderPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Current active session required"
+          },
+          "403": {
+            "description": "Permission denied"
+          },
+          "404": {
+            "description": "Not found in scope"
+          },
+          "409": {
+            "description": "Version, state or evidence conflict"
+          },
+          "503": {
+            "description": "Source unavailable; retry same request"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Configuration": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "PERCENTAGE",
+              "FIXED_AMOUNT"
+            ]
+          },
+          "rateBps": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "fixedFeeVnd": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "effectiveAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "mode",
+          "rateBps",
+          "fixedFeeVnd",
+          "effectiveAt",
+          "version",
+          "reason"
+        ]
+      },
+      "CommissionConfig": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "current": {
+            "$ref": "#/components/schemas/Configuration"
+          },
+          "serverTime": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "version",
+          "current"
+        ]
+      },
+      "CommissionChange": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "PERCENTAGE",
+              "FIXED_AMOUNT"
+            ]
+          },
+          "rateBps": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "fixedFeeVnd": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "effectiveAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "mode",
+          "rateBps",
+          "fixedFeeVnd",
+          "effectiveAt",
+          "reason"
+        ]
+      },
+      "PayoutSnapshot": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "destination_version": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "bank_name": {
+            "type": "string"
+          },
+          "account_holder": {
+            "type": "string"
+          },
+          "masked_account": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "destination_version",
+          "bank_name",
+          "account_holder",
+          "masked_account"
+        ]
+      },
+      "Eligibility": {
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "eventName": {
+            "type": "string"
+          },
+          "eventVersion": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "grossVnd": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "platformFeeVnd": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "gatewayFeeVnd": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "adjustmentsVnd": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "returnedVnd": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "platformFeeReversalVnd": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "netVnd": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "eligible": {
+            "type": "boolean"
+          },
+          "paymentFingerprint": {
+            "type": "string"
+          },
+          "checkedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "payout": {
+            "$ref": "#/components/schemas/PayoutSnapshot",
+            "nullable": true
+          },
+          "reasons": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        },
+        "required": [
+          "eventId",
+          "organizationId",
+          "eventName",
+          "eventVersion",
+          "currency",
+          "grossVnd",
+          "platformFeeVnd",
+          "gatewayFeeVnd",
+          "adjustmentsVnd",
+          "returnedVnd",
+          "platformFeeReversalVnd",
+          "netVnd",
+          "eligible",
+          "paymentFingerprint",
+          "checkedAt",
+          "payout",
+          "reasons",
+          "items"
+        ]
+      },
+      "Evidence": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "PAID",
+              "NO_TRANSFER"
+            ]
+          },
+          "amountVnd": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "reference": {
+            "type": "string",
+            "nullable": true
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "evidence": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "amountVnd",
+          "reference",
+          "occurredAt",
+          "evidence"
+        ]
+      },
+      "History": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "actor_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "action": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "actor_id",
+          "action",
+          "reason",
+          "occurred_at"
+        ]
+      },
+      "Settlement": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "PROCESSING",
+              "SETTLED",
+              "FAILED"
+            ]
+          },
+          "transferStatus": {
+            "type": "string"
+          },
+          "transferReference": {
+            "type": "string",
+            "nullable": true
+          },
+          "snapshot": {
+            "$ref": "#/components/schemas/Eligibility"
+          },
+          "decision": {
+            "$ref": "#/components/schemas/Evidence",
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "requestedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/History"
+            }
+          },
+          "pendingReason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "organizationId",
+          "eventId",
+          "status",
+          "transferStatus",
+          "transferReference",
+          "snapshot",
+          "decision",
+          "version",
+          "requestedAt",
+          "completedAt"
+        ]
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "active",
+          "version"
+        ]
+      },
+      "Setting": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "reminderLeadHours",
+              "supportEmail"
+            ]
+          },
+          "value": {
+            "oneOf": [
+              {
+                "type": "integer",
+                "format": "int64"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "version": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "changedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "editable": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "key",
+          "value",
+          "version",
+          "changedAt",
+          "editable"
+        ]
+      },
+      "Settings": {
+        "type": "object",
+        "properties": {
+          "settings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Setting"
+            }
+          },
+          "fixedPolicies": {
+            "type": "object",
+            "properties": {
+              "reservationMinutes": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "checkinBeforeHours": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "timezone": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "reservationMinutes",
+              "checkinBeforeHours",
+              "timezone"
+            ]
+          }
+        },
+        "required": [
+          "settings",
+          "fixedPolicies"
+        ]
+      },
+      "AuditRecord": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "actor_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "resource_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "action": {
+            "type": "string"
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "details": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "source",
+          "id",
+          "actor_id",
+          "resource_id",
+          "action",
+          "occurred_at",
+          "details"
+        ]
+      },
+      "SourceStatus": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "synchronized_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "completed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "last_error": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "source",
+          "synchronized_at",
+          "last_error"
+        ]
+      },
+      "ReportFilters": {
+        "type": "object",
+        "properties": {
+          "to": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "timezone": {
+            "type": "string"
+          },
+          "dateBasis": {
+            "type": "string"
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "from": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "from",
+          "to",
+          "timezone",
+          "dateBasis",
+          "eventId"
+        ]
+      },
+      "ReportMetrics": {
+        "type": "object",
+        "properties": {
+          "events": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "ticketsSold": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "paidTickets": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "freeTickets": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "grossVnd": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "cashCollectedVnd": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "cashReturnedVnd": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "netCashVnd": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "settledVnd": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "unknownFeeOrders": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "quota": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "soldCurrent": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "reservedCurrent": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "availableCurrent": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "openExceptions": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "unknownOutcomeAttempts": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "checkinsInPeriod": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "voidedTickets": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "platformFeeVnd": {
+            "type": "number",
+            "nullable": true
+          },
+          "gatewayFeeVnd": {
+            "type": "number",
+            "nullable": true
+          },
+          "adjustmentsVnd": {
+            "type": "number",
+            "nullable": true
+          },
+          "netVnd": {
+            "type": "number",
+            "nullable": true
+          },
+          "sellThroughPercent": {
+            "type": "number",
+            "nullable": true
+          },
+          "paymentSuccessPercent": {
+            "type": "number",
+            "nullable": true
+          },
+          "checkinPercent": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "events",
+          "ticketsSold",
+          "paidTickets",
+          "freeTickets",
+          "grossVnd",
+          "cashCollectedVnd",
+          "cashReturnedVnd",
+          "netCashVnd",
+          "settledVnd",
+          "unknownFeeOrders",
+          "quota",
+          "soldCurrent",
+          "reservedCurrent",
+          "availableCurrent",
+          "openExceptions",
+          "unknownOutcomeAttempts",
+          "checkinsInPeriod",
+          "voidedTickets",
+          "platformFeeVnd",
+          "gatewayFeeVnd",
+          "adjustmentsVnd",
+          "netVnd",
+          "sellThroughPercent",
+          "paymentSuccessPercent",
+          "checkinPercent"
+        ]
+      },
+      "ReportEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "quota": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "sold": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "available": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "capacity": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "sellThroughPercent": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "status",
+          "quota",
+          "sold",
+          "available",
+          "capacity",
+          "sellThroughPercent"
+        ]
+      },
+      "ReportRow": {
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "eventName": {
+            "type": "string"
+          },
+          "confirmedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "tickets": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "grossVnd": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "financeStatus": {
+            "type": "string"
+          },
+          "platformFeeVnd": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "gatewayFeeVnd": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "adjustmentsVnd": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "netVnd": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          }
+        },
+        "required": [
+          "orderId",
+          "eventId",
+          "eventName",
+          "confirmedAt",
+          "tickets",
+          "grossVnd",
+          "financeStatus",
+          "platformFeeVnd",
+          "gatewayFeeVnd",
+          "adjustmentsVnd",
+          "netVnd"
+        ]
+      },
+      "ReportSummary": {
+        "type": "object",
+        "properties": {
+          "snapshotId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "asOf": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dataUpdatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "currency": {
+            "type": "string"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ReportFilters"
+          },
+          "metrics": {
+            "$ref": "#/components/schemas/ReportMetrics"
+          },
+          "dateBasis": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "noSales": {
+            "type": "boolean"
+          },
+          "sourceStatus": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SourceStatus"
+            }
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReportEvent"
+            }
+          },
+          "series": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "date": {
+                  "type": "string"
+                },
+                "grossVnd": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "tickets": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              },
+              "required": [
+                "date",
+                "grossVnd",
+                "tickets"
+              ]
+            }
+          },
+          "byTicketType": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "eventId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "ticketTypeId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "tickets": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "grossVnd": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              },
+              "required": [
+                "eventId",
+                "ticketTypeId",
+                "name",
+                "tickets",
+                "grossVnd"
+              ]
+            }
+          },
+          "platformTotals": {
+            "type": "object",
+            "required": [
+              "users",
+              "organizations",
+              "observedAt"
+            ],
+            "properties": {
+              "users": {
+                "type": "integer",
+                "nullable": true
+              },
+              "organizations": {
+                "type": "integer",
+                "nullable": true
+              },
+              "observedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        },
+        "required": [
+          "snapshotId",
+          "asOf",
+          "dataUpdatedAt",
+          "currency",
+          "filters",
+          "metrics",
+          "dateBasis",
+          "noSales",
+          "sourceStatus",
+          "events",
+          "series",
+          "byTicketType"
+        ]
+      },
+      "SalesPage": {
+        "type": "object",
+        "properties": {
+          "snapshotId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReportRow"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "hasMore": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "snapshotId",
+          "data",
+          "total",
+          "hasMore"
+        ]
+      },
+      "SettlementPage": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Settlement"
+            }
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "data",
+          "hasMore",
+          "nextCursor"
+        ]
+      },
+      "ConfigurationPage": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Configuration"
+            }
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextCursor": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          }
+        },
+        "required": [
+          "data",
+          "hasMore",
+          "nextCursor"
+        ]
+      },
+      "CategoryPage": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Category"
+            }
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "data",
+          "hasMore",
+          "nextCursor"
+        ]
+      },
+      "AuditPage": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditRecord"
+            }
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SourceStatus"
+            }
+          }
+        },
+        "required": [
+          "data",
+          "hasMore",
+          "nextCursor",
+          "sources"
+        ]
+      }
+    }
+  }
+}

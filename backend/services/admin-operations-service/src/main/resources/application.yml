@@ -1,0 +1,52 @@
+server:
+  port: ${SERVER_PORT:8090}
+spring:
+  application:
+    name: admin-operations-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/event_ticketing}
+    username: ${DB_USERNAME:app_admin_audit}
+    password: ${DB_PASSWORD:local_admin_audit}
+  flyway:
+    schemas: admin_audit
+    default-schema: admin_audit
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${IDENTITY_JWK_URI:http://localhost:8081/api/v1/.well-known/jwks.json}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: admin-audit-v1
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    listener:
+      ack-mode: manual_immediate
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+      properties:
+        enable.idempotence: true
+        delivery.timeout.ms: 10000
+        request.timeout.ms: 5000
+        max.block.ms: 3000
+app:
+  jwt:
+    issuer: ${JWT_ISSUER:http://localhost:8081}
+  identity:
+    base-url: ${IDENTITY_BASE_URL:http://localhost:8081}
+    service-token: ${IDENTITY_SERVICE_TOKEN:local-service-token}
+  commerce-base-url: ${COMMERCE_BASE_URL:http://localhost:8083}
+  organization-base-url: ${ORGANIZATION_SERVICE_URL:http://localhost:8082}
+  finance-base-url: ${FINANCE_SERVICE_URL:http://localhost:8089}
+  discovery-base-url: ${DISCOVERY_SERVICE_URL:http://localhost:8084}
+  payment-base-url: ${PAYMENT_SERVICE_URL:http://localhost:8087}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

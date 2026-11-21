@@ -1,0 +1,15 @@
+.operation-filter { display:flex; flex-direction:row; flex-wrap:wrap; align-items:end; gap:16px; margin-bottom:24px; padding:20px; background:white; border:1px solid var(--border); border-radius:12px; }
+.operation-filter > div { flex:1 1 160px; min-width:0; }
+.operation-metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:0; border:1px solid var(--border); border-radius:12px; background:white; margin:24px 0; }
+.operation-metrics > div { padding:20px; min-width:0; }.operation-metrics dt { font-size:.8rem; color:#475569; }.operation-metrics dd { margin:10px 0 0; font-size:1.35rem; font-weight:700;  overflow-wrap:anywhere; }
+.operation-details { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px; }.operation-details dl { display:grid; align-items:baseline; grid-template-columns:1fr 1fr; gap:12px; }.operation-details dl > dt,.operation-details dl > dd { margin:0; }.operation-details dd { margin:0; text-align:right;  overflow-wrap:anywhere; }
+.operation-history { list-style:none; padding:0; }.operation-history li { padding:16px 0; border-bottom:1px solid var(--border); }.operation-history small { display:block; margin-top:6px; }
+.operation-bar { display:block; height:8px; margin-top:8px; background:var(--primary); border-radius:3px;  }.operation-table { min-width:680px; }.operation-table th { overflow-wrap:normal; }.operation-table td { white-space:nowrap; }.operation-table td:first-child { white-space:normal; min-width:180px; }.operation-id { overflow-wrap:anywhere; font-size:.8rem; }.operation-form { max-width:680px; }.operation-meta { font-size:.8rem; color:#475569; overflow-wrap:anywhere; }.operation-skeleton { min-height:180px; background:var(--soft); border-radius:12px; display:grid; place-items:center; margin:20px 0; }
+@media(max-width:1000px){.operation-metrics { grid-template-columns:repeat(2,minmax(0,1fr)); }.operation-details { grid-template-columns:1fr; }}
+@media(max-width:480px){.operation-filter { padding:16px; }.operation-filter > div { flex-basis:100%; }.operation-metrics > div { padding:16px 12px; }.operation-metrics dd { font-size:1.05rem; }.operation-details dl { grid-template-columns:1fr; gap:6px; }.operation-details dl > dd { text-align:left; margin-bottom:12px; }}
+
+.operation-filter label { display:block; margin:0 0 8px; }
+.panel > .operation-filter { border:0; padding:0; background:transparent; }
+
+
+.table-scroll + .panel { margin-top:24px; }
