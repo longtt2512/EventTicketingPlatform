@@ -11,3 +11,4 @@ export { IconComponent } from './icon.component';
 
 export { PasswordFieldComponent } from './password-field.component';
 export { refreshOnReturn } from './refresh-on-return';
+export { VndInputDirective } from './vnd-input.directive';

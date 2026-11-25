@@ -1,0 +1,25 @@
+:host { display: block; }
+.create-event { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 16px; align-items: start; margin-block: 20px 28px; }
+.create-event-name { min-width: 0; }
+.create-event label, .assignment-form label { display: block; margin: 0 0 8px; font-weight: 600; }
+.create-event button { margin: 32px 0 0; }
+.create-event > p { grid-column: 1 / -1; margin: 0; }
+.organization-events { table-layout: fixed; min-width: 0; }
+.organization-events th:first-child { width: 50%; }
+.organization-events th:last-child { width: 168px; }
+.organization-events td:first-child a { font-weight: 600; overflow-wrap: anywhere; }
+.organization-events td:last-child { text-align: right; }
+.organization-events .button-link { white-space: nowrap; }
+.empty-events { margin: 0; color: var(--muted); }
+.staff-assignment { margin-block: 24px; }
+.staff-assignment summary { width: fit-content; min-height: 44px; padding-block: 12px; cursor: pointer; font-weight: 600; }
+.assignment-form { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; gap: 16px; align-items: start; margin-block: 20px; }
+.assignment-form > div { min-width: 0; }
+.assignment-form button { margin: 32px 0 0; }
+@media (max-width: 767px) {
+  .create-event, .assignment-form { grid-template-columns: minmax(0, 1fr); }
+  .create-event button, .assignment-form button { margin: 0; width: 100%; }
+  .organization-events th:first-child { width: 60%; }
+  .organization-events th:last-child, .organization-events td:last-child { display: none; }
+  .organization-events td, .organization-events th { padding-inline: 8px; }
+}

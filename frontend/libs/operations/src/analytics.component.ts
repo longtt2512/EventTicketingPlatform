@@ -1,4 +1,4 @@
-import { refreshOnReturn } from '@event-ticketing/ui';
+import { refreshOnReturn, FORM_FEEDBACK } from '@event-ticketing/ui';
 import { OrganizationWorkspaceComponent } from '../../organization/src/organization-workspace.component';
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -9,7 +9,7 @@ import { dateTime, localTime, utcTime, label } from '../../events/src/event-mode
 import { OperationsApi, operationError } from './operations-api';
 import { ReportSummary, ReportRow, amount, percentage } from './operation-models';
 @Component({
-    selector: 'etp-analytics', imports: [OrganizationWorkspaceComponent, FormsModule], changeDetection: ChangeDetectionStrategy.OnPush, templateUrl: './analytics.component.html', styleUrl: './operations.scss'
+    selector: 'etp-analytics', imports: [OrganizationWorkspaceComponent, FormsModule, ...FORM_FEEDBACK], changeDetection: ChangeDetectionStrategy.OnPush, templateUrl: './analytics.component.html', styleUrl: './operations.scss'
 })
 export class AnalyticsComponent {private expanded=false;
  readonly api=inject(OperationsApi);private readonly destroy=inject(DestroyRef);readonly org=inject(ActivatedRoute).snapshot.paramMap.get('org');

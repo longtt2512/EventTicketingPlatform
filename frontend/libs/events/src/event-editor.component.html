@@ -1,42 +1,95 @@
-<div [etpUnsavedChanges]="hasUnsavedChanges()">
+<div class="event-authoring" [etpUnsavedChanges]="hasUnsavedChanges()">
 <a [routerLink]="['/organizations',org]" [queryParams]="{section:'events'}" class="back-link">Về sự kiện của tổ chức</a>
-@if(error()){<p class="notice error" role="alert">{{error()}}</p>@if(!event()){<button class="secondary" [disabled]="busy()" (click)="load()">Thử lại</button>}}@if(message()){<p class="notice success" role="status">{{message()}}</p>}
+@if(error()){<p class="notice error" role="alert">{{error()}}</p>@if(!event()){<button class="secondary" [disabled]="busy()" (click)="load()">Thử lại</button>}}@else if(message()){<p class="notice success" role="status">{{message()}}</p>}
 @if(event();as e){
-<div class="page-heading"><div><h1>{{e.name}}</h1><p><span class="status-badge" [attr.data-state]="e.status">{{label(e.status)}}</span> <span class="small">Cập nhật {{date(e.updatedAt)}}</span></p></div>@if(error()){<button class="secondary" type="button" [disabled]="busy()||uploading()" (click)="load()">Thử lại</button>}</div>
+<div class="page-heading"><div><h1>{{e.name}}</h1><p><span class="status-badge" [attr.data-state]="e.status">{{label(e.status)}}</span> <span class="small">Cập nhật {{date(e.updatedAt)}}</span></p></div></div>
 @if(e.cancellationPending){<p class="notice warning" role="status">Yêu cầu hủy đã được lưu và dừng bán. Hệ thống đang khóa check-in. Trạng thái sẽ được cập nhật khi hoàn tất.</p>}
 @if(e.reviewReason){<p class="notice" role="status"><strong>{{e.status==='CANCELLED'?'Lý do hủy':'Phản hồi kiểm duyệt'}}:</strong> {{e.reviewReason}}</p>}
 @if(e.status==='PENDING_REVIEW'){<p class="notice">Sự kiện đang chờ kiểm duyệt. Nội dung và hạng vé được khóa để giữ đúng phiên bản xét duyệt.</p>}
 @if(e.status==='APPROVED'){<p class="notice">Sự kiện đã được duyệt. Bạn có thể công khai ở bước Xem lại. Nếu sửa, sự kiện sẽ trở về bản nháp và cần duyệt lại.</p>}
 <nav class="event-steps" aria-label="Các bước chuẩn bị sự kiện">@for(item of ['Thông tin','Địa điểm','Hạng vé','Xem lại'];track item;let i=$index){<button class="secondary" type="button" [class.active]="step()===i+1" [attr.aria-current]="step()===i+1?'step':null" (click)="go(i+1)"><span>{{i+1}}</span>{{item}}</button>}</nav>
-<form etpForm #detailsForm="ngForm" (ngSubmit)="save()" [hidden]="step()>2">
-<fieldset [disabled]="!editable()||busy()||uploading()"><section [hidden]="step()!==1" class="panel"><h2>Thông tin sự kiện</h2><p>Có thể lưu bản nháp và bổ sung sau. Hoàn thiện đủ thông tin trước khi gửi kiểm duyệt.</p>
-<label for="event-title">Tên sự kiện</label><input etpField id="event-title" name="name" [(ngModel)]="input.name" required maxlength="200">
-<label for="event-category">Danh mục</label><select etpField id="event-category" name="category" [(ngModel)]="input.category"><option [ngValue]="null">Chọn danh mục</option>@if(input.category&&!categories().includes(input.category)){<option [value]="input.category">{{input.category}} (lịch sử)</option>}@for(c of categories();track c){<option [value]="c">{{c}}</option>}</select>
-<label for="event-description">Mô tả sự kiện</label><textarea etpField id="event-description" name="description" [(ngModel)]="input.description" rows="6" maxlength="20000"></textarea>
-<div class="media-editor"><div><label for="event-banner">Ảnh bìa</label><p class="small" id="banner-help">PNG hoặc JPEG, tối đa 5 MB. Ảnh ngang hiển thị tốt nhất.</p><input id="event-banner" type="file" accept="image/png,image/jpeg" aria-describedby="banner-help" (change)="upload($event,'BANNER')"></div><etp-event-image [mediaId]="input.bannerMediaId" [alt]="input.name"/></div>
-<label for="event-gallery">Thêm ảnh thư viện</label><input id="event-gallery" type="file" accept="image/png,image/jpeg" (change)="upload($event,'GALLERY')">
-<div class="gallery">@for(id of input.galleryMediaIds;track id){<div><etp-event-image [mediaId]="id" alt="Ảnh bổ sung cho sự kiện"/><button type="button" class="quiet" (click)="removeImage(id)">Bỏ ảnh khỏi thư viện</button></div>}</div>
-@if(uploading()){<p role="status">Đang tải và kiểm tra ảnh…</p>}</section>
-<section [hidden]="step()!==2" class="panel"><h2>Địa điểm và thời gian</h2><p>Thời gian theo {{input.timezone}}. Mỗi sự kiện có một địa điểm và một khoảng thời gian.</p>
-<label for="venue-name">Tên địa điểm</label><input etpField id="venue-name" name="venueName" [(ngModel)]="input.venueName" maxlength="200">
-<label for="venue-address">Địa chỉ</label><input etpField id="venue-address" name="venueAddress" [(ngModel)]="input.venueAddress" maxlength="500">
-<div class="form-grid"><div><label for="event-city">Thành phố</label><input etpField id="event-city" name="city" [(ngModel)]="input.city" maxlength="100"></div><div><label for="event-capacity">Sức chứa tối đa</label><input etpField id="event-capacity" type="number" name="capacity" [(ngModel)]="input.capacity" min="1" step="1"></div>
-<div><label for="event-start">Bắt đầu sự kiện</label><input etpField id="event-start" type="datetime-local" name="start" [(ngModel)]="start"></div><div><label for="event-end">Kết thúc sự kiện</label><input etpField id="event-end" type="datetime-local" name="end" [(ngModel)]="end"></div></div>
-<label for="event-terms">Điều khoản tham dự</label><textarea etpField id="event-terms" name="terms" [(ngModel)]="input.terms" rows="5" maxlength="20000"></textarea></section></fieldset>
-@if(editable()){<div class="editor-actions"><p class="small">{{detailsForm.dirty||uploading()?'Có thay đổi chưa lưu':'Bản nháp được lưu trên máy chủ'}}</p><div class="actions"><button [disabled]="busy()||uploading()">{{busy()?'Đang lưu…':'Lưu bản nháp'}}</button><button type="button" class="secondary" [disabled]="busy()||uploading()" (click)="save(step()+1)">Lưu và tiếp tục</button></div></div>}
+<form etpForm #detailsForm="ngForm" class="authoring-form" (input)="clearFeedback()" (change)="clearFeedback()" (ngSubmit)="save($event.submitter?.value === 'next' ? step()+1 : undefined)" [hidden]="step()>2">
+  <fieldset [disabled]="!editable()||busy()||uploading()">
+    <section [hidden]="step()!==1" class="form-step" aria-labelledby="event-info-heading">
+      <h2 id="event-info-heading">Thông tin sự kiện</h2>
+      <p class="step-intro">* Bắt buộc để gửi kiểm duyệt. Bạn có thể lưu bản nháp và bổ sung sau.</p>
+      <div class="basics-layout">
+        <div class="event-fields">
+          <div class="field">
+            <label for="event-title">Tên sự kiện</label>
+            <input etpField id="event-title" name="name" [(ngModel)]="input.name" required pattern=".*\S.*" maxlength="200">
+          </div>
+          <div class="field">
+            <label for="event-category">Danh mục</label>
+            <select etpField [etpRequiredForReview]="true" id="event-category" name="category" [(ngModel)]="input.category">
+              <option [ngValue]="null">Chọn danh mục</option>
+              @if(input.category&&!categories().includes(input.category)){<option [value]="input.category">{{input.category}} (lịch sử)</option>}
+              @for(c of categories();track c){<option [value]="c">{{c}}</option>}
+            </select>
+          </div>
+          <div class="field">
+            <label for="event-description">Mô tả sự kiện</label>
+            <textarea etpField [etpRequiredForReview]="true" id="event-description" name="description" [(ngModel)]="input.description" rows="5" maxlength="20000"></textarea>
+          </div>
+        </div>
+        <div class="event-media">
+          <label for="event-banner">Ảnh bìa <span class="required-marker" aria-hidden="true"></span></label>
+          @if(input.bannerMediaId){
+            <etp-event-image [mediaId]="input.bannerMediaId" [alt]="input.name"/>
+          }@else{<div class="banner-empty">Chưa có ảnh bìa</div>}
+          <input #bannerFile id="event-banner" hidden type="file" accept="image/png,image/jpeg" aria-describedby="banner-help" (change)="upload($event,'BANNER')">
+          <button type="button" id="banner-button" class="secondary upload-button" (click)="bannerFile.click()">{{input.bannerMediaId?'Đổi ảnh bìa':'Chọn ảnh bìa'}}</button>
+          <p class="small" id="banner-help">PNG hoặc JPEG, tối đa 5 MB. Nên dùng ảnh ngang.</p>
+          <details class="gallery-options">
+            <summary>Ảnh bổ sung @if(input.galleryMediaIds.length){({{input.galleryMediaIds.length}})}<span class="small">Không bắt buộc</span></summary>
+            <input #galleryFile id="event-gallery" hidden type="file" accept="image/png,image/jpeg" aria-label="Thêm ảnh thư viện" (change)="upload($event,'GALLERY')">
+            <button type="button" class="secondary" (click)="galleryFile.click()">Thêm ảnh thư viện</button>
+            <div class="gallery-thumbnails">
+              @for(id of input.galleryMediaIds;track id){<div><etp-event-image [mediaId]="id" alt="Ảnh bổ sung cho sự kiện"/><button type="button" class="quiet" (click)="removeImage(id)">Bỏ ảnh khỏi thư viện</button></div>}
+            </div>
+          </details>
+          @if(uploading()){<p role="status" class="small">Đang tải và kiểm tra ảnh…</p>}
+        </div>
+      </div>
+    </section>
+    <section [hidden]="step()!==2" class="form-step" aria-labelledby="event-venue-heading">
+      <h2 id="event-venue-heading">Địa điểm và thời gian</h2>
+      <p class="step-intro">* Bắt buộc để gửi kiểm duyệt. Thời gian theo {{input.timezone}}.</p>
+      <div class="venue-fields">
+        <div class="field"><label for="venue-name">Tên địa điểm</label><input etpField [etpRequiredForReview]="true" id="venue-name" name="venueName" [(ngModel)]="input.venueName" maxlength="200"></div>
+        <div class="field"><label for="venue-address">Địa chỉ</label><input etpField [etpRequiredForReview]="true" id="venue-address" name="venueAddress" [(ngModel)]="input.venueAddress" maxlength="500"></div>
+        <div class="form-grid">
+          <div class="field"><label for="event-city">Thành phố</label><input etpField [etpRequiredForReview]="true" id="event-city" name="city" [(ngModel)]="input.city" maxlength="100"></div>
+          <div class="field"><label for="event-capacity">Sức chứa tối đa</label><input etpField [etpRequiredForReview]="true" id="event-capacity" type="number" name="capacity" [(ngModel)]="input.capacity" min="1" step="1" pattern="[0-9]+"></div>
+          <div class="field"><label for="event-start">Bắt đầu sự kiện</label><input etpField [etpRequiredForReview]="true" id="event-start" etpEventDate="start" [eventTimezone]="input.timezone" [min]="earliestDate()" type="datetime-local" name="start" [(ngModel)]="start"></div>
+          <div class="field"><label for="event-end">Kết thúc sự kiện</label><input etpField [etpRequiredForReview]="true" id="event-end" etpEventDate="end" [eventStart]="start" [eventTimezone]="input.timezone" [min]="start||earliestDate()" type="datetime-local" name="end" [(ngModel)]="end"></div>
+        </div>
+        <div class="field"><label for="event-terms">Điều khoản tham dự</label><textarea etpField [etpRequiredForReview]="true" id="event-terms" name="terms" [(ngModel)]="input.terms" rows="4" maxlength="20000"></textarea></div>
+      </div>
+    </section>
+  </fieldset>
+  @if(editable()){
+    <footer class="form-footer">
+      <p class="small" role="status">{{uploading()?'Đang tải ảnh…':busy()?'Đang lưu…':error()?'Chưa lưu được thay đổi':contentDirty()?'Có thay đổi chưa lưu':'Đã lưu bản nháp'}}</p>
+      <div class="step-actions">
+        @if(step()>1){<button type="button" class="quiet" [disabled]="busy()||uploading()" (click)="go(step()-1)">Quay lại</button>}
+        <button type="submit" value="draft" class="secondary" [disabled]="busy()||uploading()">Lưu bản nháp</button>
+        <button type="submit" value="next" [disabled]="busy()||uploading()">Lưu và tiếp tục</button>
+      </div>
+    </footer>
+  }
 </form>
-<section class="panel" [hidden]="step()!==3">@if(contentDirty()){<p class="notice">Bạn có thay đổi chưa lưu ở thông tin hoặc địa điểm. Lưu bản nháp trước khi chỉnh hạng vé.</p>}<etp-ticket-editor [event]="e" [readonly]="contentDirty()" (changed)="accept($event)"/></section>
+<section class="panel" [hidden]="step()!==3">@if(contentDirty()){<p class="notice">Bạn có thay đổi chưa lưu ở thông tin hoặc địa điểm. Lưu bản nháp trước khi chỉnh hạng vé.</p>}<etp-ticket-editor [event]="e" [readonly]="contentDirty()" (changed)="clearFeedback();accept($event)" (prepareDetails)="go(2)"/>@if(!tickets?.editing()){<div class="ticket-step-footer"><button type="button" class="secondary" (click)="go(4)">Tiếp tục: Xem lại</button></div>}</section>
 <section [hidden]="step()!==4" class="panel"><h2>Xem lại và công khai</h2><div class="review-layout"><etp-event-image [mediaId]="e.bannerMediaId" [alt]="e.name" [title]="e.name" [category]="e.category"/><div><h3>{{e.name}}</h3><p>{{e.category||'Chưa chọn danh mục'}}</p><p>{{e.venueName||'Chưa có địa điểm'}} · {{e.city}}</p><p>{{date(e.startAt,e.timezone)}} – {{date(e.endAt,e.timezone)}}</p><p>Sức chứa: {{e.capacity??'Chưa thiết lập'}}</p></div></div>
-@if(editable()){@if(missing().length){<h3>Cần bổ sung trước khi gửi duyệt</h3><ul>@for(item of missing();track item){<li>{{item}}</li>}</ul>}@else{<p class="notice success">Các thông tin bắt buộc đã có. Kiểm tra lại thời gian, nội dung và hạng vé trước khi gửi.</p>}}
+@if(editable()){@if(missing().length){<div class="review-checklist"><h3>Cần bổ sung {{missing().length}} mục trước khi gửi duyệt</h3><p>Chọn mục bên dưới để đến đúng chỗ cần điền.</p><ul>@for(item of missing();track item.field){<li><button type="button" class="quiet" (click)="openRequired(item)">{{item.label}}</button></li>}</ul></div>}@else{<p class="step-intro">Các thông tin bắt buộc đã có. Kiểm tra lại thời gian, nội dung và hạng vé trước khi gửi.</p>}}
 <div class="readable-copy"><h3>Mô tả</h3><p>{{e.description||'Chưa có mô tả.'}}</p><h3>Điều khoản tham dự</h3><p>{{e.terms||'Chưa có điều khoản.'}}</p></div>
-<div class="actions">@if(e.status==='DRAFT'||e.status==='REJECTED'){<button type="button" [disabled]="busy()" (click)="action('submit')">Gửi kiểm duyệt</button>}@if(e.status==='APPROVED'){<button type="button" [disabled]="busy()" (click)="action('publish')">Công khai sự kiện</button>}</div>
+<footer class="review-footer">@if(contentDirty()){<p class="notice">Lưu thay đổi ở bước Thông tin hoặc Địa điểm trước khi gửi.</p>}<div class="actions">@if(e.status==='DRAFT'||e.status==='REJECTED'){<button type="button" [disabled]="busy()||hasUnsavedChanges()||missing().length>0" (click)="action('submit')">Gửi kiểm duyệt</button>}@if(e.status==='APPROVED'){<button type="button" [disabled]="busy()" (click)="action('publish')">Công khai sự kiện</button>}</div></footer>
 @if(e.publishedAt){<p class="small">Liên kết khách xem: /events/{{e.id}}</p>}
 <details class="event-details-section"><summary>Người tham dự</summary><button class="secondary" type="button" [disabled]="attendeeBusy()" (click)="loadAttendees()">Tải danh sách người tham dự</button>@if(attendeesLoaded()){@if(!attendees().length){<p>Chưa có người tham dự.</p>}@else{<ul>@for(a of attendees();track a.id){<li>{{a.name}} · {{a.ticketType}} · {{label(a.status)}}<br><small class="wrap">Mã vé: {{a.id}}</small>@if(a.orderId){<br><small class="wrap">Mã đơn: {{a.orderId}}</small>}@if(a.checkedInAt){<br><small>Đã check-in: {{date(a.checkedInAt)}}</small>}</li>}</ul>}@if(attendeeCursor()){<button type="button" class="secondary" [disabled]="attendeeBusy()" (click)="loadAttendees(true)">Xem thêm người tham dự</button>}}</details>
 <details class="event-details-section"><summary>Lịch sử sự kiện</summary><ol class="event-history">@for(h of history();track h.version){<li><strong>{{actionLabel(h.action)}}</strong> · {{date(h.occurredAt)}}@if(h.reason){<p>{{h.reason}}</p>}</li>}@empty{<li>Chưa có thao tác được ghi nhận.</li>}</ol></details>
-@if(!e.cancellationPending&&e.status!=='CANCELLED'&&e.status!=='COMPLETED'){<details class="event-details-section cancellation"><summary>Hủy sự kiện</summary><p>Thao tác này dừng bán vé. Sự kiện và lịch sử sẽ được giữ lại.</p><label for="cancel-reason">Lý do hủy sự kiện</label><textarea id="cancel-reason" [(ngModel)]="reason" maxlength="2000"></textarea><button class="danger" type="button" [disabled]="busy()" (click)="action('cancel')">Hủy sự kiện</button></details>}
+@if(!e.cancellationPending&&e.status!=='CANCELLED'&&e.status!=='COMPLETED'){<details class="event-details-section cancellation"><summary>Hủy sự kiện</summary><p>Thao tác này dừng bán vé. Sự kiện và lịch sử sẽ được giữ lại.</p><label for="cancel-reason">Lý do hủy sự kiện <span class="required-marker" aria-hidden="true"></span></label><textarea id="cancel-reason" [(ngModel)]="reason" maxlength="2000"></textarea><button class="danger" type="button" [disabled]="busy()" (click)="action('cancel')">Hủy sự kiện</button></details>}
 </section>
 }@else if(busy()){<p role="status" class="notice">Đang tải sự kiện…</p>}
 @if(confirmation.current();as confirm){<etp-confirm-dialog [confirmation]="confirm" (resolved)="confirmation.resolve($event)"/>}
+@if(event();as e){@if(step()===4){<nav class="event-operations" aria-label="Vận hành sự kiện"><a [routerLink]="['/organizations',e.organizationId,'events',e.id,'orders']">Xem đơn hàng của sự kiện</a><a [routerLink]="['/check-in/events',e.id,'stats']">Thống kê check-in</a></nav>}}
 </div>
-
-@if(event();as e){<a class="button-link secondary" [routerLink]="['/organizations',e.organizationId,'events',e.id,'orders']">Xem đơn hàng của sự kiện</a> <a class="button-link secondary" [routerLink]="['/check-in/events',e.id,'stats']">Thống kê check-in</a>}

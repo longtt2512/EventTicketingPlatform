@@ -28,7 +28,7 @@ public class CommissionClient {
             return snapshot;
         } catch(RuntimeException ex) {
             throw new ApiException(HttpStatus.SERVICE_UNAVAILABLE,"COMMISSION_UNAVAILABLE",
-                "Chưa xác định được phí của đơn. Vui lòng thử lại; vé chưa bị giữ.");
+                "Chưa xác định được phí của đơn. Vui lòng thử lại. Vé chưa bị giữ.");
         }
     }
 }

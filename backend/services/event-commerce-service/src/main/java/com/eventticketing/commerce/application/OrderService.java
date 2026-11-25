@@ -47,9 +47,9 @@ public class OrderService {
   var feeLines=new ArrayList<Map<String,Object>>();
   for(var t:e.ticketTypes())if(quantities.containsKey(t.id()))feeLines.add(Map.of("ticketTypeId",t.id(),"unitPrice",t.price(),"quantity",quantities.get(t.id())));
   var snapshot=commission.quote(id,feeLines);
-  if(snapshot==null||snapshot.path("grossVnd").asLong(-1)!=total)throw conflict("COMMISSION_UNAVAILABLE","Snapshot phí không khớp đơn; hãy thử lại.");
+  if(snapshot==null||snapshot.path("grossVnd").asLong(-1)!=total)throw conflict("COMMISSION_UNAVAILABLE","Snapshot phí không khớp đơn. Hãy thử lại.");
   Instant captured=Instant.parse(snapshot.path("capturedAt").asText()),expires=captured.plusSeconds(600);
-  if(!Instant.now().isBefore(expires))throw conflict("COMMISSION_UNAVAILABLE","Snapshot phí đã hết hạn; hãy thử lại.");
+  if(!Instant.now().isBefore(expires))throw conflict("COMMISSION_UNAVAILABLE","Snapshot phí đã hết hạn. Hãy thử lại.");
   inventory.reserve(e.id(),id,quantities,expires);
   db.update("insert into event_commerce.orders(id,customer_id,event_id,organization_id,event_name,terms_snapshot,status,total_vnd,expires_at,created_at,commission_snapshot) values (?,?,?,?,?,?,'PENDING_PAYMENT',?,?,?,?::jsonb)",id,actor,e.id(),e.organizationId(),e.name(),e.terms(),total,Timestamp.from(expires),Timestamp.from(captured),snapshot.toString());
   for(var t:e.ticketTypes())if(quantities.containsKey(t.id()))db.update("insert into event_commerce.order_items(id,order_id,ticket_type_id,name,quantity,unit_price) values (?,?,?,?,?,?)",UUID.randomUUID(),id,t.id(),t.name(),quantities.get(t.id()),t.price());

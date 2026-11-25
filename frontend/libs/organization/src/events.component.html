@@ -1,10 +1,58 @@
-<section class="panel"><h2>Sự kiện của tổ chức</h2><p>Chọn sự kiện để hoàn thiện nội dung, thiết lập hạng vé và gửi kiểm duyệt.</p><div class="table-scroll"><table><thead><tr><th>Sự kiện</th><th>Trạng thái</th><th>Mã sự kiện</th></tr></thead><tbody>@for(e of events();track e.id){<tr><td><a [routerLink]="workspace==='admin'?['/events']:['/organizations',organization.id,'events',e.id]" [queryParams]="workspace==='admin'?{event:e.id,status:''}:null"><strong>{{e.name}}</strong><small>Quản lý sự kiện</small></a></td><td><span class="status-badge" [attr.data-state]="e.status">{{label(e.status)}}</span></td><td class="small wrap">{{e.id}}</td></tr>}@empty{<tr><td colspan="3">Chưa có sự kiện. Tạo bản nháp bên dưới để bắt đầu.</td></tr>}</tbody></table></div></section>
-@if(error()){<p class="notice error" role="alert">{{error()}}</p>} @if(message()){<p class="notice success" role="status">{{message()}}</p>}
-<section class="panel"><h2>Sự kiện và nhân viên</h2><p>Chuẩn bị sự kiện nháp và phân công nhân viên thuộc tổ chức.</p>
-<div class="table-scroll" role="region" aria-label="Bảng dữ liệu, cuộn ngang để xem thêm" tabindex="0"><table><thead><tr><th>Sự kiện</th><th>Nhân viên</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody>
-@for(a of assignments();track a.id){<tr><td>{{eventName(a.eventId)}}</td><td>{{staffName(a.userId)}}</td><td>{{label(a.status)}}</td><td>@if(a.status==='ACTIVE'&&organization.status==='ACTIVE'){<button class="danger" [disabled]="busy()" (click)="revoke(a)">Thu hồi phân công</button>}</td></tr>}
-@empty{<tr><td colspan="4">Chưa có phân công.</td></tr>}</tbody></table></div>@if(error()){<button class="secondary" [disabled]="busy()" (click)="load()">Thử lại</button>}</section>
-@if(organization.status==='ACTIVE'){<div class="settings-grid"><section class="panel"><h2>Tạo sự kiện nháp</h2><form etpForm #draft="ngForm" (ngSubmit)="create()"><label for="event-name">Tên sự kiện</label><input etpField id="event-name" name="name" [(ngModel)]="name" required maxlength="200"><button [disabled]="busy()">Tạo bản nháp</button></form></section>
-<section class="panel"><h2>Phân công nhân viên</h2><form etpForm #assignment="ngForm" (ngSubmit)="assign()"><label for="assignment-event">Sự kiện</label><select etpField id="assignment-event" name="eventId" [(ngModel)]="eventId" required><option value="">Chọn sự kiện</option>@for(e of events();track e.id){<option [value]="e.id">{{e.name}}</option>}</select>
-<label for="assignment-staff">Nhân viên soát vé</label><select etpField id="assignment-staff" name="userId" [(ngModel)]="userId" required><option value="">Chọn nhân viên</option>@for(m of staff();track m.userId){<option [value]="m.userId">{{m.displayName}} — {{m.email}}</option>}</select>
-@if(!staff().length){<p class="small">Thêm thành viên với quyền Soát vé trong mục Thành viên trước.</p>}<button [disabled]="busy()">Phân công nhân viên</button></form></section></div>}
+@if(error()){<p class="notice error" role="alert">{{error()}}</p>}
+@if(message()){<p class="notice success" role="status">{{message()}}</p>}
+
+<section class="panel" aria-labelledby="organization-events-title">
+  <h2 id="organization-events-title">Sự kiện của tổ chức</h2>
+  @if(organization.status==='ACTIVE'){
+    <form etpForm #draft="ngForm" class="create-event" (ngSubmit)="create()">
+      <div class="create-event-name">
+        <label for="event-name">Tên sự kiện mới</label>
+        <input etpField id="event-name" name="name" [(ngModel)]="name" required pattern=".*\S.*" maxlength="200" aria-describedby="create-event-help" [readonly]="busy()">
+      </div>
+      <button type="submit" [disabled]="busy()">Tạo và chỉnh sửa</button>
+      <p id="create-event-help" class="small">Bản nháp được lưu ngay khi tạo. Bạn sẽ chuyển đến trang bổ sung thông tin và hạng vé.</p>
+    </form>
+  }
+  @if(events().length){
+    <div class="table-scroll" role="region" aria-label="Sự kiện của tổ chức" tabindex="0">
+      <table class="organization-events"><thead><tr><th>Sự kiện</th><th>Trạng thái</th><th><span class="visually-hidden">Thao tác</span></th></tr></thead><tbody>
+        @for(e of events();track e.id){
+          <tr>
+            <td><a [routerLink]="workspace==='admin'?['/events']:['/organizations',organization.id,'events',e.id]" [queryParams]="workspace==='admin'?{event:e.id,status:''}:null">{{e.name}}</a></td>
+            <td><span class="status-badge" [attr.data-state]="e.status">{{label(e.status)}}</span></td>
+            <td><a class="button-link secondary" [attr.aria-label]="'Mở sự kiện '+e.name" [routerLink]="workspace==='admin'?['/events']:['/organizations',organization.id,'events',e.id]" [queryParams]="workspace==='admin'?{event:e.id,status:''}:null">Mở sự kiện</a></td>
+          </tr>
+        }
+      </tbody></table>
+    </div>
+  }@else if(busy()){
+    <p role="status">Đang tải sự kiện…</p>
+  }@else if(!error()){
+    <p class="empty-events">{{organization.status==='ACTIVE'?'Chưa có sự kiện. Nhập tên để tạo bản nháp đầu tiên.':'Chưa có sự kiện.'}}</p>
+  }
+  @if(error()){<button type="button" class="secondary" [disabled]="busy()" (click)="load()">Thử lại</button>}
+</section>
+
+<details class="staff-assignment">
+  <summary>Phân công nhân viên soát vé</summary>
+  <p class="small">Thiết lập khi cần giao nhân viên kiểm tra vé tại sự kiện.</p>
+  @if(organization.status==='ACTIVE'){
+    <form etpForm #assignment="ngForm" class="assignment-form" (ngSubmit)="assign()">
+      <div>
+        <label for="assignment-event">Sự kiện</label>
+        <select etpField id="assignment-event" name="eventId" [(ngModel)]="eventId" required><option value="">Chọn sự kiện</option>@for(e of events();track e.id){<option [value]="e.id">{{e.name}}</option>}</select>
+      </div>
+      <div>
+        <label for="assignment-staff">Nhân viên soát vé</label>
+        <select etpField id="assignment-staff" name="userId" [(ngModel)]="userId" required><option value="">Chọn nhân viên</option>@for(m of staff();track m.userId){<option [value]="m.userId">{{m.displayName}} — {{m.email}}</option>}</select>
+      </div>
+      <button type="submit" class="secondary" [disabled]="busy()">Phân công nhân viên</button>
+    </form>
+    @if(!staff().length){<p class="small">Thêm thành viên với quyền Soát vé trong mục Thành viên trước.</p>}
+  }
+  @if(assignments().length){
+    <div class="table-scroll" role="region" aria-label="Phân công nhân viên" tabindex="0"><table><thead><tr><th>Sự kiện</th><th>Nhân viên</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody>
+      @for(a of assignments();track a.id){<tr><td>{{eventName(a.eventId)}}</td><td>{{staffName(a.userId)}}</td><td>{{label(a.status)}}</td><td>@if(a.status==='ACTIVE'&&organization.status==='ACTIVE'){<button type="button" class="danger" [disabled]="busy()" (click)="revoke(a)">Thu hồi phân công</button>}</td></tr>}
+    </tbody></table></div>
+  }@else{<p class="small">Chưa có phân công.</p>}
+</details>

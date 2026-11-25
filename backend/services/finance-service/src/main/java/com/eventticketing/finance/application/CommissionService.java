@@ -87,7 +87,7 @@ public class CommissionService {
     private static void validate(String mode,Integer bps,Long fixed) {
         if(!("PERCENTAGE".equals(mode)&&bps!=null&&bps>=0&&bps<=10000&&fixed==null)
             &&!("FIXED_AMOUNT".equals(mode)&&fixed!=null&&fixed>=0&&bps==null))
-            throw invalid("Chọn phần trăm 0–100% hoặc phí cố định không âm; không kết hợp hai kiểu.");
+            throw invalid("Chọn phần trăm 0–100% hoặc phí cố định không âm. Không kết hợp hai kiểu.");
     }
     private Configuration current(Instant at) {
         return db.query("select * from finance.commission_configs where effective_at<=? order by effective_at desc limit 1",

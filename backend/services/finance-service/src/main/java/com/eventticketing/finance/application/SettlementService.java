@@ -47,7 +47,7 @@ public class SettlementService {
     public ObjectNode process(UUID id,UUID actor,long version,String reason){
         var old=repo.lock(id);version(old,version);String status=old.path("status").asText();
         if(!Set.of("PENDING","FAILED").contains(status)||("FAILED".equals(status)&&!"NOT_PAID".equals(old.path("transferStatus").asText())))throw conflict("INVALID_SETTLEMENT_STATE","Chỉ tiếp tục batch mới hoặc lần chuyển chắc chắn chưa trả.");
-        if(!old.path("decision").isNull())throw conflict("TRANSFER_UNKNOWN","Còn bằng chứng đang xác minh; không được chỉ dẫn trả lần hai.");
+        if(!old.path("decision").isNull())throw conflict("TRANSFER_UNKNOWN","Còn bằng chứng đang xác minh. Không được chỉ dẫn trả lần hai.");
         var fresh=refresh(old,actor);sameAmounts(old.path("snapshot"),fresh);sameDestination(old.path("snapshot"),fresh);
         repo.db().update("update finance.settlements set status='PROCESSING',snapshot=?::jsonb,transfer_status='NOT_STARTED',version=version+1 where id=?",fresh.toString(),id);
         return changed(id,actor,"SETTLEMENT_PROCESSING",old,reason);
@@ -79,15 +79,15 @@ public class SettlementService {
         if(evidence.amountVnd()!=net||evidence.occurredAt().isAfter(Instant.now())||evidence.occurredAt().isBefore(Instant.parse(old.path("requestedAt").asText())))throw CommissionService.invalid("Bằng chứng phải khớp số tiền và ngày từ lúc yêu cầu đến hiện tại.");
         boolean zero=net==0;
         if(zero?(!"NO_TRANSFER".equals(evidence.kind())||(evidence.reference()!=null&&!evidence.reference().isBlank())):(!"PAID".equals(evidence.kind())||evidence.reference()==null||!evidence.reference().matches("MOCK-SETTLEMENT-[A-Za-z0-9-]{6,80}")))
-            throw CommissionService.invalid("Số tiền 0 cần quyết định không chuyển tiền; khoản trả cần mã MOCK-SETTLEMENT-… và bằng chứng mô phỏng.");
+            throw CommissionService.invalid("Số tiền 0 cần quyết định không chuyển tiền. Khoản trả cần mã MOCK-SETTLEMENT-… và bằng chứng mô phỏng.");
         repo.db().update("update finance.settlements set snapshot=?::jsonb,decision=?::jsonb,decision_actor=?,transfer_status='UNKNOWN',transfer_reference=?,version=version+1 where id=?",
             fresh.toString(),input.toString(),actor,zero?null:evidence.reference(),id);
         return changed(id,actor,"TRANSFER_EVIDENCE_RECORDED",old,evidence.evidence());
     }
     private ObjectNode refresh(JsonNode old,UUID actor){var fresh=eligibility.evaluate(UUID.fromString(old.path("organizationId").asText()),UUID.fromString(old.path("eventId").asText()),actor,true);requireEligible(fresh);return fresh;}
     private void requireEligible(JsonNode value){if(!value.path("eligible").asBoolean())throw conflict("SETTLEMENT_NOT_ELIGIBLE","Chưa đủ điều kiện đối soát: "+value.path("reasons").toString());}
-    private void sameAmounts(JsonNode old,JsonNode fresh){for(String name:List.of("grossVnd","platformFeeVnd","gatewayFeeVnd","adjustmentsVnd","netVnd","items"))if(!same(old.path(name),fresh.path(name)))throw conflict("FINANCIAL_STATE_CHANGED","Snapshot tài chính đã thay đổi; cần kiểm tra trước khi chi trả.");}
-    private void sameDestination(JsonNode old,JsonNode fresh){for(String name:List.of("id","destination_version"))if(!same(old.path("payout").path(name),fresh.path("payout").path(name)))throw conflict("PAYOUT_CHANGED","Tài khoản đã đổi; cập nhật snapshot có kiểm chứng trước khi tiếp tục.");}
+    private void sameAmounts(JsonNode old,JsonNode fresh){for(String name:List.of("grossVnd","platformFeeVnd","gatewayFeeVnd","adjustmentsVnd","netVnd","items"))if(!same(old.path(name),fresh.path(name)))throw conflict("FINANCIAL_STATE_CHANGED","Snapshot tài chính đã thay đổi. Cần kiểm tra trước khi chi trả.");}
+    private void sameDestination(JsonNode old,JsonNode fresh){for(String name:List.of("id","destination_version"))if(!same(old.path("payout").path(name),fresh.path("payout").path(name)))throw conflict("PAYOUT_CHANGED","Tài khoản đã đổi. Cập nhật snapshot có kiểm chứng trước khi tiếp tục.");}
     private ObjectNode changed(UUID id,UUID actor,String action,ObjectNode before,String reason){var value=repo.get(id);facts.audit(id,actor,action,before,value,reason);facts.emit(id,"updated",value);return value;}
     private boolean same(JsonNode left,JsonNode right){return left.equals((a,b)->a.isNumber()&&b.isNumber()?a.decimalValue().compareTo(b.decimalValue()):a.equals(b)?0:1,right);}
     private void version(JsonNode value,long expected){if(value.path("version").longValue()!=expected)throw conflict("STALE_VERSION","Đối soát đã thay đổi. Tải lại và kiểm tra trước khi tiếp tục.");}

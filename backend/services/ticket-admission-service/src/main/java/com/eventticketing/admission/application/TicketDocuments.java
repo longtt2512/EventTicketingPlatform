@@ -9,5 +9,5 @@ import org.springframework.transaction.annotation.Transactional;
 public class TicketDocuments {
  private final TicketQueries tickets;private final TicketPdfRenderer renderer;private final TicketArtifactStore store;
  public TicketDocuments(TicketQueries tickets,TicketPdfRenderer renderer,TicketArtifactStore store){this.tickets=tickets;this.renderer=renderer;this.store=store;}
- @Transactional public byte[] pdf(UUID id,UUID actor){var ticket=tickets.detail(id,actor);try{var bytes=renderer.render(ticket);store.put("tickets/"+id+"/"+ticket.version()+"-"+(ticket.qrImage()!=null?"qr":"status")+".pdf",bytes);return bytes;}catch(RuntimeException ex){throw new ApiException(HttpStatus.SERVICE_UNAVAILABLE,"PDF_UNAVAILABLE","Chưa thể tạo bản PDF. Vé vẫn được giữ nguyên; hãy thử tải lại.");}}
+ @Transactional public byte[] pdf(UUID id,UUID actor){var ticket=tickets.detail(id,actor);try{var bytes=renderer.render(ticket);store.put("tickets/"+id+"/"+ticket.version()+"-"+(ticket.qrImage()!=null?"qr":"status")+".pdf",bytes);return bytes;}catch(RuntimeException ex){throw new ApiException(HttpStatus.SERVICE_UNAVAILABLE,"PDF_UNAVAILABLE","Chưa thể tạo bản PDF. Vé vẫn được giữ nguyên. Hãy thử tải lại.");}}
 }

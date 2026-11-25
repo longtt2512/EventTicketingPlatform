@@ -64,7 +64,7 @@ public class EventService {
         if(previous==null&&e.status().equals("PUBLISHED"))throw invalid("Không thể thêm hạng vé sau khi công khai.");
         if(e.status().equals("PUBLISHED")&&(!previous.name().equals(input.name().trim())||!previous.description().equals(text(input.description()))||!previous.saleStart().equals(input.saleStart())||!previous.saleEnd().equals(input.saleEnd())||previous.maxPerOrder()!=input.maxPerOrder()))
             throw invalid("Sau khi công khai, chỉ có thể đổi giá và hạn mức cho vé mới hoặc tạm dừng bán.");
-        if(!input.saleStart().isBefore(input.saleEnd())||e.startAt()==null||input.saleEnd().isAfter(e.startAt()))throw invalid("Chọn thời gian mở bán trước đóng bán; đóng bán không sau giờ bắt đầu sự kiện.");
+        if(!input.saleStart().isBefore(input.saleEnd())||e.startAt()==null||input.saleEnd().isAfter(e.startAt()))throw invalid("Thời gian mở bán phải trước thời gian đóng bán. Đóng bán không được sau giờ bắt đầu sự kiện.");
         if(input.maxPerOrder()>input.quota())throw invalid("Giới hạn mỗi đơn không được lớn hơn hạn mức hạng vé.");
         if(previous!=null&&input.quota()<previous.reserved()+previous.sold())throw invalid("Không thể giảm hạn mức dưới số vé đã bán và đang giữ chỗ.");
         int total=e.ticketTypes().stream().filter(t->!t.id().equals(ticketId)).mapToInt(TicketView::quota).sum();
@@ -115,6 +115,9 @@ public class EventService {
     }
     private void validateInput(EventInput i,String currentCategory) {
         categories.requireNewSelection(emptyToNull(i.category()),currentCategory);
+        var now=Instant.now();
+        if(i.startAt()!=null&&!i.startAt().isAfter(now))throw invalid("Thời gian bắt đầu phải ở tương lai. Hãy chọn lại ngày và giờ bắt đầu.");
+        if(i.endAt()!=null&&!i.endAt().isAfter(now))throw invalid("Thời gian kết thúc phải ở tương lai. Hãy chọn lại ngày và giờ kết thúc.");
         if(i.startAt()!=null&&i.endAt()!=null&&!i.startAt().isBefore(i.endAt()))throw invalid("Giờ kết thúc phải sau giờ bắt đầu.");
         try {ZoneId.of(i.timezone()==null?"Asia/Ho_Chi_Minh":i.timezone());}catch(DateTimeException ex){throw invalid("Múi giờ không hợp lệ.");}
     }

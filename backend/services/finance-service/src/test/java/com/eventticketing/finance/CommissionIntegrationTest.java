@@ -52,7 +52,7 @@ class CommissionIntegrationTest {
         var r=request(1000,1);service.quote(r);
         assertThatThrownBy(()->service.quote(new QuoteRequest(r.orderId(),List.of(new Line(r.lines().getFirst().ticketTypeId(),2000,1)))))
             .extracting(e->((com.eventticketing.finance.api.ApiException)e).getCode()).isEqualTo("IDEMPOTENCY_CONFLICT");
-        assertThatThrownBy(()->service.change(new Change("PERCENTAGE",500,100L,null,"Hybrid"),0,UUID.randomUUID())).hasMessageContaining("không kết hợp");
+        assertThatThrownBy(()->service.change(new Change("PERCENTAGE",500,100L,null,"Hybrid"),0,UUID.randomUUID())).hasMessageContaining("Không kết hợp");
         assertThatThrownBy(()->service.change(new Change("PERCENTAGE",10001,null,null,"Invalid"),0,UUID.randomUUID())).hasMessageContaining("0–100%");
         assertThatThrownBy(()->service.change(new Change("FIXED_AMOUNT",null,-1L,null,"Invalid"),0,UUID.randomUUID())).hasMessageContaining("không âm");
     }

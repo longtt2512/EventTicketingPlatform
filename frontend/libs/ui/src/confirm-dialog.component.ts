@@ -17,7 +17,7 @@ export interface Confirmation {
     <p class="confirmation-subject">{{ confirmation.subject }}</p>
     <p id="confirmation-description">{{ confirmation.description }}</p>
     @if (confirmation.reasonRequired) {
-      <div class="confirmation-input"><label for="confirmation-reason">Lý do thay đổi trạng thái</label>
+      <div class="confirmation-input"><label for="confirmation-reason">Lý do thay đổi trạng thái <span class="required-marker" aria-hidden="true"></span></label>
         <textarea #reasonField id="confirmation-reason" maxlength="1000" required aria-describedby="confirmation-reason-help" [attr.aria-invalid]="reasonError()" (input)="reason = reasonField.value; reasonError.set(false)"></textarea>
         <p id="confirmation-reason-help" class="small">Bắt buộc nhập lý do để lưu vào lịch sử của danh mục này.</p>
         @if(reasonError()){<p class="field-error" role="alert">Vui lòng nhập lý do thay đổi trạng thái.</p>}

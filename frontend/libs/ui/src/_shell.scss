@@ -81,7 +81,7 @@ p { max-width: none; }
 .portal-brand { padding-inline: 10px; margin-bottom: 24px; }
 .portal-brand small { display: block; font-size: .55rem; color: #64748b; font-weight: 500; letter-spacing: .08em; margin-top: 1px; }
 .workspace-switch { display: flex; align-items: center; gap: 10px; padding: 12px 10px; border: 1px solid #e8e6fb; background: #f7f6ff; border-radius: 7px; font-size: .8rem; font-weight: 600; text-decoration: none; color: #1f2937; }
-.workspace-switch small { display: block; font-size: .65rem; font-weight: 400; margin-top: 3px; }
+.workspace-switch small { color: #475569; display: block; font-size: .65rem; font-weight: 400; margin-top: 3px; }
 .workspace-symbol { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 6px; color: white; background: var(--primary); flex-shrink: 0; }
 .workspace-switch etp-icon { margin-left: auto; width: 14px; }
 .portal-sidebar nav { margin-top: 8px; }

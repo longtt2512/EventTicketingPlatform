@@ -5,7 +5,7 @@
 @if(!order()&&loading()){<p role="status">Đang kiểm tra đơn hàng…</p>}
 @if(order();as o){<div class="purchase-layout" [class.payment-result-layout]="mode==='result'" [class.order-detail-layout]="mode==='detail'"><div><section class="order-state" [attr.data-state]="o.paymentStatus==='FAILED'?'FAILED':o.status" aria-live="polite"><span class="payment-result-symbol"><etp-icon [name]="o.paymentStatus==='FAILED'?'error-circle':o.status==='CONFIRMED'?'check-circle':o.status==='PENDING_PAYMENT'?'clock':'error-circle'" tone="indigo"/></span><h2>{{o.paymentStatus==='FAILED'?'Thanh toán chưa thành công':label(o.status)}}</h2>
 @if(o.status==='CONFIRMED'){<p>Đơn hàng đã được xác nhận. Theo dõi tiến trình phát hành và mở vé bên dưới.</p>}
-@else if(o.status==='EXPIRED'){<p>Thời gian giữ vé đã hết. Đơn này không thể thanh toán tiếp; bạn có thể chọn vé để tạo đơn mới.</p>}
+@else if(o.status==='EXPIRED'){<p>Thời gian giữ vé đã hết. Đơn này không thể thanh toán tiếp. Bạn có thể chọn vé để tạo đơn mới.</p>}
 @else if(o.status==='CANCELLED'){<p>Đơn đã hủy. Vé đang giữ đã được giải phóng.</p>}
 @else if(o.paymentStatus==='PENDING'){<p>Đang chờ xác minh kết quả thanh toán. Hãy kiểm tra trạng thái trước khi thực hiện giao dịch khác.</p>}
 @else if(o.paymentStatus==='EXCEPTION'){<p>Giao dịch cần được đối soát. Chưa xác nhận vé cho khoản thanh toán này.</p>}

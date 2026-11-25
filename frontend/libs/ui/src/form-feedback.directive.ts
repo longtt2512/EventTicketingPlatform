@@ -1,9 +1,14 @@
 import { AfterViewInit, ChangeDetectorRef, Directive, DoCheck, ElementRef, HostListener, Input, OnChanges, OnDestroy, Renderer2, forwardRef, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AbstractControl, FormGroupDirective, NG_VALIDATORS, NgControl, NgForm, ValidationErrors, Validator } from '@angular/forms';
+import { AbstractControl, FormGroupDirective, NG_VALIDATORS, NgControl, NgForm, ValidationErrors, Validator, Validators } from '@angular/forms';
+import { VndInputDirective } from './vnd-input.directive';
 
 /** One error vocabulary for both reactive and template-driven forms. */
 export function fieldError(control: AbstractControl, label: string): string {
+  if (control.hasError('eventRule')) return control.getError('eventRule');
+  if (control.hasError('vnd')) return 'Nhập số tiền VNĐ nguyên, không âm, ví dụ 150.000.';
+  if (control.hasError('min')) return `Nhập giá trị từ ${Number(control.getError('min').min).toLocaleString('vi-VN')} trở lên.`;
+  if (control.hasError('max')) return `Nhập giá trị không vượt quá ${Number(control.getError('max').max).toLocaleString('vi-VN')}.`;
   if (control.hasError('required')) {
     const name=label.toLocaleLowerCase('vi');
     return name.startsWith('nhập ') ? `Vui lòng ${name}.` : `Vui lòng nhập ${name}.`;
@@ -19,6 +24,8 @@ export function fieldError(control: AbstractControl, label: string): string {
 
 @Directive({ selector: '[etpField]', standalone: true })
 export class FieldFeedbackDirective implements AfterViewInit, DoCheck, OnDestroy {
+  @Input() etpRequiredForReview = false;
+  private requiredMarker?: HTMLElement;
   private readonly element = inject<ElementRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>>(ElementRef);
   private readonly ngControl = inject(NgControl, { self: true });
   private readonly renderer = inject(Renderer2);
@@ -46,7 +53,18 @@ export class FieldFeedbackDirective implements AfterViewInit, DoCheck, OnDestroy
     if (!this.errorElement) return;
     const field = this.element.nativeElement;
     const control = this.ngControl.control;
-    const label = field.labels?.[0]?.textContent?.trim() || 'thông tin này';
+    const required = this.etpRequiredForReview || field.required || !!control?.hasValidator(Validators.required);
+    const labelElement = field.labels?.[0];
+    if (required && labelElement && !this.requiredMarker) {
+      this.requiredMarker = this.renderer.createElement('span');
+      this.renderer.setAttribute(this.requiredMarker, 'class', 'required-marker');
+      this.renderer.setAttribute(this.requiredMarker, 'aria-hidden', 'true');
+      // Keep the visual marker outside the label's accessible text.
+      this.renderer.setProperty(this.requiredMarker, 'textContent', '');
+      this.renderer.appendChild(labelElement, this.requiredMarker);
+    } else if (!required && this.requiredMarker) { this.requiredMarker.remove(); this.requiredMarker = undefined; }
+    this.renderer.setAttribute(field, 'aria-required', String(required));
+    const label = labelElement?.textContent?.replace(/\s*\*$/, '').trim() || 'thông tin này';
     const message = control?.invalid && control.touched ? fieldError(control, label) : '';
     if (message === this.previousMessage) return;
     this.previousMessage = message;
@@ -58,7 +76,7 @@ export class FieldFeedbackDirective implements AfterViewInit, DoCheck, OnDestroy
     else this.renderer.removeAttribute(field, 'aria-describedby');
   }
 
-  ngOnDestroy(): void { this.errorElement?.remove(); }
+  ngOnDestroy(): void { this.errorElement?.remove(); this.requiredMarker?.remove(); }
 }
 
 @Directive({ selector: 'form[etpForm]', standalone: true })
@@ -107,4 +125,4 @@ export class MatchingValueDirective implements Validator, OnChanges, OnDestroy {
   ngOnDestroy(): void { this.subscription?.unsubscribe(); }
 }
 
-export const FORM_FEEDBACK = [FieldFeedbackDirective, FormFeedbackDirective, MatchingValueDirective] as const;
+export const FORM_FEEDBACK = [FieldFeedbackDirective, FormFeedbackDirective, MatchingValueDirective, VndInputDirective] as const;

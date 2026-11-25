@@ -23,7 +23,7 @@ public class FinanceAuthorization {
         if(!user.roles().contains("ADMIN"))access.require(org,actor,"FINANCE",mutation);
         var orgs=db.queryForList("select id,name,status,created_by_user_id,version from organization.organizations where id=?",org);
         if(orgs.isEmpty())throw OrganizationAccess.missing();var row=orgs.getFirst();
-        if(mutation&&!"ACTIVE".equals(row.get("status")))throw new ApiException(HttpStatus.CONFLICT,"ORGANIZATION_SUSPENDED","Tổ chức bị tạm dừng; chưa thể đối soát.");
+        if(mutation&&!"ACTIVE".equals(row.get("status")))throw new ApiException(HttpStatus.CONFLICT,"ORGANIZATION_SUSPENDED","Tổ chức bị tạm dừng. Chưa thể đối soát.");
         var result=new LinkedHashMap<String,Object>(row);
         var payouts=db.queryForList("select id,destination_version,bank_name,account_holder,masked_account,status from organization.payout_destinations where organization_id=? and status='ACTIVE' order by destination_version desc limit 1",org);
         result.put("payout",payouts.isEmpty()?null:payouts.getFirst());return result;

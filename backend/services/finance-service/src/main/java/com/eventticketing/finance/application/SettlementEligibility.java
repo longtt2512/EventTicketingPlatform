@@ -31,7 +31,7 @@ public class SettlementEligibility {
                 long amount=order.path("totalVnd").longValue();gross=Math.addExact(gross,amount);
                 var snapshot=order.path("commissionSnapshot");long fee=0;
                 if(!snapshot.isObject()||!snapshot.path("platformFeeVnd").canConvertToLong()||snapshot.path("grossVnd").asLong(-1)!=amount){
-                    known=false;reasons.put("COMMISSION_SNAPSHOT_MISSING","Có đơn lịch sử chưa có snapshot phí; không được tự áp phí mới.");
+                    known=false;reasons.put("COMMISSION_SNAPSHOT_MISSING","Có đơn lịch sử chưa có snapshot phí. Không được tự áp phí mới.");
                 }else{fee=snapshot.path("platformFeeVnd").longValue();fees=Math.addExact(fees,fee);}
                 if(amount>0){
                     String applied=order.path("appliedPaymentId").asText();JsonNode paid=null;
@@ -45,15 +45,15 @@ public class SettlementEligibility {
                         long returned=0;for(var back:payment.path("returns"))if(applied.equals(back.path("transaction_id").asText()))returned=Math.addExact(returned,back.path("amount").longValue());
                         returns=Math.addExact(returns,returned);
                         if(returned==amount)reversed=Math.addExact(reversed,fee);
-                        else if(returned>0){known=false;reasons.put("PARTIAL_RETURN_PENDING","Đơn đang được hoàn từng phần; phí được hưởng còn chờ xử lý.");}
+                        else if(returned>0){known=false;reasons.put("PARTIAL_RETURN_PENDING","Đơn đang được hoàn từng phần. Phí được hưởng còn chờ xử lý.");}
                     }
                 }
                 items.addObject().put("orderId",order.path("id").asText()).put("grossVnd",amount).set("commissionSnapshot",snapshot.isMissingNode()?json.nullNode():snapshot);
             }
-        }catch(ArithmeticException ex){throw new ApiException(HttpStatus.UNPROCESSABLE_ENTITY,"AMOUNT_OVERFLOW","Tổng tiền vượt giới hạn VND; cần kiểm tra sổ giao dịch.");}
+        }catch(ArithmeticException ex){throw new ApiException(HttpStatus.UNPROCESSABLE_ENTITY,"AMOUNT_OVERFLOW","Tổng tiền vượt giới hạn VND. Cần kiểm tra sổ giao dịch.");}
         if(items.isEmpty())reasons.put("NO_CONFIRMED_ORDERS","Chưa có đơn xác nhận để đối soát.");
         long adjustments=Math.subtractExact(returns,reversed);Long net=known?Math.subtractExact(Math.subtractExact(Math.subtractExact(gross,fees),gateway),adjustments):null;
-        if(net!=null&&net<0)reasons.put("NEGATIVE_NET","Doanh thu thuần âm; cần xử lý tài chính trước khi chi trả.");
+        if(net!=null&&net<0)reasons.put("NEGATIVE_NET","Doanh thu thuần âm. Cần xử lý tài chính trước khi chi trả.");
         ObjectNode result=json.createObjectNode();result.put("eventId",event.toString()).put("organizationId",org.toString()).put("eventName",eventState.path("name").asText())
             .put("eventVersion",eventState.path("version").asLong()).put("currency","VND").put("grossVnd",gross).put("returnedVnd",returns).put("platformFeeReversalVnd",reversed)
             .put("adjustmentsVnd",adjustments).put("eligible",reasons.isEmpty()).put("paymentFingerprint",payment.path("fingerprint").asText()).put("checkedAt",Instant.now().toString());

@@ -66,9 +66,20 @@ describe('Organization workflows and recoverable states',()=>{
  });
  it('payout list failure clears loading',()=>{const c=payouts().componentInstance;c.load();fail(orgUrl+'/payout-destinations');expect(c.busy()).toBeFalse();});
  it('creates drafts, handles failure, assigns staff and refreshes server state',()=>{
-  const c=events().componentInstance;c.name='Draft new';c.create();fail(orgUrl+'/events');expect(c.name).toBe('Draft new');c.create();http.expectOne(orgUrl+'/events').flush({id:'created',name:'Draft new',organizationId:'org',status:'DRAFT'});expect(c.eventId).toBe('created');expect(c.name).toBe('');
-  c.userId='staff';c.assign();fail(orgUrl+'/events/created/staff/staff');expect(c.busy()).toBeFalse();c.assign();http.expectOne(orgUrl+'/events/created/staff/staff').flush(null);flushEvents();expect(c.message()).toContain('Đã phân công');
+  const navigate=spyOn(TestBed.inject(Router),'navigate').and.resolveTo(true);
+  const c=events().componentInstance;c.name='Draft new';c.create();fail(orgUrl+'/events');expect(c.name).toBe('Draft new');expect(c.hasUnsavedChanges()).toBeTrue();expect(navigate).not.toHaveBeenCalled();c.create();http.expectOne(orgUrl+'/events').flush({id:'created',name:'Draft new',organizationId:'org',status:'DRAFT'});expect(c.eventId).toBe('');expect(c.name).toBe('');expect(c.hasUnsavedChanges()).toBeFalse();expect(navigate).toHaveBeenCalledOnceWith(['/organizations','org','events','created']);
+  c.eventId='created';c.userId='staff';c.assign();fail(orgUrl+'/events/created/staff/staff');expect(c.busy()).toBeFalse();c.assign();http.expectOne(orgUrl+'/events/created/staff/staff').flush(null);flushEvents();expect(c.message()).toContain('Đã phân công');
   expect(c.eventName('event')).toBe('Draft');expect(c.staffName('staff')).toBe(member.email);expect(c.eventName('missing')).toBe('missing');expect(c.staffName('missing')).toBe('missing');
+ });
+ it('keeps genuine pending staff input when creating a draft',()=>{
+  spyOn(TestBed.inject(Router),'navigate').and.resolveTo(false);
+  const c=events().componentInstance;c.eventId='event';c.userId='staff';c.name='Another event';c.create();
+  http.expectOne(orgUrl+'/events').flush({id:'created',name:'Another event',organizationId:'org',status:'DRAFT'});
+  expect(c.name).toBe('');expect(c.eventId).toBe('event');expect(c.userId).toBe('staff');expect(c.hasUnsavedChanges()).toBeTrue();
+ });
+ it('does not submit blank event names or create twice while saving',()=>{
+  const c=events().componentInstance;c.name='   ';c.create();http.expectNone(orgUrl+'/events');
+  c.name='New event';c.create();c.create();fail(orgUrl+'/events');expect(c.name).toBe('New event');expect(c.busy()).toBeFalse();
  });
  it('retains assignment status when revocation fails',()=>{
   const c=events().componentInstance;const assignment=c.assignments()[0];const confirm=spyOn(window,'confirm').and.returnValue(false);c.revoke(assignment);http.expectNone(orgUrl+'/events/event/staff/staff');confirm.and.returnValue(true);c.revoke(assignment);fail(orgUrl+'/events/event/staff/staff');expect(c.assignments()[0].status).toBe('ACTIVE');c.revoke(assignment);http.expectOne(orgUrl+'/events/event/staff/staff').flush(null);expect(c.assignments()[0].status).toBe('REVOKED');

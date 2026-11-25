@@ -20,7 +20,7 @@ public class OperationsMailWorker {
    String link=kind.equals("REMINDER")||kind.equals("CANCELLED")?web+"/account/orders":kind.startsWith("APPLICATION")?organizer+"/apply":kind.equals("SETTLED")?organizer+"/organizations/"+p.path("organizationId").asText()+"/settlements":organizer+"/organizations/"+p.path("organizationId").asText()+"/events/"+p.path("eventId").asText();
    String details=p.path("name").asText()+"\n"+p.path("reason").asText();
    if(kind.equals("REMINDER"))details+="\n"+(en?"Starts at: ":"Bắt đầu: ")+p.path("startAt").asText()+"\n"+(en?"Sign in to view your tickets and current schedule.":"Đăng nhập để xem vé và lịch hiện tại.");
-   if(kind.equals("SETTLED"))details+="\n"+p.path("amount").asText()+" VND\n"+(en?"Local simulated evidence; no bank transfer was made.":"Bằng chứng mô phỏng local; không chuyển tiền ngân hàng.");
+   if(kind.equals("SETTLED"))details+="\n"+p.path("amount").asText()+" VND\n"+(en?"Local simulated evidence; no bank transfer was made.":"Bằng chứng mô phỏng local. Không chuyển tiền ngân hàng.");
    var message=new SimpleMailMessage();message.setFrom("no-reply@event-ticketing.local");message.setTo(contact.email());message.setSubject(subject+" · Event Ticketing");message.setText(subject+"\n"+details+"\n"+link);mail.send(message);
    db.update("update notification.operations_deliveries set delivered_at=clock_timestamp(),attempts=attempts+1 where obligation_key=? and user_id=?",row.get("obligation_key"),row.get("user_id"));
   }catch(Exception ex){retry(row);}

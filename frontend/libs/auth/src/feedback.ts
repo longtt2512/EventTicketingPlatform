@@ -31,7 +31,7 @@ const messages: Record<string, string> = {
 
 export function errorMessage(error: unknown): string {
   if (error instanceof HttpErrorResponse) {
-    if (error.status === 0) return 'Không thể kết nối máy chủ. Kiểm tra mạng và thử lại; thông tin bạn nhập vẫn được giữ.';
+    if (error.status === 0) return 'Không thể kết nối máy chủ. Kiểm tra mạng và thử lại. Thông tin bạn nhập vẫn được giữ.';
     const problem = error.error as { code?: string } | null;
     return messages[problem?.code ?? ''] ?? 'Không thể hoàn tất thao tác. Vui lòng thử lại.';
   }

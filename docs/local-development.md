@@ -78,7 +78,9 @@ above. Kafka's health check uses its internal listener; host services use 19092.
 
 - Customer discovery: `http://localhost:14200/events` (guest access).
 - Organizer: `http://localhost:14200/org/organizations`, choose an organization,
-  open **Sự kiện và phân công**, create a draft and select **Quản lý sự kiện**.
+  open **Sự kiện và phân công**, enter **Tên sự kiện mới** and select
+  **Tạo và chỉnh sửa**. The saved draft opens directly in the editor. Staff
+  assignment remains under the collapsed **Phân công nhân viên soát vé** section.
 - Admin review: `http://localhost:14200/admin/events` with the generated validation
   administrator in `.runtime/phase1/credentials.json`.
 - `npm run test:unit` runs shared frontend regression tests.
@@ -416,3 +418,23 @@ reconnecting, entering a route, or completing an action refreshes its data.
 Dirty forms, open confirmations, pending admission decisions and expanded
 pagination are preserved. Payment/issuance progress continues polling. Explicit
 retry remains available for failed reads and uncertain transaction outcomes.
+
+
+### Event authoring repair verification (2026-11-21)
+
+`phase2-browser-workflow.js` additionally exercises past/equal event dates,
+server-side date rejection without revision changes, required markers, missing
+terms focus recovery, grouped VNĐ input, and invalid sale windows. The fixture
+format remains the Phase 2 browser fixture (unique synthetic event name, future
+start/end, saleStart/saleEnd, banner, and synthetic actor credentials).
+
+`event-authoring-recovery-workflow.js` takes synthetic actor credentials,
+`organizationId`, `eventId`, and future local `start`/`end`. Use only a disposable
+owned draft with a banner/category already saved and no ticket types. It verifies
+an aborted save preserves input, retry with “Lưu và tiếp tục”, numeric paid-price
+payloads, missing terms recovery, and desktop/mobile layouts. Cancel the synthetic
+event after the run. Never point the recovery workflow at user data.
+
+Evidence from this repair: 73 main-flow checks and 17 recovery checks in
+`output/playwright/event-authoring-{full,recovery}-result.json`. The final UI is
+captured in `output/playwright/event-authoring-final-*.png`.

@@ -11,7 +11,7 @@ import { finalize } from 'rxjs';
 @Component({
     selector: 'etp-admin-users', imports: [ReactiveFormsModule, ...FORM_FEEDBACK, ConfirmDialogComponent, UnsavedChangesDirective], changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-    <div [etpUnsavedChanges]="hasUnsavedChanges()"><div class="toolbar"><div class="page-heading"><h1>Tài khoản người dùng</h1><p>Khóa hoặc mở khóa tài khoản; các thay đổi được lưu lịch sử.</p></div>@if(error()){<button class="secondary" (click)="load()" [disabled]="loading()">Thử lại</button>}</div>
+    <div [etpUnsavedChanges]="hasUnsavedChanges()"><div class="toolbar"><div class="page-heading"><h1>Tài khoản người dùng</h1><p>Khóa hoặc mở khóa tài khoản. Các thay đổi được lưu lịch sử.</p></div>@if(error()){<button class="secondary" (click)="load()" [disabled]="loading()">Thử lại</button>}</div>
     @if (error()) { <p role="alert" class="notice error">{{ error() }}</p> }
     @if (message()) { <p role="status" class="notice success">{{ message() }}</p> }
     @if (selected(); as user) {

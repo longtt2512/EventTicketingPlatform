@@ -42,6 +42,22 @@ class EventManagementIntegrationTest {
   return service.ticket(org,id,actor,e.version(),null,new TicketInput("Vé thường","",100000L,quota,Instant.now().minusSeconds(60),e.startAt().minusSeconds(1),quota));
  }
  EventView publish(EventView e){e=service.command(org,e.id(),actor,e.version(),"submit","",false);e=service.command(org,e.id(),actor,e.version(),"approve","Đạt",true);return service.command(org,e.id(),actor,e.version(),"publish","",false);}
+ @Test void draftsAllowMissingScheduleButRejectPastDatesWithoutChangingRevision(){
+  var draft=drafts.create(org,actor,"Date validation");
+  var blank=new EventInput("Date validation",null,"","","","","Asia/Ho_Chi_Minh",null,null,null,"",null,List.of());
+  var saved=service.update(org,draft.id(),actor,0,blank);
+  var past=new EventInput("Date validation",null,"","","","","Asia/Ho_Chi_Minh",Instant.now().minusSeconds(7200),Instant.now().minusSeconds(3600),null,"",null,List.of());
+  assertThatThrownBy(()->service.update(org,draft.id(),actor,saved.version(),past)).hasMessageContaining("bắt đầu phải ở tương lai");
+  var pastEnd=new EventInput("Date validation",null,"","","","","Asia/Ho_Chi_Minh",null,Instant.now().minusSeconds(1),null,"",null,List.of());
+  assertThatThrownBy(()->service.update(org,draft.id(),actor,saved.version(),pastEnd)).hasMessageContaining("kết thúc phải ở tương lai");
+  assertThat(repo.get(draft.id()).version()).isEqualTo(saved.version());
+  assertThat(repo.get(draft.id()).endAt()).isNull();
+  var start=Instant.now().plusSeconds(86400).truncatedTo(java.time.temporal.ChronoUnit.SECONDS);
+  var reversed=new EventInput("Date validation",null,"","","","","Asia/Ho_Chi_Minh",start,start.minusSeconds(1),null,"",null,List.of());
+  assertThatThrownBy(()->service.update(org,draft.id(),actor,saved.version(),reversed)).hasMessageContaining("kết thúc phải sau");
+  var valid=new EventInput("Date validation",null,"","","","","Asia/Ho_Chi_Minh",start,start.plusSeconds(3600),null,"",null,List.of());
+  assertThat(service.update(org,draft.id(),actor,saved.version(),valid).endAt()).isEqualTo(valid.endAt());
+ }
  @Test void reviewRequiresCompleteDataLocksRevisionAndDoesNotAutoPublish(){
   var draft=drafts.create(org,actor,"Incomplete");assertThatThrownBy(()->service.command(org,draft.id(),actor,0,"submit","",false)).isInstanceOf(ApiException.class).hasMessageContaining("bổ sung");
   var ready=prepared(10);var pending=service.command(org,ready.id(),actor,ready.version(),"submit","",false);

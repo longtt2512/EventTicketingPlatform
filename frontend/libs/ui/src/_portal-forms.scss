@@ -45,3 +45,6 @@ etp-password-field .password-toggle svg { width: 22px; height: 22px; }
   .review-decision .actions { align-items: stretch; }
   .review-decision .actions button { flex: 1 1 180px; }
 }
+
+.required-marker { color: var(--danger); font-weight: 600; }
+.required-marker::after { content: " *"; }
