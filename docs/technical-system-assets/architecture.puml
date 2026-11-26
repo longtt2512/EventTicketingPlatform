@@ -1,0 +1,46 @@
+@startuml
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 18
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam dpi 160
+skinparam ArrowColor #1F4E79
+skinparam LineColor #1F4E79
+skinparam RectangleBackgroundColor #EEF5FB
+skinparam RectangleBorderColor #1F4E79
+skinparam ComponentBackgroundColor #D9EAF7
+skinparam ComponentBorderColor #1F4E79
+skinparam DatabaseBackgroundColor #EEF5FB
+skinparam DatabaseBorderColor #1F4E79
+skinparam StateBackgroundColor #EEF5FB
+skinparam StateBorderColor #1F4E79
+skinparam ActivityBackgroundColor #EEF5FB
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityDiamondBackgroundColor #D9EAF7
+skinparam ActivityDiamondBorderColor #1F4E79
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #708090
+skinparam packageStyle rectangle
+skinparam nodesep 35
+skinparam ranksep 45
+skinparam linetype ortho
+rectangle "Frontend\nCustomer · Organizer · Admin · Staff" as FE
+rectangle "API Gateway\nTiếp nhận HTTP và định tuyến" as G
+rectangle "Microservices\nNghiệp vụ, phân quyền và tác vụ nền" as MS
+together {
+database "PostgreSQL\nDữ liệu giao dịch" as DB
+queue "Kafka\nSự kiện nghiệp vụ" as K
+storage "MinIO\nTệp riêng tư" as M
+rectangle "SMTP\nGửi email" as E
+}
+FE -down-> G
+G -down-> MS
+MS -down-> DB
+MS <-down-> K
+MS -down-> M
+MS -down-> E
+DB -[hidden]right- K
+K -[hidden]right- M
+M -[hidden]right- E
+@enduml

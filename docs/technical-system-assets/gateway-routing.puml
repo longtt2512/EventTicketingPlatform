@@ -1,0 +1,41 @@
+@startuml
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 18
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam dpi 160
+skinparam ArrowColor #1F4E79
+skinparam LineColor #1F4E79
+skinparam RectangleBackgroundColor #EEF5FB
+skinparam RectangleBorderColor #1F4E79
+skinparam ComponentBackgroundColor #D9EAF7
+skinparam ComponentBorderColor #1F4E79
+skinparam DatabaseBackgroundColor #EEF5FB
+skinparam DatabaseBorderColor #1F4E79
+skinparam StateBackgroundColor #EEF5FB
+skinparam StateBorderColor #1F4E79
+skinparam ActivityBackgroundColor #EEF5FB
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityDiamondBackgroundColor #D9EAF7
+skinparam ActivityDiamondBorderColor #1F4E79
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #708090
+skinparam packageStyle rectangle
+skinparam nodesep 35
+skinparam ranksep 45
+skinparam linetype ortho
+rectangle "Frontend\nYêu cầu thuộc /api/v1/orders" as F
+rectangle "API Gateway\nƯu tiên route cụ thể" as G
+together {
+rectangle "Payment\n/{id}/payment-attempts\nTạo lần thanh toán" as P
+rectangle "Ticket Admission\n/{id}/tickets\nĐọc vé của đơn" as A
+rectangle "Event Commerce\n/orders/** còn lại\nĐặt, đọc, xác nhận đơn" as C
+}
+F -down-> G
+G -down-> P
+G -down-> A
+G -down-> C
+P -[hidden]right- A
+A -[hidden]right- C
+@enduml

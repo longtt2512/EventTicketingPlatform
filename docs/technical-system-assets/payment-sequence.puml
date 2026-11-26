@@ -1,0 +1,49 @@
+@startuml
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 17
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam dpi 160
+skinparam ArrowColor #1F4E79
+skinparam LineColor #1F4E79
+skinparam ParticipantBackgroundColor #D9EAF7
+skinparam ParticipantBorderColor #1F4E79
+skinparam ActorBorderColor #1F4E79
+skinparam DatabaseBackgroundColor #EEF5FB
+skinparam RectangleBackgroundColor #EEF5FB
+skinparam RectangleBorderColor #1F4E79
+skinparam ComponentBackgroundColor #D9EAF7
+skinparam ComponentBorderColor #1F4E79
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #708090
+skinparam maxMessageSize 220
+skinparam sequenceMessageAlign center
+hide footbox
+autonumber
+actor Customer as U
+participant Payment as P
+participant Commerce as C
+participant "Provider local" as L
+U -> P : Tạo payment attempt + key
+P -> C : Đọc đơn và xin claim
+C -> C : Lưu claim / attemptId ổn định
+C --> P : Claim + snapshot đơn
+P -> P : Lưu attempt và session
+P --> U : Phiên thanh toán
+U -> P : Chọn QR hoặc thẻ
+P -> P : Chụp cấu hình phương thức
+L -> P : Callback + chữ ký HMAC
+P -> P : Xác minh chữ ký\nmerchant / thời gian
+alt Callback hợp lệ
+ P -> P : Transaction receipt\n+ khoản thu + outbox
+ P --> L : Đã tiếp nhận
+else Chữ ký hoặc dữ liệu sai
+ P --> L : Từ chối
+end
+note over P,C
+Claim và attempt có transaction riêng.
+Retry cùng key khôi phục attempt cũ.
+end note
+
+@enduml

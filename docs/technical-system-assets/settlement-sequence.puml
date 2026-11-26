@@ -1,0 +1,53 @@
+@startuml
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 17
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam dpi 160
+skinparam ArrowColor #1F4E79
+skinparam LineColor #1F4E79
+skinparam ParticipantBackgroundColor #D9EAF7
+skinparam ParticipantBorderColor #1F4E79
+skinparam ActorBorderColor #1F4E79
+skinparam DatabaseBackgroundColor #EEF5FB
+skinparam RectangleBackgroundColor #EEF5FB
+skinparam RectangleBorderColor #1F4E79
+skinparam ComponentBackgroundColor #D9EAF7
+skinparam ComponentBorderColor #1F4E79
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #708090
+skinparam maxMessageSize 220
+skinparam sequenceMessageAlign center
+hide footbox
+autonumber
+actor "Organizer / Admin" as U
+participant Finance as F
+participant Commerce as C
+participant Payment as P
+participant Organization as O
+U -> F : Yêu cầu settlement
+F -> C : Sự kiện / đơn confirmed
+C --> F : Dữ liệu nguồn
+F -> P : Sổ tiền hiện hành
+P --> F : Khoản thu / hoàn / phí / ngoại lệ
+F -> O : Quyền FINANCE và payout
+O --> F : Payout + destinationVersion
+F -> F : Transaction claim sự kiện\nvà các đơn vào batch
+U -> F : Ghi bằng chứng PAID\nhoặc NO_TRANSFER
+F -> F : Lưu bằng chứng quyết định
+F -> P : Authorize cùng fingerprint
+P -> P : Khóa sổ tiền và ngoại lệ\nKiểm tra proof đã có
+P -> O : Authorize payout version
+O -> O : Kiểm tra / lưu proof
+O --> P : Proof tổ chức
+P -> P : Lưu proof tài chính
+P --> F : Authorization
+F -> F : Transaction SETTLED\n+ audit + outbox
+F --> U : Kết quả đối soát
+note over F,O
+Mất phản hồi: dùng lại cùng bằng chứng.
+UNKNOWN không tự tạo lần chi mới.
+end note
+
+@enduml

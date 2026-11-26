@@ -1,0 +1,54 @@
+@startuml
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 18
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam dpi 160
+skinparam ArrowColor #1F4E79
+skinparam LineColor #1F4E79
+skinparam RectangleBackgroundColor #EEF5FB
+skinparam RectangleBorderColor #1F4E79
+skinparam ComponentBackgroundColor #D9EAF7
+skinparam ComponentBorderColor #1F4E79
+skinparam DatabaseBackgroundColor #EEF5FB
+skinparam DatabaseBorderColor #1F4E79
+skinparam StateBackgroundColor #EEF5FB
+skinparam StateBorderColor #1F4E79
+skinparam ActivityBackgroundColor #EEF5FB
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityDiamondBackgroundColor #D9EAF7
+skinparam ActivityDiamondBorderColor #1F4E79
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #708090
+skinparam packageStyle rectangle
+skinparam nodesep 35
+skinparam ranksep 45
+skinparam linetype ortho
+skinparam componentStyle rectangle
+package "Event Commerce" {
+ component "OrderController\nTiếp nhận yêu cầu HTTP" as API
+ component "OrderService\nĐiều phối giao dịch đặt vé" as S
+ together {
+ component "IdentityClient\nCommissionClient\nREST tới Identity / Finance" as CL
+ component "InventoryService\nGiữ và đóng allocation" as INV
+ component "OrderRepository\nEventRepository\nKhóa và ghi đơn" as REP
+ component "OrderFacts\nGhi audit và outbox" as FACT
+ }
+ database "Schema Commerce\nĐơn, allocation, request, audit, outbox\ncommit trong cùng transaction" as DB
+ component "EventOutboxPublisher\nĐọc các fact chưa phát" as PUB
+}
+queue "Kafka\nPhân phối fact" as K
+API -down-> S
+S -right-> CL
+S -down-> INV
+S -down-> REP
+S -down-> FACT
+INV -down-> DB
+REP -down-> DB
+FACT -down-> DB
+DB -down-> PUB
+PUB -down-> K
+INV -[hidden]right- REP
+REP -[hidden]right- FACT
+@enduml

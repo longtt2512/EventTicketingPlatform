@@ -1,0 +1,48 @@
+@startuml
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 17
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam dpi 160
+skinparam ArrowColor #1F4E79
+skinparam LineColor #1F4E79
+skinparam ParticipantBackgroundColor #D9EAF7
+skinparam ParticipantBorderColor #1F4E79
+skinparam ActorBorderColor #1F4E79
+skinparam DatabaseBackgroundColor #EEF5FB
+skinparam RectangleBackgroundColor #EEF5FB
+skinparam RectangleBorderColor #1F4E79
+skinparam ComponentBackgroundColor #D9EAF7
+skinparam ComponentBorderColor #1F4E79
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #708090
+skinparam maxMessageSize 220
+skinparam sequenceMessageAlign center
+hide footbox
+autonumber
+actor Staff as S
+participant Admission as A
+participant "Identity / Organization" as P
+participant Commerce as C
+S -> A : Scan QR + request key
+A -> P : Kiểm tra tài khoản\nvà phân công hiện hành
+P --> A : Quyền truy cập sự kiện
+A -> C : Đọc lịch / trạng thái sự kiện
+C --> A : Dữ liệu hiện hành
+ group Transaction Admission
+ A -> A : Khóa gate\nKiểm tra request đã xử lý
+ alt Cùng key đã thành công
+  A -> A : Lấy kết quả cũ, replay=true
+ else Request mới
+  A -> A : Hash QR / đúng sự kiện\nISSUED / gate OPEN / thời gian
+  alt Vé hợp lệ
+   A -> A : CHECKED_IN + admission\n+ request result + outbox
+  else Vé không hợp lệ
+   A -> A : Lưu kết quả từ chối
+  end
+ end
+ end
+A --> S : SUCCESS / replay\nhoặc lý do từ chối
+
+@enduml

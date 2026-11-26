@@ -1,0 +1,36 @@
+@startuml
+!pragma layout elk
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 18
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam dpi 160
+skinparam ArrowColor #1F4E79
+skinparam LineColor #1F4E79
+skinparam RectangleBackgroundColor #EEF5FB
+skinparam RectangleBorderColor #1F4E79
+skinparam ComponentBackgroundColor #D9EAF7
+skinparam ComponentBorderColor #1F4E79
+skinparam DatabaseBackgroundColor #EEF5FB
+skinparam DatabaseBorderColor #1F4E79
+skinparam StateBackgroundColor #EEF5FB
+skinparam StateBorderColor #1F4E79
+skinparam ActivityBackgroundColor #EEF5FB
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityDiamondBackgroundColor #D9EAF7
+skinparam ActivityDiamondBorderColor #1F4E79
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #708090
+skinparam packageStyle rectangle
+skinparam nodesep 35
+skinparam ranksep 45
+skinparam linetype ortho
+state "PENDING_PAYMENT" as P : Allocation: ACTIVE\nGiữ chỗ tối đa 10 phút
+state "CONFIRMED" as C : Allocation: CONSUMED
+state "EXPIRED" as E : Allocation: EXPIRED
+state "CANCELLED" as X : Allocation: RELEASED
+P -down-> C : Xác nhận hợp lệ
+P -down-> E : Hết hạn
+P -down-> X : Hủy
+@enduml

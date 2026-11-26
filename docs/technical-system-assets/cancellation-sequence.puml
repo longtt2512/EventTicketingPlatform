@@ -1,0 +1,48 @@
+@startuml
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 17
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam dpi 160
+skinparam ArrowColor #1F4E79
+skinparam LineColor #1F4E79
+skinparam ParticipantBackgroundColor #D9EAF7
+skinparam ParticipantBorderColor #1F4E79
+skinparam ActorBorderColor #1F4E79
+skinparam DatabaseBackgroundColor #EEF5FB
+skinparam RectangleBackgroundColor #EEF5FB
+skinparam RectangleBorderColor #1F4E79
+skinparam ComponentBackgroundColor #D9EAF7
+skinparam ComponentBorderColor #1F4E79
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #708090
+skinparam maxMessageSize 220
+skinparam sequenceMessageAlign center
+hide footbox
+autonumber
+actor "Organizer / Admin" as U
+participant Commerce as C
+participant Admission as A
+U -> C : Hủy + version + lý do
+C -> C : Transaction 1\nLưu yêu cầu, pending=true\ngiải phóng vé đang giữ
+C -> A : Freeze sự kiện
+alt Admission phản hồi
+ A -> A : Transaction khóa gate\nFROZEN, vé chưa dùng VOIDED
+ A --> C : Freeze hoàn tất
+ C -> C : Transaction 2\nCANCELLED, pending=false\nlịch sử và outbox
+ C --> U : Đã hủy
+else Timeout / lỗi
+ C -> C : Giữ yêu cầu chờ\nđặt lịch thử lại
+ C --> U : CANCELLATION_PENDING
+ loop Worker phục hồi
+  C -> A : Freeze cùng eventId
+  A --> C : Trạng thái đã đóng
+  C -> C : Hoàn tất transaction 2
+ end
+end
+note over A
+Giữ vé CHECKED_IN và lịch sử admission.
+end note
+
+@enduml

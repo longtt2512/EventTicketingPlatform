@@ -1,0 +1,56 @@
+@startuml
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 18
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam dpi 160
+skinparam ArrowColor #1F4E79
+skinparam LineColor #1F4E79
+skinparam RectangleBackgroundColor #EEF5FB
+skinparam RectangleBorderColor #1F4E79
+skinparam ComponentBackgroundColor #D9EAF7
+skinparam ComponentBorderColor #1F4E79
+skinparam DatabaseBackgroundColor #EEF5FB
+skinparam DatabaseBorderColor #1F4E79
+skinparam StateBackgroundColor #EEF5FB
+skinparam StateBorderColor #1F4E79
+skinparam ActivityBackgroundColor #EEF5FB
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityDiamondBackgroundColor #D9EAF7
+skinparam ActivityDiamondBorderColor #1F4E79
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #708090
+skinparam packageStyle rectangle
+skinparam nodesep 35
+skinparam ranksep 45
+skinparam componentStyle rectangle
+package "Danh tính và tổ chức" as CORE {
+ component "Identity\nTài khoản và phiên" as I
+ component "Organization\nTổ chức và quyền" as O
+ I -[hidden]right- O
+}
+package "Giao dịch nghiệp vụ" as BIZ {
+ component "Event Commerce\nSự kiện, tồn kho, đơn" as C
+ component "Payment\nKhoản thu và sổ tiền" as P
+ component "Ticket Admission\nVé và vào cửa" as T
+ component "Finance\nPhí và đối soát" as F
+ C -[hidden]right- P
+ T -[hidden]right- F
+ C -[hidden]down- T
+ P -[hidden]down- F
+}
+package "Tra cứu và vận hành" as READ {
+ component "Discovery\nTìm kiếm và báo cáo" as D
+ component "Notification\nEmail nghiệp vụ" as N
+ component "Admin Operations\nCấu hình và audit" as A
+ D -[hidden]right- N
+ N -[hidden]right- A
+}
+I -[hidden]down- C
+T -[hidden]down- D
+legend bottom
+Mỗi dịch vụ sở hữu dữ liệu và quy tắc trong một schema riêng.
+Các nhóm trên thể hiện phạm vi nghiệp vụ, không phải thứ tự gọi.
+endlegend
+@enduml

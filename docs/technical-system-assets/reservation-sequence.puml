@@ -1,0 +1,50 @@
+@startuml
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 17
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam dpi 160
+skinparam ArrowColor #1F4E79
+skinparam LineColor #1F4E79
+skinparam ParticipantBackgroundColor #D9EAF7
+skinparam ParticipantBorderColor #1F4E79
+skinparam ActorBorderColor #1F4E79
+skinparam DatabaseBackgroundColor #EEF5FB
+skinparam RectangleBackgroundColor #EEF5FB
+skinparam RectangleBorderColor #1F4E79
+skinparam ComponentBackgroundColor #D9EAF7
+skinparam ComponentBorderColor #1F4E79
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #708090
+skinparam maxMessageSize 220
+skinparam sequenceMessageAlign center
+hide footbox
+autonumber
+actor Customer as U
+participant Commerce as C
+participant Finance as F
+database "DB Commerce" as DB
+U -> C : Đọc booking quote
+C --> U : Giá / terms / selectionVersion
+U -> C : Reserve + lựa chọn\n+ Idempotency-Key
+C -> C : Xác minh người mua\nvà fingerprint
+alt Yêu cầu đã xử lý
+ C --> U : Đơn cũ / expiresAt cũ
+else Yêu cầu mới
+ group Transaction Commerce
+ C -> DB : Khóa sự kiện
+ C -> C : Kiểm tra giá, quota\nvà số lượng
+ C -> F : Lấy quote phí theo orderId
+ F -> F : Lưu quote trong DB Finance
+ F --> C : Snapshot + capturedAt
+ C -> DB : Giữ vé + tạo đơn / dòng đơn\n+ request + audit + outbox
+ end
+ C --> U : Đơn PENDING_PAYMENT\nexpiresAt = capturedAt + 600s
+end
+note over C,DB
+Lỗi kiểm tra hoặc ghi dữ liệu:
+rollback transaction Commerce.
+end note
+
+@enduml

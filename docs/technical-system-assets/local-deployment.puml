@@ -1,0 +1,52 @@
+@startuml
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 18
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam dpi 160
+skinparam ArrowColor #1F4E79
+skinparam LineColor #1F4E79
+skinparam RectangleBackgroundColor #EEF5FB
+skinparam RectangleBorderColor #1F4E79
+skinparam ComponentBackgroundColor #D9EAF7
+skinparam ComponentBorderColor #1F4E79
+skinparam DatabaseBackgroundColor #EEF5FB
+skinparam DatabaseBorderColor #1F4E79
+skinparam StateBackgroundColor #EEF5FB
+skinparam StateBorderColor #1F4E79
+skinparam ActivityBackgroundColor #EEF5FB
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityDiamondBackgroundColor #D9EAF7
+skinparam ActivityDiamondBorderColor #1F4E79
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #708090
+skinparam packageStyle rectangle
+skinparam nodesep 35
+skinparam ranksep 45
+skinparam linetype ortho
+actor "Người dùng\nlocalhost:14200" as U
+node "Máy phát triển" {
+ rectangle "Frontend server\nCustomer · Organizer · Admin · Staff" as F
+ rectangle "API Gateway" as G
+ rectangle "Tiến trình Java\nMicroservices Spring Boot" as S
+ node "Docker Compose trong môi trường validation" as INFRA {
+  database "PostgreSQL" as DB
+  queue "Kafka" as K
+  storage "MinIO" as M
+  rectangle "MailHog\nSMTP và hộp thư web" as E
+  DB -[hidden]right- K
+  K -[hidden]right- M
+  M -[hidden]right- E
+ }
+ F -down-> G
+ G -down-> S
+ S -down-> INFRA
+}
+U -right-> F
+legend bottom
+Launcher quản lý PID, URL, khóa và readiness.
+Cổng validation tách biệt với cổng local.
+Đây là môi trường phát triển, chưa phải triển khai HA.
+endlegend
+@enduml

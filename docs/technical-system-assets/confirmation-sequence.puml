@@ -1,0 +1,48 @@
+@startuml
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 17
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam dpi 160
+skinparam ArrowColor #1F4E79
+skinparam LineColor #1F4E79
+skinparam ParticipantBackgroundColor #D9EAF7
+skinparam ParticipantBorderColor #1F4E79
+skinparam ActorBorderColor #1F4E79
+skinparam DatabaseBackgroundColor #EEF5FB
+skinparam RectangleBackgroundColor #EEF5FB
+skinparam RectangleBorderColor #1F4E79
+skinparam ComponentBackgroundColor #D9EAF7
+skinparam ComponentBorderColor #1F4E79
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #708090
+skinparam maxMessageSize 220
+skinparam sequenceMessageAlign center
+hide footbox
+autonumber
+queue Kafka as K
+participant Commerce as C
+database "DB Commerce" as DB
+K -> C : payment.succeeded
+ group Transaction Commerce
+ C -> DB : Khóa sự kiện rồi đơn\nGhi inbox nếu chưa tồn tại
+ alt Message mới, claim hợp lệ
+  C -> C : Kiểm tra amount / currency\nhạn giữ và trạng thái
+  alt Đủ điều kiện
+   C -> DB : Consume allocation\nCONFIRMED + outbox
+  else Muộn / sai / thu thêm
+   C -> DB : Lưu kết quả ngoại lệ\nKhông lấy lại tồn kho
+  end
+ else Message đã xử lý
+  C -> C : Giữ kết quả cũ
+ end
+ end
+C --> K : Ack sau commit
+C -> K : Outbox: payment-result\nvà order.confirmed nếu có
+note over K,C
+Payment nhận payment-result.
+Admission nhận order.confirmed.
+end note
+
+@enduml

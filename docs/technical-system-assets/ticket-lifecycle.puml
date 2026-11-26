@@ -1,0 +1,48 @@
+@startuml
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 18
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam dpi 160
+skinparam ArrowColor #1F4E79
+skinparam LineColor #1F4E79
+skinparam RectangleBackgroundColor #EEF5FB
+skinparam RectangleBorderColor #1F4E79
+skinparam ComponentBackgroundColor #D9EAF7
+skinparam ComponentBorderColor #1F4E79
+skinparam DatabaseBackgroundColor #EEF5FB
+skinparam DatabaseBorderColor #1F4E79
+skinparam StateBackgroundColor #EEF5FB
+skinparam StateBorderColor #1F4E79
+skinparam ActivityBackgroundColor #EEF5FB
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityDiamondBackgroundColor #D9EAF7
+skinparam ActivityDiamondBorderColor #1F4E79
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #708090
+skinparam packageStyle rectangle
+skinparam nodesep 35
+skinparam ranksep 60
+skinparam linetype ortho
+state "Nghĩa vụ phát hành theo đơn" as OB {
+ state "PENDING\nChờ phát hành" as P
+ state "READY\nĐã tạo đủ vé" as R
+ state "CANCELLED\nDừng phát hành" as C
+ P -down-> R : Tạo đủ vé
+ P -down-> C : Gate FROZEN
+}
+state "Trạng thái từng vé" as TK {
+ state "ISSUED\nVé chưa dùng" as I
+ state "CHECKED_IN\nĐã vào cửa" as CI
+ state "VOIDED\nVé bị vô hiệu" as V
+ I -down-> CI : Check-in hợp lệ
+ I -down-> V : Hủy sự kiện
+}
+OB -[hidden]right-> TK
+legend bottom
+Mỗi vé được tạo ở trạng thái ISSUED trước khi nghĩa vụ thành READY.
+Nguồn lỗi: giữ PENDING để thử lại. Mỗi vé chỉ có một admission.
+Vé CHECKED_IN giữ nguyên lịch sử khi hủy sự kiện.
+endlegend
+@enduml

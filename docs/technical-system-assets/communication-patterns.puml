@@ -1,0 +1,30 @@
+@startuml
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 18
+skinparam shadowing false
+skinparam dpi 160
+skinparam ArrowColor #1F4E79
+skinparam ParticipantBackgroundColor #EEF5FB
+skinparam ParticipantBorderColor #1F4E79
+skinparam SequenceGroupBackgroundColor #EEF5FB
+skinparam SequenceGroupBodyBackgroundColor white
+hide footbox
+participant "Service gọi\nhoặc nguồn" as A
+queue "Kafka" as K
+participant "Service sở hữu\nhoặc bên nhận" as B
+
+group Đồng bộ REST
+A -> B : Yêu cầu + X-Service-Token
+B --> A : Kết quả hiện hành
+note over A,B : Quyền, quote, claim, freeze.\nBên gọi chờ phản hồi và giới hạn thời gian.
+end
+
+group Bất đồng bộ Kafka
+A -> A : Commit dữ liệu + outbox
+A -> K : Phát fact sau commit
+K -> B : Event ID / version
+B -> B : Inbox + dữ liệu cùng transaction
+note over A,B : Xác nhận đơn, phát hành, báo cáo.\nCó độ trễ; chống tác động trùng bằng inbox/khóa.
+end
+@enduml

@@ -1,0 +1,45 @@
+@startuml
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 17
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam dpi 160
+skinparam ArrowColor #1F4E79
+skinparam LineColor #1F4E79
+skinparam ParticipantBackgroundColor #D9EAF7
+skinparam ParticipantBorderColor #1F4E79
+skinparam ActorBorderColor #1F4E79
+skinparam DatabaseBackgroundColor #EEF5FB
+skinparam RectangleBackgroundColor #EEF5FB
+skinparam RectangleBorderColor #1F4E79
+skinparam ComponentBackgroundColor #D9EAF7
+skinparam ComponentBorderColor #1F4E79
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #708090
+skinparam maxMessageSize 220
+skinparam sequenceMessageAlign center
+hide footbox
+autonumber
+actor "Người dùng" as U
+participant "Identity" as I
+participant "Service nghiệp vụ" as S
+participant "Organization" as O
+U -> I : Đăng nhập
+I -> I : Kiểm tra mật khẩu\nvà trạng thái tài khoản
+I -> I : Lưu refresh session
+I --> U : Access token + cookie
+U -> S : API + Bearer token
+S -> S : Xác minh chữ ký JWT
+S -> I : Đọc security-state
+I --> S : Tài khoản / phiên hiện hành
+alt Tài khoản và phiên hợp lệ
+ S -> O : Kiểm tra quyền tổ chức\n(nếu nghiệp vụ yêu cầu)
+ O --> S : Quyền hiện hành
+ S -> S : Xử lý theo phạm vi được cấp
+ S --> U : Kết quả
+else Bị khóa hoặc thu hồi
+ S --> U : Từ chối truy cập
+end
+
+@enduml

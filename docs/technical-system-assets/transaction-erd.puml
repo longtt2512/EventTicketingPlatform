@@ -1,0 +1,71 @@
+@startuml
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 17
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam dpi 160
+skinparam ArrowColor #1F4E79
+skinparam LineColor #1F4E79
+skinparam ParticipantBackgroundColor #D9EAF7
+skinparam ParticipantBorderColor #1F4E79
+skinparam ActorBorderColor #1F4E79
+skinparam DatabaseBackgroundColor #EEF5FB
+skinparam RectangleBackgroundColor #EEF5FB
+skinparam RectangleBorderColor #1F4E79
+skinparam ComponentBackgroundColor #D9EAF7
+skinparam ComponentBorderColor #1F4E79
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #708090
+skinparam maxMessageSize 220
+skinparam sequenceMessageAlign center
+hide circle
+skinparam linetype ortho
+entity "Commerce orders" as O {
+ * id <<PK>>
+}
+entity "Payment attempts" as A {
+ * id <<PK>>
+ order_id : UUID
+}
+entity "Payment transactions" as P {
+ * id <<PK>>
+ attempt_id <<FK, nullable>>
+ provider / merchant / reference <<UNIQUE>>
+}
+entity "Admission obligations" as B {
+ * order_id <<PK>>
+ snapshot / state
+}
+entity "Admission tickets" as T {
+ * id <<PK>>
+ order_id <<FK>>
+ item_id / ordinal
+ credential_hash <<UNIQUE>>
+}
+entity "Admission admissions" as G {
+ * id <<PK>>
+ ticket_id <<FK, UNIQUE>>
+}
+entity "Finance settlements" as F {
+ * id <<PK>>
+ event_id <<UNIQUE>>
+}
+entity "Finance settlement_items" as FI {
+ * order_id <<PK>>
+ settlement_id <<FK>>
+}
+O .. A : order_id
+O .. B : order_id
+A |o--o{ P
+B ||--o{ T
+T ||--o| G
+F ||--o{ FI
+O .. FI : order_id
+note bottom
+Nét liền: FK trong cùng schema.
+Nét đứt: tham chiếu giữa các dịch vụ.
+UNIQUE vé: order_id, item_id, ordinal.
+end note
+
+@enduml

@@ -1,0 +1,75 @@
+@startuml
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 17
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam dpi 160
+skinparam ArrowColor #1F4E79
+skinparam LineColor #1F4E79
+skinparam ParticipantBackgroundColor #D9EAF7
+skinparam ParticipantBorderColor #1F4E79
+skinparam ActorBorderColor #1F4E79
+skinparam DatabaseBackgroundColor #EEF5FB
+skinparam RectangleBackgroundColor #EEF5FB
+skinparam RectangleBorderColor #1F4E79
+skinparam ComponentBackgroundColor #D9EAF7
+skinparam ComponentBorderColor #1F4E79
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #708090
+skinparam maxMessageSize 220
+skinparam sequenceMessageAlign center
+hide circle
+skinparam linetype ortho
+entity events {
+ * id : UUID <<PK>>
+ --
+ organization_id : UUID
+ status / version
+}
+entity ticket_types {
+ * id : UUID <<PK>>
+ --
+ event_id : UUID <<FK>>
+ quota / reserved / sold
+}
+entity orders {
+ * id : UUID <<PK>>
+ --
+ event_id : UUID <<FK>>
+ customer_id / expires_at
+ applied_payment_id <<UNIQUE>>
+}
+entity "inventory_allocations" as alloc {
+ * id : UUID <<PK>>
+ --
+ event_id : UUID <<FK>>
+ state / expires_at
+}
+entity "allocation_lines" as al {
+ * allocation_id <<PK, FK>>
+ * ticket_type_id <<PK, FK>>
+ --
+ quantity / price_snapshot
+}
+entity "order_items" as oi {
+ * id : UUID <<PK>>
+ --
+ order_id : UUID <<FK>>
+ ticket_type_id : UUID
+ quantity / unit_price
+}
+events ||--o{ ticket_types
+events ||--o{ orders
+events ||--o{ alloc
+alloc ||--|{ al
+ticket_types ||--o{ al
+orders ||--|{ oi
+orders .. alloc
+note bottom of oi
+UNIQUE(order_id, ticket_type_id)
+ticket_type_id không có FK
+orders và allocations dùng cùng id
+end note
+
+@enduml

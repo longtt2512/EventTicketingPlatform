@@ -1,0 +1,50 @@
+@startuml
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 17
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam dpi 160
+skinparam ArrowColor #1F4E79
+skinparam LineColor #1F4E79
+skinparam ParticipantBackgroundColor #D9EAF7
+skinparam ParticipantBorderColor #1F4E79
+skinparam ActorBorderColor #1F4E79
+skinparam DatabaseBackgroundColor #EEF5FB
+skinparam RectangleBackgroundColor #EEF5FB
+skinparam RectangleBorderColor #1F4E79
+skinparam ComponentBackgroundColor #D9EAF7
+skinparam ComponentBorderColor #1F4E79
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #708090
+skinparam maxMessageSize 220
+skinparam sequenceMessageAlign center
+hide footbox
+autonumber
+queue Kafka as K
+participant Admission as A
+participant Commerce as C
+participant Identity as I
+participant Notification as N
+K -> A : order.confirmed
+A -> A : Transaction inbox\n+ issuance obligation
+A --> K : Ack sau commit
+A -> C : Worker đọc lại đơn / sự kiện
+C --> A : Dữ liệu hiện hành
+A -> A : Khóa gate và obligation
+alt Gate OPEN
+ A -> I : Đọc liên hệ người mua
+ I --> A : Tên / email
+ A -> A : Transaction tạo vé còn thiếu\n+ credential + READY + outbox
+ A -> K : ticket.issued / order.ready
+ K -> N : order.ready
+ N -> N : Lưu công việc gửi email
+else Gate FROZEN
+ A -> A : CANCELLED, không tạo vé mới
+end
+note over A
+Lỗi nguồn: giữ PENDING để thử lại.
+UNIQUE(order, item, ordinal) chống trùng.
+end note
+
+@enduml

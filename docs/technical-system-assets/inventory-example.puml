@@ -1,0 +1,41 @@
+@startuml
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 18
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam dpi 160
+skinparam ArrowColor #1F4E79
+skinparam LineColor #1F4E79
+skinparam RectangleBackgroundColor #EEF5FB
+skinparam RectangleBorderColor #1F4E79
+skinparam ComponentBackgroundColor #D9EAF7
+skinparam ComponentBorderColor #1F4E79
+skinparam DatabaseBackgroundColor #EEF5FB
+skinparam DatabaseBorderColor #1F4E79
+skinparam StateBackgroundColor #EEF5FB
+skinparam StateBorderColor #1F4E79
+skinparam ActivityBackgroundColor #EEF5FB
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityDiamondBackgroundColor #D9EAF7
+skinparam ActivityDiamondBorderColor #1F4E79
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #708090
+skinparam packageStyle rectangle
+skinparam nodesep 35
+skinparam ranksep 45
+start
+:Một hạng vé có Q = 100\nR = đang giữ; S = đã bán; A = còn lại\nBan đầu: R = 10, S = 30, A = 60;
+:Giữ thêm 2 vé\nR = 12, S = 30, A = 58;
+if (Kết quả của đơn?) then (Xác nhận)
+ :Tiêu thụ lượng giữ\nR = 10, S = 32, A = 58;
+else (Hủy hoặc hết hạn)
+ :Giải phóng lượng giữ\nR = 10, S = 30, A = 60;
+endif
+stop
+legend bottom
+A = Q − R − S; R + S ≤ Q.
+Khóa theo sự kiện bảo vệ cập nhật đồng thời.
+Đơn, allocation, request và outbox cùng transaction.
+endlegend
+@enduml

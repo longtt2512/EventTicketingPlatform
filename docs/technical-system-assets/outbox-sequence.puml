@@ -1,0 +1,51 @@
+@startuml
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 17
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam dpi 160
+skinparam ArrowColor #1F4E79
+skinparam LineColor #1F4E79
+skinparam ParticipantBackgroundColor #D9EAF7
+skinparam ParticipantBorderColor #1F4E79
+skinparam ActorBorderColor #1F4E79
+skinparam DatabaseBackgroundColor #EEF5FB
+skinparam RectangleBackgroundColor #EEF5FB
+skinparam RectangleBorderColor #1F4E79
+skinparam ComponentBackgroundColor #D9EAF7
+skinparam ComponentBorderColor #1F4E79
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #708090
+skinparam maxMessageSize 220
+skinparam sequenceMessageAlign center
+hide footbox
+autonumber
+participant Producer as P
+database "DB nguồn" as DB
+queue Kafka as K
+participant Consumer as C
+database "DB nhận" as R
+P -> DB : Transaction nghiệp vụ\n+ bản ghi outbox
+DB --> P : Commit
+P -> K : Publisher gửi eventId ổn định
+K --> P : Broker ack
+P -> DB : Đánh dấu đã gửi
+K -> C : Phân phối thông điệp
+C -> R : Bắt đầu transaction\nINSERT inbox nếu chưa có
+alt Message mới
+ C -> R : Cập nhật nghiệp vụ / projection\nkiểm tra entity version
+else Message trùng
+ C -> C : Không áp dụng lần nữa
+end
+R --> C : Commit
+C --> K : Manual ack
+note over P,K
+Crash sau broker ack có thể phát lại.
+end note
+note over C,R
+Lỗi transaction: không ack.
+Retry có giới hạn rồi DLT.
+end note
+
+@enduml

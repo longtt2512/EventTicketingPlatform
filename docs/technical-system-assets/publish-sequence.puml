@@ -1,0 +1,45 @@
+@startuml
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 17
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam dpi 160
+skinparam ArrowColor #1F4E79
+skinparam LineColor #1F4E79
+skinparam ParticipantBackgroundColor #D9EAF7
+skinparam ParticipantBorderColor #1F4E79
+skinparam ActorBorderColor #1F4E79
+skinparam DatabaseBackgroundColor #EEF5FB
+skinparam RectangleBackgroundColor #EEF5FB
+skinparam RectangleBorderColor #1F4E79
+skinparam ComponentBackgroundColor #D9EAF7
+skinparam ComponentBorderColor #1F4E79
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #708090
+skinparam maxMessageSize 220
+skinparam sequenceMessageAlign center
+hide footbox
+autonumber
+actor Organizer as O
+participant Commerce as C
+actor Admin as A
+participant Discovery as D
+O -> C : Lưu bản nháp
+O -> C : Submit + version
+C -> C : Kiểm tra quyền và nội dung\nGhi trạng thái PENDING_REVIEW
+C --> O : Chờ duyệt
+A -> C : Approve / Reject + reason
+C -> C : Transaction trạng thái\nvà lịch sử
+C --> A : Quyết định
+alt APPROVED
+ O -> C : Publish + version
+ C -> C : Transaction PUBLISHED\n+ version + outbox
+ C --> O : Đã công bố
+ C ->> D : event.published qua Kafka
+ D -> D : Transaction inbox\n+ projection công khai
+else REJECTED
+ O -> C : Chỉnh sửa và gửi lại
+end
+
+@enduml

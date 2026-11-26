@@ -1,0 +1,47 @@
+@startuml
+!pragma layout elk
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 18
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam dpi 160
+skinparam ArrowColor #1F4E79
+skinparam LineColor #1F4E79
+skinparam RectangleBackgroundColor #EEF5FB
+skinparam RectangleBorderColor #1F4E79
+skinparam ComponentBackgroundColor #D9EAF7
+skinparam ComponentBorderColor #1F4E79
+skinparam DatabaseBackgroundColor #EEF5FB
+skinparam DatabaseBorderColor #1F4E79
+skinparam StateBackgroundColor #EEF5FB
+skinparam StateBorderColor #1F4E79
+skinparam ActivityBackgroundColor #EEF5FB
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityDiamondBackgroundColor #D9EAF7
+skinparam ActivityDiamondBorderColor #1F4E79
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #708090
+skinparam packageStyle rectangle
+skinparam nodesep 35
+skinparam ranksep 45
+skinparam linetype ortho
+skinparam ranksep 40
+state "DRAFT\nBản nháp" as D
+state "PENDING_REVIEW\nChờ duyệt" as R
+state "REJECTED\nBị từ chối" as X
+state "APPROVED\nĐã duyệt" as A
+state "PUBLISHED\nĐã công bố" as P
+state "ONGOING\nĐang diễn ra" as O
+state "COMPLETED\nĐã kết thúc" as C
+D -down-> R : Gửi duyệt
+R -right-> X : Từ chối
+X -up-> D : Chỉnh sửa
+X -left-> R : Gửi lại
+R -down-> A : Phê duyệt
+A -left-> D : Sửa nội dung
+A -down-> P : Công bố
+P -down-> O : Đến giờ bắt đầu
+O -down-> C : Đến giờ kết thúc
+P -right-> C : Đã quá giờ kết thúc
+@enduml

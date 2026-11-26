@@ -1,0 +1,45 @@
+@startuml
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 18
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam dpi 160
+skinparam ArrowColor #1F4E79
+skinparam LineColor #1F4E79
+skinparam RectangleBackgroundColor #EEF5FB
+skinparam RectangleBorderColor #1F4E79
+skinparam ComponentBackgroundColor #D9EAF7
+skinparam ComponentBorderColor #1F4E79
+skinparam DatabaseBackgroundColor #EEF5FB
+skinparam DatabaseBorderColor #1F4E79
+skinparam StateBackgroundColor #EEF5FB
+skinparam StateBorderColor #1F4E79
+skinparam ActivityBackgroundColor #EEF5FB
+skinparam ActivityBorderColor #1F4E79
+skinparam ActivityDiamondBackgroundColor #D9EAF7
+skinparam ActivityDiamondBorderColor #1F4E79
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #708090
+skinparam packageStyle rectangle
+skinparam nodesep 35
+skinparam ranksep 45
+skinparam linetype ortho
+rectangle "Commerce · Payment\nAdmission · Finance\nPhát fact nghiệp vụ" as O
+queue "Kafka" as K
+rectangle "Feed Commerce\nBổ sung dữ liệu thiếu" as B
+rectangle "Discovery\nInbox và projection theo version" as D
+rectangle "Snapshot báo cáo\nPhạm vi quyền, bộ lọc, thời điểm" as S
+rectangle "Dashboard" as R
+file "CSV" as C
+O -down-> K
+K -down-> D
+B -right-> D
+D -down-> S
+S -down-> R
+S -down-> C
+R -[hidden]right- C
+legend bottom
+Dashboard và CSV cùng đọc một snapshotId.
+endlegend
+@enduml
