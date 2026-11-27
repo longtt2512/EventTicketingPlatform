@@ -1,47 +1,35 @@
 @startuml
 !pragma layout elk
-skinparam backgroundColor white
-skinparam defaultFontName Arial
-skinparam defaultFontSize 18
-skinparam shadowing false
-skinparam roundcorner 6
-skinparam dpi 160
-skinparam ArrowColor #1F4E79
-skinparam LineColor #1F4E79
-skinparam RectangleBackgroundColor #EEF5FB
-skinparam RectangleBorderColor #1F4E79
-skinparam ComponentBackgroundColor #D9EAF7
-skinparam ComponentBorderColor #1F4E79
-skinparam DatabaseBackgroundColor #EEF5FB
-skinparam DatabaseBorderColor #1F4E79
-skinparam StateBackgroundColor #EEF5FB
-skinparam StateBorderColor #1F4E79
-skinparam ActivityBackgroundColor #EEF5FB
-skinparam ActivityBorderColor #1F4E79
-skinparam ActivityDiamondBackgroundColor #D9EAF7
-skinparam ActivityDiamondBorderColor #1F4E79
-skinparam NoteBackgroundColor #F4F4F4
-skinparam NoteBorderColor #708090
-skinparam packageStyle rectangle
-skinparam nodesep 35
-skinparam ranksep 45
 skinparam linetype ortho
-skinparam ranksep 40
-state "DRAFT\nBản nháp" as D
-state "PENDING_REVIEW\nChờ duyệt" as R
-state "REJECTED\nBị từ chối" as X
-state "APPROVED\nĐã duyệt" as A
-state "PUBLISHED\nĐã công bố" as P
-state "ONGOING\nĐang diễn ra" as O
-state "COMPLETED\nĐã kết thúc" as C
-D -down-> R : Gửi duyệt
-R -right-> X : Từ chối
-X -up-> D : Chỉnh sửa
-X -left-> R : Gửi lại
-R -down-> A : Phê duyệt
-A -left-> D : Sửa nội dung
-A -down-> P : Công bố
-P -down-> O : Đến giờ bắt đầu
-O -down-> C : Đến giờ kết thúc
-P -right-> C : Đã quá giờ kết thúc
+!include state-theme.iuml
+' Explicit label insets keep ELK node and transition text clear of borders.
+skinparam ranksep 26
+skinparam ArrowFontSize 18
+skinparam StateFontSize 20
+state "<size:5> </size>\n  <b>CHU TRÌNH HOẠT ĐỘNG</b>  \n<size:5> </size>" as LIVE #F8FAFD {
+  state "<size:5> </size>\n  <b>DRAFT</b>  \n  Bản nháp  \n<size:5> </size>" as D #FFE3A0
+  state "<size:5> </size>\n  <b>PENDING_REVIEW</b>  \n  Chờ duyệt  \n<size:5> </size>" as R #9FE1EA
+  state "<size:5> </size>\n  <b>REJECTED</b>  \n  Bị từ chối  \n<size:5> </size>" as X #F6B5CC
+  state "<size:5> </size>\n  <b>APPROVED</b>  \n  Đã duyệt  \n<size:5> </size>" as A #CEBFF4
+  state "<size:5> </size>\n  <b>PUBLISHED</b>  \n  Đã công bố  \n<size:5> </size>" as P #A9CCF5
+  state "<size:5> </size>\n  <b>ONGOING</b>  \n  Đang diễn ra  \n<size:5> </size>" as O #9DDECB
+  [*] -down-> D
+  D -down-> R : <size:5> </size>\n  Gửi duyệt  \n<size:5> </size>
+  R -right-> X : <size:5> </size>\n  Từ chối  \n<size:5> </size>
+  X -up-> D : <size:5> </size>\n  Chỉnh sửa  \n<size:5> </size>
+  X -left-> R : <size:5> </size>\n  Gửi lại  \n<size:5> </size>
+  R -down-> A : <size:5> </size>\n  Phê duyệt  \n<size:5> </size>
+  A -left-> D : <size:5> </size>\n  Sửa nội dung  \n<size:5> </size>
+  A -down-> P : <size:5> </size>\n  Công bố  \n<size:5> </size>
+  P -down-> O : <size:5> </size>\n  Đến giờ bắt đầu  \n  [chưa kết thúc]  \n<size:5> </size>
+}
+state "<size:5> </size>\n  <b>COMPLETED</b>  \n  Đã kết thúc  \n<size:5> </size>" as C #BFE3A3
+state "<size:5> </size>\n  <b>CANCELLED</b>  \n  Đã hủy  \n<size:5> </size>" as CX #F6ABAA
+O -down-> C : <size:5> </size>\n  Đến giờ kết thúc  \n<size:5> </size>
+P -right-> C : <size:5> </size>\n  Đã quá giờ  \n  kết thúc  \n<size:5> </size>
+LIVE -right-> CX : <size:4> </size>\n  Yêu cầu hủy hợp lệ;  \n  Admission đã đóng gate  \n<size:5> </size>
+state FinishCompleted <<end>>
+state FinishCancelled <<end>>
+C -down-> FinishCompleted
+CX -down-> FinishCancelled
 @enduml

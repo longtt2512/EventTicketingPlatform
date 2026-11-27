@@ -4,7 +4,7 @@ Date: 2026-11-26
 
 ## Status
 
-Complete — diagram notation and routing revision validated on 2026-11-26
+Event state diagram spacing revision completed on 2026-11-27
 
 ## Outcome
 
@@ -242,3 +242,161 @@ Final Word SHA-256: `5794e2430f5cf5083b0d3f1f2a2a048990122c41b0803398eb51e66879a
 No application code, data or environment was changed. Application tests were not
 rerun for this document-only revision; historical validation dates remain explicit.
 No commit, push or deployment was performed.
+
+
+## Illustrated architecture revision requested on 2026-11-27
+
+User supplied a colorful architecture illustration and asked for more expressive
+high-level and microservices figures. Redesign architecture, service boundaries
+and Commerce components with original local icons, distinct domain colors and
+clear connections. Keep editable PlantUML and render locally. Describe current
+implementation only; preserve PTIT formatting, service tables and all sequences.
+Back up the current artifacts, render the revised Word report, inspect all changed
+pages and prove unchanged pages match reviewed images. Validate caption placement,
+references, embedded assets and page numbering before delivery.
+
+No application change, commit, push or deployment is included in this request.
+
+## Illustrated architecture revision v5 completed
+
+Redrew the high-level architecture, service boundaries and Commerce components
+with 21 original SVG/PNG icons, domain colors, aligned component cards and
+orthogonal connectors. The backend catalog uses a consistent three-column grid.
+PlantUML sources retain all text and relationships; local icon assets require no
+network access. No runtime infrastructure was added to the diagrams.
+
+Validation completed:
+
+- All 27 PlantUML sources pass syntax validation; the three changed figures render.
+- The report remains 64 pages, with 27 figures, 35 tables and 11 sequence diagrams.
+- Changed pages 12, 13 and 16 were visually reviewed at native render size.
+- The other 61 pages are pixel-identical to previously reviewed pages.
+- All 27 embedded diagrams match current PNG assets byte-for-byte.
+- All 21 original icon pairs regenerate identically; SVGs parse and references resolve.
+- All 74 navigation targets and all 63 numbered footers are valid; page map is stable.
+- Captions remain below figures/tables at 12 pt, with 13 pt body text.
+- Five cover fields remain blank; 14 retained template parts are unchanged.
+- Schema appendix still matches all 84 application tables across nine schemas.
+- No application code changed; application tests were not rerun.
+
+Final render: `.runtime/technical-document/illustrated-v2/`.
+Proof: `.runtime/technical-document/illustrated-revision/verification.json` and
+`final-qa.json`.
+
+Final Word SHA-256: `58ab2d647c3711d2ae157af86ef6f6a40fff339a0e45d4445b6a84a9ca9d2466`.
+
+No commit, push or deployment was performed for this revision.
+
+## Colored activity diagram requested on 2026-11-27
+
+Restyle the journey activity diagram using the user-provided swimlane example:
+tinted lanes and headers, vivid action fills, white text and clear connectors.
+Keep the existing business flow, render with PlantUML, update the Word report,
+and verify the changed page plus pixel equivalence of other pages. Preserve
+existing uncommitted architecture work and the open Word lock file.
+
+## Colored activity diagram revision v5.1 completed
+
+Rendered the journey with native PlantUML swimlanes: four pastel lane backgrounds,
+matching colored headers, vivid action fills with white text, and clear orthogonal
+connectors. All nine activities and their business flow remain unchanged.
+Updated Figure 1.1 in the Word report and inspected physical page 7 visually.
+
+Validation completed:
+
+- PlantUML syntax validation and PNG rendering passed.
+- The report remains 64 pages with 27 figures, 35 tables and 11 sequence diagrams.
+- The other 63 pages are pixel-identical to the reviewed v5 render.
+- The changed embedded PNG matches the source asset; all other media are unchanged.
+- Page references remain stable; captions remain below content at 12 pt, body 13 pt.
+- Five cover fields remain blank; 14 retained template parts are preserved.
+- The appendix still describes 84 application tables across nine schemas.
+
+Final render: `.runtime/technical-document/activity-v1/`.
+Evidence: `.runtime/technical-document/activity-revision/verification.json` and
+`final-qa.json`.
+
+Final Word SHA-256: `705e1cdc1cf004f009b7c96cd858a0035a7cb608125d6ed7fea00f4a469b3d83`.
+
+No application code changed; application tests were not rerun.
+No commit, push or deployment was performed for this revision.
+
+## State machine and routing revision requested on 2026-11-27
+
+Restyle every state machine in the report (event, order, issuance and ticket
+states) using rounded colored nodes, readable transition labels and clear paths.
+Redraw order routing with local icons, a gateway boundary and service cards.
+Use native editable PlantUML and existing icon assets. The user examples control
+visual direction; current implementation controls all states and routes.
+
+Authority: EventService, EventLifecycle and EventCancellation; OrderService and
+OrderExpiry; IssuanceService, EventGates and AdmissionService; API Gateway
+application.yml. Include cancellation_pending as a processing flag distinct from
+persisted event status, and include payment-status alongside payment-attempts.
+Do not add unimplemented gateway authentication, discovery, caching or limits.
+
+Backups: `.runtime/technical-document/state-routing-revision/baseline/`.
+Render and inspect all changed diagrams and report pages; compare other pages
+against the reviewed activity-v1 render. Verify captions, references, embedded
+images and template fidelity. Preserve unrelated changes and the Word lock file.
+No application code, commit, push or deployment is included.
+
+## State machine and routing revision v6 completed
+
+Restyled every state-machine figure (event, order, issuance/ticket) with a shared
+local PlantUML theme, rounded colored states and clearer labels. All original
+transitions remain. Added the implemented event cancellation path: the pending
+flag blocks sales and lifecycle advancement; CANCELLED follows gate closure.
+Redrew routing using original icons, service colors and configured route priority,
+including payment-status. No unimplemented gateway features were added.
+
+Validation: all 27 PlantUML sources pass syntax checks. Report remains 64 pages,
+27 figures, 35 tables and 11 sequences. Physical pages 10, 17, 20 and 22 were
+visually reviewed; the other 60 are pixel-identical to reviewed activity-v1 pages.
+All 27 embedded PNGs match current assets; exactly four media files changed.
+All 74 navigation targets and 63 numbered footers pass; the page map is stable.
+Captions remain below content at 12 pt, body 13 pt; five cover fields are blank.
+Fourteen template parts are preserved; appendix retains 84 tables in nine schemas.
+
+Final render: `.runtime/technical-document/state-routing-final/`.
+Proof: `.runtime/technical-document/state-routing-revision/verification.json`
+and `final-qa.json`.
+
+Final Word SHA-256: `c66f540d9d94868f538207e36fd85d150e3cace7439ce5d51d385f5b4925a3be`.
+
+No application code changed; application tests were not rerun.
+No commit, push or deployment was performed for this revision.
+
+## Event state diagram spacing revision
+
+The user identified crowded nodes and transition labels in Figure 1.2. Increase
+actual node padding and label clearance, render with PlantUML, inspect at report
+size and preserve the implemented state transitions. Keep other figures intact.
+Baseline: `.runtime/technical-document/event-spacing-revision/baseline/`.
+
+
+## Event state diagram spacing revision v6.1 completed
+
+Added explicit insets to the state titles and transition labels in Figure 1.2.
+The ELK layout now reserves space around the text instead of placing labels
+against borders or connectors. Each terminal status has a separate final marker,
+removing the overlapping arrowheads at the bottom. Increased the figure height
+in Word from 7 to 7.5 inches so the added spacing remains readable on the page.
+
+Validation: native PlantUML rendering and syntax check pass. Visually reviewed
+the PNG and the final Word page 10. All 14 original transition paths and labels
+are preserved. The report remains 64 pages with 27 figures and 35 tables; only
+physical page 10 changed, while the other 63 pages are pixel-identical to the
+reviewed state-routing-final render. Exactly one embedded image changed and
+matches the current PNG. All 74 navigation targets and 63 numbered footers pass.
+Page references are stable; captions remain below content at 12 pt, body 13 pt.
+Five cover fields remain blank and 14 retained template parts are unchanged.
+
+Final render: `.runtime/technical-document/event-spacing-final/`.
+Proof: `.runtime/technical-document/event-spacing-revision/verification.json`
+and `final-qa.json`.
+
+Final Word SHA-256: `d26cd339f0b1546fa97759750de678b3bfed12c68dd902ee5ea527c6d86c520e`.
+
+No application code changed; application tests were not rerun.
+No commit, push or deployment was performed for this revision.

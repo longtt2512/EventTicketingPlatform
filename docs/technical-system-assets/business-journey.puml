@@ -1,48 +1,67 @@
 @startuml
-skinparam backgroundColor white
+skinparam backgroundColor #FFFFFF
 skinparam defaultFontName Arial
-skinparam defaultFontSize 18
+skinparam defaultFontSize 20
+skinparam dpi 180
 skinparam shadowing false
-skinparam roundcorner 6
-skinparam dpi 160
-skinparam ArrowColor #1F4E79
-skinparam LineColor #1F4E79
-skinparam RectangleBackgroundColor #EEF5FB
-skinparam RectangleBorderColor #1F4E79
-skinparam ComponentBackgroundColor #D9EAF7
-skinparam ComponentBorderColor #1F4E79
-skinparam DatabaseBackgroundColor #EEF5FB
-skinparam DatabaseBorderColor #1F4E79
-skinparam StateBackgroundColor #EEF5FB
-skinparam StateBorderColor #1F4E79
-skinparam ActivityBackgroundColor #EEF5FB
-skinparam ActivityBorderColor #1F4E79
-skinparam ActivityDiamondBackgroundColor #D9EAF7
-skinparam ActivityDiamondBorderColor #1F4E79
-skinparam NoteBackgroundColor #F4F4F4
-skinparam NoteBorderColor #708090
-skinparam packageStyle rectangle
-skinparam nodesep 35
-skinparam ranksep 45
+skinparam roundcorner 10
+skinparam ArrowColor #52616F
+skinparam ArrowThickness 1.4
 skinparam activity {
-  FontSize 18
+  FontName Arial
+  FontSize 20
+  FontColor #FFFFFF
+  BackgroundColor #4B82CE
+  BorderColor transparent
+  BorderThickness 1.2
+  StartColor #172B3A
+  EndColor #172B3A
 }
-|Tổ chức sự kiện|
+skinparam swimlane {
+  BorderColor #B9C7D5
+  BorderThickness 1
+  TitleBackgroundColor #FFFFFF
+  TitleFontColor #24394D
+  TitleFontSize 22
+  TitleFontStyle plain
+  Width 255
+}
+<style>
+activityDiagram {
+  arrow {
+    LineColor #52616F
+    LineThickness 1.4
+  }
+  activity {
+    Padding 14
+    MinimumWidth 210
+    HorizontalAlignment center
+  }
+  swimlane {
+    Padding 16
+  }
+}
+</style>
+|#F8F4FF|ORG|\n<back:#E9DFF9><b>  Tổ chức sự kiện  </b></back>\n
+|#F1F7FE|CUSTOMER|\n<back:#DCEAFB><b>  Khách hàng  </b></back>\n
+|#F0F8F7|SYS|\n<back:#D9EFE9><b>  Hệ thống  </b></back>\n
+|#F4F9F1|STAFF|\n<back:#E1EEDB><b>  Kiểm soát vé  </b></back>\n
+|ORG|
 start
-:Organizer soạn\nsự kiện và hạng vé;
-:Admin phê duyệt;\nOrganizer công bố;
-|Khách hàng|
-:Chọn vé\nvà đặt chỗ;
-|Hệ thống|
-:Xác nhận đơn trả phí\nkhi thanh toán hợp lệ,\nhoặc đơn miễn phí;
-:Phát hành vé QR;
-|Khách hàng|
-:Nhận vé\nvà đến sự kiện;
-|Kiểm soát vé|
-:Staff kiểm tra vé\nvà xác nhận vào cửa;
-|Hệ thống|
-:Finance tổng hợp\nkết quả đối soát;
-|Tổ chức sự kiện|
-:Admin ghi nhận\nkết quả đối soát;
+:Organizer soạn\nsự kiện và hạng vé; <<#8050CD>>
+:Admin phê duyệt;\nOrganizer công bố; <<#8050CD>>
+|CUSTOMER|
+:Chọn vé\nvà đặt chỗ; <<#397BC5>>
+|SYS|
+:Xác nhận đơn trả phí\nkhi thanh toán hợp lệ,\nhoặc đơn miễn phí; <<#258778>>
+:Phát hành vé QR; <<#258778>>
+|CUSTOMER|
+:Nhận vé\nvà đến sự kiện; <<#397BC5>>
+|STAFF|
+:Staff kiểm tra vé\nvà xác nhận vào cửa; <<#548946>>
+|SYS|
+:Finance tổng hợp\nkết quả đối soát; <<#258778>>
+|ORG|
+:Admin ghi nhận\nkết quả đối soát; <<#8050CD>>
 stop
 @enduml

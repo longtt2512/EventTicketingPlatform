@@ -63,7 +63,7 @@ Một đơn thuộc một sự kiện, giữ giá và điều khoản tại lúc
 
 ![Hình 1.2 Vòng đời sự kiện và điều kiện hủy](technical-system-assets/event-lifecycle.png)
 
-Sự kiện bắt đầu ở DRAFT. Khi hủy trước lúc kết thúc, Commerce đặt cancellation_pending để chặn bán mới, yêu cầu Admission đóng quyền vào cửa rồi mới ghi CANCELLED.
+Sự kiện bắt đầu ở DRAFT. Có thể yêu cầu hủy khi sự kiện chưa ở COMPLETED hoặc CANCELLED. Commerce đặt cờ cancellation_pending để chặn bán mới và dừng cập nhật vòng đời; chỉ ghi CANCELLED sau khi Admission xác nhận đã đóng quyền vào cửa. Nếu chưa đóng được gate, hệ thống lưu yêu cầu để thử lại.
 
 ### Yêu cầu phi chức năng
 

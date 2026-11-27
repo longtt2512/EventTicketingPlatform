@@ -1,36 +1,13 @@
 @startuml
 !pragma layout elk
-skinparam backgroundColor white
-skinparam defaultFontName Arial
-skinparam defaultFontSize 18
-skinparam shadowing false
-skinparam roundcorner 6
-skinparam dpi 160
-skinparam ArrowColor #1F4E79
-skinparam LineColor #1F4E79
-skinparam RectangleBackgroundColor #EEF5FB
-skinparam RectangleBorderColor #1F4E79
-skinparam ComponentBackgroundColor #D9EAF7
-skinparam ComponentBorderColor #1F4E79
-skinparam DatabaseBackgroundColor #EEF5FB
-skinparam DatabaseBorderColor #1F4E79
-skinparam StateBackgroundColor #EEF5FB
-skinparam StateBorderColor #1F4E79
-skinparam ActivityBackgroundColor #EEF5FB
-skinparam ActivityBorderColor #1F4E79
-skinparam ActivityDiamondBackgroundColor #D9EAF7
-skinparam ActivityDiamondBorderColor #1F4E79
-skinparam NoteBackgroundColor #F4F4F4
-skinparam NoteBorderColor #708090
-skinparam packageStyle rectangle
-skinparam nodesep 35
-skinparam ranksep 45
-skinparam linetype ortho
-state "PENDING_PAYMENT" as P : Allocation: ACTIVE\nGiữ chỗ tối đa 10 phút
-state "CONFIRMED" as C : Allocation: CONSUMED
-state "EXPIRED" as E : Allocation: EXPIRED
-state "CANCELLED" as X : Allocation: RELEASED
-P -down-> C : Xác nhận hợp lệ
-P -down-> E : Hết hạn
-P -down-> X : Hủy
+!include state-theme.iuml
+skinparam ranksep 50
+state "<b>PENDING_PAYMENT</b>\nChờ xác nhận đơn\n<size:15>Allocation: ACTIVE · Giữ chỗ 10 phút</size>" as P #FFE3A0
+state "<b>CONFIRMED</b>\nĐã xác nhận\n<size:15>Allocation: CONSUMED</size>" as C #BFE3A3
+state "<b>EXPIRED</b>\nĐã hết hạn\n<size:15>Allocation: EXPIRED</size>" as E #E2E7EE
+state "<b>CANCELLED</b>\nĐã hủy\n<size:15>Allocation: RELEASED</size>" as X #F6ABAA
+[*] -down-> P
+P -down-> C : Thanh toán hợp lệ\nhoặc xác nhận đơn miễn phí
+P -down-> E : Hết hạn giữ chỗ
+P -down-> X : Khách hủy hợp lệ\nhoặc sự kiện bị hủy
 @enduml

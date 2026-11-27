@@ -1,41 +1,55 @@
 @startuml
-skinparam backgroundColor white
+skinparam componentStyle rectangle
+skinparam backgroundColor #FFFFFF
 skinparam defaultFontName Arial
 skinparam defaultFontSize 18
+skinparam defaultFontColor #24394D
+skinparam defaultTextAlignment center
+skinparam dpi 180
 skinparam shadowing false
-skinparam roundcorner 6
-skinparam dpi 160
-skinparam ArrowColor #1F4E79
-skinparam LineColor #1F4E79
-skinparam RectangleBackgroundColor #EEF5FB
-skinparam RectangleBorderColor #1F4E79
-skinparam ComponentBackgroundColor #D9EAF7
-skinparam ComponentBorderColor #1F4E79
-skinparam DatabaseBackgroundColor #EEF5FB
-skinparam DatabaseBorderColor #1F4E79
-skinparam StateBackgroundColor #EEF5FB
-skinparam StateBorderColor #1F4E79
-skinparam ActivityBackgroundColor #EEF5FB
-skinparam ActivityBorderColor #1F4E79
-skinparam ActivityDiamondBackgroundColor #D9EAF7
-skinparam ActivityDiamondBorderColor #1F4E79
-skinparam NoteBackgroundColor #F4F4F4
-skinparam NoteBorderColor #708090
-skinparam packageStyle rectangle
-skinparam nodesep 35
-skinparam ranksep 45
+skinparam roundcorner 18
 skinparam linetype ortho
-rectangle "Frontend\nYêu cầu thuộc /api/v1/orders" as F
-rectangle "API Gateway\nƯu tiên route cụ thể" as G
-together {
-rectangle "Payment\n/{id}/payment-attempts\nTạo lần thanh toán" as P
-rectangle "Ticket Admission\n/{id}/tickets\nĐọc vé của đơn" as A
-rectangle "Event Commerce\n/orders/** còn lại\nĐặt, đọc, xác nhận đơn" as C
+skinparam ArrowColor #425B70
+skinparam ArrowThickness 2
+skinparam ArrowFontSize 16
+skinparam ComponentBorderThickness 1.8
+skinparam ComponentBorderColor #90ACC0
+skinparam PackageBorderThickness 1.8
+skinparam PackageBorderColor #C9B77D
+skinparam PackageBackgroundColor #F8F4FD
+skinparam PackageFontColor #806C33
+skinparam PackageFontSize 22
+skinparam packageStyle rectangle
+skinparam nodesep 30
+skinparam ranksep 35
+skinparam legend {
+  BackgroundColor #FFFFFF
+  BorderColor #FFFFFF
+  FontSize 15
+  FontColor #526577
 }
-F -down-> G
+<style>
+component {
+  Padding 12
+  MinimumWidth 190
+  HorizontalAlignment center
+}
+</style>
+component "<img:icons/frontend.png{scale=.52}>\n<b>Frontend</b>\nYêu cầu HTTP\n/api/v1/orders" as F #E9F5FC;line:4388B8
+component "<img:icons/gateway.png{scale=.55}>\n<b>API Gateway</b>\nCORS · Đối chiếu đường dẫn\n<size:16>Ưu tiên route cụ thể trước /orders/**</size>" as G #E8DDF8;line:9A7ABB
+together {
+component "<img:icons/payment.png{scale=.5}>\n<b>01  Payment</b>\n/{id}/payment-attempts\n/{id}/payment-status\n<size:15>Tạo lần thanh toán · Đọc kết quả</size>" as P #FFF3D6;line:C9A04A
+component "<img:icons/admission.png{scale=.5}>\n<b>02  Ticket Admission</b>\n/{id}/tickets\n<size:15>Đọc vé thuộc đơn hàng</size>\n " as A #DEF2E7;line:6EAD89
+component "<img:icons/commerce.png{scale=.5}>\n<b>03  Event Commerce</b>\n/orders/** còn lại\n<size:15>Đặt · Đọc · Xác nhận đơn</size>\n " as C #DCEFF9;line:609FC3
+}
+F -right-> G
 G -down-> P
 G -down-> A
 G -down-> C
-P -[hidden]right- A
-A -[hidden]right- C
+P -[hidden]right-> A
+A -[hidden]right-> C
+legend bottom
+Các hậu tố /{id}/... thuộc /api/v1/orders. Số 01–03 chỉ thứ tự ưu tiên route.
+Gateway chuyển tiếp đến dịch vụ sở hữu tài nguyên; xác thực và phân quyền tại dịch vụ đích.
+endlegend
 @enduml

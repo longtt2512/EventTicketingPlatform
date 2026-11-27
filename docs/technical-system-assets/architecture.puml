@@ -1,46 +1,58 @@
 @startuml
-skinparam backgroundColor white
+skinparam componentStyle rectangle
+skinparam backgroundColor #FFFFFF
 skinparam defaultFontName Arial
-skinparam defaultFontSize 18
+skinparam defaultFontSize 20
+skinparam defaultTextAlignment center
+skinparam defaultFontColor #24394D
+skinparam dpi 180
 skinparam shadowing false
-skinparam roundcorner 6
-skinparam dpi 160
-skinparam ArrowColor #1F4E79
-skinparam LineColor #1F4E79
-skinparam RectangleBackgroundColor #EEF5FB
-skinparam RectangleBorderColor #1F4E79
-skinparam ComponentBackgroundColor #D9EAF7
-skinparam ComponentBorderColor #1F4E79
-skinparam DatabaseBackgroundColor #EEF5FB
-skinparam DatabaseBorderColor #1F4E79
-skinparam StateBackgroundColor #EEF5FB
-skinparam StateBorderColor #1F4E79
-skinparam ActivityBackgroundColor #EEF5FB
-skinparam ActivityBorderColor #1F4E79
-skinparam ActivityDiamondBackgroundColor #D9EAF7
-skinparam ActivityDiamondBorderColor #1F4E79
-skinparam NoteBackgroundColor #F4F4F4
-skinparam NoteBorderColor #708090
-skinparam packageStyle rectangle
-skinparam nodesep 35
-skinparam ranksep 45
+skinparam roundcorner 16
 skinparam linetype ortho
-rectangle "Frontend\nCustomer · Organizer · Admin · Staff" as FE
-rectangle "API Gateway\nTiếp nhận HTTP và định tuyến" as G
-rectangle "Microservices\nNghiệp vụ, phân quyền và tác vụ nền" as MS
-together {
-database "PostgreSQL\nDữ liệu giao dịch" as DB
-queue "Kafka\nSự kiện nghiệp vụ" as K
-storage "MinIO\nTệp riêng tư" as M
-rectangle "SMTP\nGửi email" as E
+skinparam ArrowColor #49718B
+skinparam ArrowThickness 2
+skinparam ComponentBorderThickness 2
+skinparam ComponentBorderColor #90ACC0
+skinparam ComponentBackgroundColor #FFFFFF
+skinparam PackageBorderThickness 2
+skinparam PackageBorderColor #D4B262
+skinparam PackageBackgroundColor #FFFCF3
+skinparam PackageFontColor #87652C
+skinparam PackageFontSize 22
+skinparam packageStyle rectangle
+skinparam nodesep 28
+skinparam ranksep 38
+<style>
+component {
+  Padding 12
+  MinimumWidth 180
+  HorizontalAlignment center
 }
-FE -down-> G
-G -down-> MS
-MS -down-> DB
-MS <-down-> K
-MS -down-> M
-MS -down-> E
-DB -[hidden]right- K
-K -[hidden]right- M
-M -[hidden]right- E
+legend {
+  BackgroundColor #FFFFFF
+  LineColor #D4E0E8
+  FontSize 16
+}
+</style>
+component "<img:icons/frontend.png{scale=.58}>\n<b>Frontend</b>\nCustomer · Organizer · Admin · Staff" as FE #F0F7FC;line:4388B8
+component "<img:icons/gateway.png{scale=.56}>\n<b>API Gateway</b>\nHTTP / REST · CORS · định tuyến" as G #F3EDFC;line:8A6AC1
+component "<img:icons/identity.png{scale=.6}>  <img:icons/commerce.png{scale=.6}>  <img:icons/discovery.png{scale=.6}>\n<b>Microservices</b>\nDanh tính và tổ chức · Giao dịch\nTra cứu và vận hành" as MS #FFFCF3;line:D4B262
+together {
+component "<img:icons/postgresql.png{scale=.48}>\n<b>PostgreSQL</b>\nSchema riêng\ntheo dịch vụ" as DB #F1F7FC;line:4388B8
+component "<img:icons/kafka.png{scale=.48}>\n<b>Kafka</b>\nSự kiện\nnghiệp vụ" as K #FFFAED;line:C89639
+component "<img:icons/minio.png{scale=.48}>\n<b>MinIO</b>\nTệp và PDF\nriêng tư" as M #FCF1F5;line:C87C90
+component "<img:icons/smtp.png{scale=.48}>\n<b>SMTP</b>\nEmail local\nqua MailHog" as E #FFFAED;line:C89639
+}
+FE -[#337FA4]down-> G
+G -[#337FA4]down-> MS
+MS -[#337FA4]down-> DB
+MS <.[#C58C2F].> K
+MS -[#B86C85]down-> M
+MS -[#B86C85]down-> E
+DB -[hidden]right-> K
+K -[hidden]right-> M
+M -[hidden]right-> E
+legend bottom
+<color:#337FA4>━━</color> Lời gọi hoặc truy cập dữ liệu    <color:#C58C2F>┄┄</color> Sự kiện bất đồng bộ
+endlegend
 @enduml

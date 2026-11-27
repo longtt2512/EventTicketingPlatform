@@ -1,56 +1,68 @@
 @startuml
-skinparam backgroundColor white
-skinparam defaultFontName Arial
-skinparam defaultFontSize 18
-skinparam shadowing false
-skinparam roundcorner 6
-skinparam dpi 160
-skinparam ArrowColor #1F4E79
-skinparam LineColor #1F4E79
-skinparam RectangleBackgroundColor #EEF5FB
-skinparam RectangleBorderColor #1F4E79
-skinparam ComponentBackgroundColor #D9EAF7
-skinparam ComponentBorderColor #1F4E79
-skinparam DatabaseBackgroundColor #EEF5FB
-skinparam DatabaseBorderColor #1F4E79
-skinparam StateBackgroundColor #EEF5FB
-skinparam StateBorderColor #1F4E79
-skinparam ActivityBackgroundColor #EEF5FB
-skinparam ActivityBorderColor #1F4E79
-skinparam ActivityDiamondBackgroundColor #D9EAF7
-skinparam ActivityDiamondBorderColor #1F4E79
-skinparam NoteBackgroundColor #F4F4F4
-skinparam NoteBorderColor #708090
-skinparam packageStyle rectangle
-skinparam nodesep 35
-skinparam ranksep 45
 skinparam componentStyle rectangle
-package "Danh tính và tổ chức" as CORE {
- component "Identity\nTài khoản và phiên" as I
- component "Organization\nTổ chức và quyền" as O
- I -[hidden]right- O
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 20
+skinparam defaultTextAlignment center
+skinparam defaultFontColor #24394D
+skinparam dpi 180
+skinparam shadowing false
+skinparam roundcorner 16
+skinparam linetype ortho
+skinparam ArrowColor #49718B
+skinparam ArrowThickness 2
+skinparam ComponentBorderThickness 2
+skinparam ComponentBorderColor #90ACC0
+skinparam ComponentBackgroundColor #FFFFFF
+skinparam PackageBorderThickness 2
+skinparam PackageBorderColor #D4B262
+skinparam PackageBackgroundColor #FFFCF3
+skinparam PackageFontColor #87652C
+skinparam PackageFontSize 22
+skinparam packageStyle rectangle
+skinparam nodesep 28
+skinparam ranksep 28
+<style>
+component {
+  Padding 12
+  MinimumWidth 235
+  HorizontalAlignment center
 }
-package "Giao dịch nghiệp vụ" as BIZ {
- component "Event Commerce\nSự kiện, tồn kho, đơn" as C
- component "Payment\nKhoản thu và sổ tiền" as P
- component "Ticket Admission\nVé và vào cửa" as T
- component "Finance\nPhí và đối soát" as F
- C -[hidden]right- P
- T -[hidden]right- F
- C -[hidden]down- T
- P -[hidden]down- F
+legend {
+  BackgroundColor #FFFFFF
+  LineColor #D4E0E8
+  FontSize 16
 }
-package "Tra cứu và vận hành" as READ {
- component "Discovery\nTìm kiếm và báo cáo" as D
- component "Notification\nEmail nghiệp vụ" as N
- component "Admin Operations\nCấu hình và audit" as A
- D -[hidden]right- N
- N -[hidden]right- A
+</style>
+together {
+component "<img:icons/identity.png{scale=.56}>\n<b>Identity</b>\nTài khoản và phiên\n<color:#75648E>identity</color>" as I #F6F1FC;line:987BC7
+component "<img:icons/organization.png{scale=.56}>\n<b>Organization</b>\nTổ chức và quyền\n<color:#75648E>organization</color>" as O #F6F1FC;line:987BC7
+component "<img:icons/admin.png{scale=.56}>\n<b>Admin Operations</b>\nCấu hình và audit\n<color:#407E72>admin_audit</color>" as A #EFF9F5;line:51AA98
 }
-I -[hidden]down- C
-T -[hidden]down- D
+together {
+component "<img:icons/commerce.png{scale=.56}>\n<b>Event Commerce</b>\nSự kiện, tồn kho, đơn\n<color:#47738B>event_commerce</color>" as C #EFF7FC;line:539AC2
+component "<img:icons/payment.png{scale=.56}>\n<b>Payment</b>\nKhoản thu và sổ tiền\n<color:#47738B>payment</color>" as P #EFF7FC;line:539AC2
+component "<img:icons/admission.png{scale=.56}>\n<b>Ticket Admission</b>\nVé và kiểm soát vào cửa\n<color:#47738B>ticket_admission</color>" as T #EFF7FC;line:539AC2
+}
+together {
+component "<img:icons/finance.png{scale=.56}>\n<b>Finance</b>\nPhí và đối soát\n<color:#47738B>finance</color>" as F #EFF7FC;line:539AC2
+component "<img:icons/discovery.png{scale=.56}>\n<b>Discovery</b>\nTìm kiếm và báo cáo\n<color:#407E72>discovery</color>" as D #EFF9F5;line:51AA98
+component "<img:icons/notification.png{scale=.56}>\n<b>Notification</b>\nEmail nghiệp vụ\n<color:#407E72>notification</color>" as N #EFF9F5;line:51AA98
+}
+I -[hidden]right-> O
+O -[hidden]right-> A
+C -[hidden]right-> P
+P -[hidden]right-> T
+F -[hidden]right-> D
+D -[hidden]right-> N
+I -[hidden]down-> C
+C -[hidden]down-> F
+O -[hidden]down-> P
+P -[hidden]down-> D
+A -[hidden]down-> T
+T -[hidden]down-> N
 legend bottom
-Mỗi dịch vụ sở hữu dữ liệu và quy tắc trong một schema riêng.
-Các nhóm trên thể hiện phạm vi nghiệp vụ, không phải thứ tự gọi.
+<color:#987BC7>■</color> Danh tính và tổ chức   <color:#539AC2>■</color> Giao dịch   <color:#51AA98>■</color> Tra cứu và vận hành
+Dòng cuối mỗi dịch vụ là schema do dịch vụ đó sở hữu.
 endlegend
 @enduml

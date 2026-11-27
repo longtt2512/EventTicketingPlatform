@@ -1,45 +1,53 @@
 @startuml
-skinparam backgroundColor white
-skinparam defaultFontName Arial
-skinparam defaultFontSize 18
-skinparam shadowing false
-skinparam roundcorner 6
-skinparam dpi 160
-skinparam ArrowColor #1F4E79
-skinparam LineColor #1F4E79
-skinparam RectangleBackgroundColor #EEF5FB
-skinparam RectangleBorderColor #1F4E79
-skinparam ComponentBackgroundColor #D9EAF7
-skinparam ComponentBorderColor #1F4E79
-skinparam DatabaseBackgroundColor #EEF5FB
-skinparam DatabaseBorderColor #1F4E79
-skinparam StateBackgroundColor #EEF5FB
-skinparam StateBorderColor #1F4E79
-skinparam ActivityBackgroundColor #EEF5FB
-skinparam ActivityBorderColor #1F4E79
-skinparam ActivityDiamondBackgroundColor #D9EAF7
-skinparam ActivityDiamondBorderColor #1F4E79
-skinparam NoteBackgroundColor #F4F4F4
-skinparam NoteBorderColor #708090
-skinparam packageStyle rectangle
-skinparam nodesep 35
-skinparam ranksep 45
-skinparam linetype ortho
 skinparam componentStyle rectangle
-package "Event Commerce" {
- component "OrderController\nTiếp nhận yêu cầu HTTP" as API
- component "OrderService\nĐiều phối giao dịch đặt vé" as S
- together {
- component "IdentityClient\nCommissionClient\nREST tới Identity / Finance" as CL
- component "InventoryService\nGiữ và đóng allocation" as INV
- component "OrderRepository\nEventRepository\nKhóa và ghi đơn" as REP
- component "OrderFacts\nGhi audit và outbox" as FACT
- }
- database "Schema Commerce\nĐơn, allocation, request, audit, outbox\ncommit trong cùng transaction" as DB
- component "EventOutboxPublisher\nĐọc các fact chưa phát" as PUB
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 20
+skinparam defaultTextAlignment center
+skinparam defaultFontColor #24394D
+skinparam dpi 180
+skinparam shadowing false
+skinparam roundcorner 16
+skinparam linetype ortho
+skinparam ArrowColor #49718B
+skinparam ArrowThickness 2
+skinparam ComponentBorderThickness 2
+skinparam ComponentBorderColor #90ACC0
+skinparam ComponentBackgroundColor #FFFFFF
+skinparam PackageBorderThickness 2
+skinparam PackageBorderColor #D4B262
+skinparam PackageBackgroundColor #FFFCF3
+skinparam PackageFontColor #87652C
+skinparam PackageFontSize 22
+skinparam packageStyle rectangle
+skinparam nodesep 28
+skinparam ranksep 38
+<style>
+component {
+  Padding 12
+  MinimumWidth 240
+  HorizontalAlignment center
 }
-queue "Kafka\nPhân phối fact" as K
-API -down-> S
+legend {
+  BackgroundColor #FFFFFF
+  LineColor #D4E0E8
+  FontSize 16
+}
+</style>
+package "Event Commerce" as COM {
+together {
+component "<img:icons/controller.png{scale=.48}>\n<b>OrderController</b>\nTiếp nhận HTTP" as API #EFF7FC;line:539AC2
+component "<img:icons/order-service.png{scale=.48}>\n<b>OrderService</b>\nĐiều phối đặt vé" as S #FFF9E8;line:CAA14C
+component "<img:icons/identity.png{scale=.48}>\n<b>REST clients</b>\nIdentityClient\nCommissionClient" as CL #F6F1FC;line:987BC7
+}
+together {
+component "<img:icons/inventory.png{scale=.48}>\n<b>InventoryService</b>\nGiữ và đóng allocation" as INV #EFF9F5;line:51AA98
+component "<img:icons/repository.png{scale=.48}>\n<b>Repositories</b>\nOrderRepository\nEventRepository" as REP #EFF7FC;line:539AC2
+component "<img:icons/facts.png{scale=.48}>\n<b>OrderFacts</b>\nGhi audit và outbox" as FACT #FFF9E8;line:CAA14C
+}
+component "<img:icons/postgresql.png{scale=.48}>\n<b>PostgreSQL</b>\nSchema Commerce" as DB #EFF7FC;line:539AC2
+component "<img:icons/worker.png{scale=.48}>\n<b>Outbox publisher</b>\nEventOutboxPublisher" as PUB #F6F1FC;line:987BC7
+API -right-> S
 S -right-> CL
 S -down-> INV
 S -down-> REP
@@ -47,8 +55,16 @@ S -down-> FACT
 INV -down-> DB
 REP -down-> DB
 FACT -down-> DB
-DB -down-> PUB
-PUB -down-> K
-INV -[hidden]right- REP
-REP -[hidden]right- FACT
+DB -right-> PUB
+INV -[hidden]right-> REP
+REP -[hidden]right-> FACT
+CL -[hidden]down-> FACT
+API -[hidden]down-> INV
+}
+component "<img:icons/kafka.png{scale=.48}>\n<b>Kafka</b>\nSự kiện đã commit" as K #FFFAED;line:C89639
+PUB .[#C58C2F]down.> K
+legend bottom
+Dữ liệu đơn, tồn kho, audit và outbox cùng transaction Commerce.
+REST clients gọi Identity và Finance; mỗi dịch vụ giữ transaction riêng.
+endlegend
 @enduml

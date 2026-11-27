@@ -1,0 +1,41 @@
+' Shared visual language for all state machines in the technical report.
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 18
+skinparam defaultFontColor #24394D
+skinparam defaultTextAlignment center
+skinparam dpi 180
+skinparam shadowing false
+skinparam roundcorner 28
+skinparam ArrowColor #34475B
+skinparam ArrowThickness 2
+skinparam ArrowFontSize 16
+skinparam ArrowFontColor #34475B
+skinparam nodesep 45
+skinparam ranksep 45
+skinparam state {
+  BackgroundColor #F4F7FC
+  BorderColor #536A7E
+  BorderThickness 1.6
+  FontSize 18
+  FontColor #203247
+  StartColor #24394D
+  EndColor #24394D
+}
+skinparam legend {
+  BackgroundColor #FFFFFF
+  BorderColor #FFFFFF
+  FontColor #526577
+  FontSize 15
+}
+hide empty description
+hide stereotype
+<style>
+stateDiagram {
+  state {
+    Padding 12
+    MinimumWidth 180
+    HorizontalAlignment center
+  }
+}
+</style>
